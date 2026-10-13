@@ -1,0 +1,184 @@
+﻿
+@model DTOs.PageVM
+
+@{
+    ViewBag.Title = Model != null && Model.Id != Guid.Empty
+        ? "Edit Page"
+        : "Add Page";
+
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-8">
+            <h2>@ViewBag.Title</h2>
+            <p class="text-muted">
+                Enter page details and SEO settings.
+                Fields marked with * are required.
+            </p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="@Url.Action("Pages", "Admin")"
+               class="btn btn-secondary">
+                Back to Pages
+            </a>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+
+            @using (Html.BeginForm(
+                "PageAction",
+                "Admin",
+                FormMethod.Post,
+                new { id = "pageForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id)
+
+                @Html.ValidationSummary(
+                    false,
+                    "",
+                    new { @class = "alert alert-danger" })
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Title)
+                    @Html.TextBoxFor(m => m.Title, new
+                    {
+                        @class = "form-control",
+                        placeholder = "Enter page title",
+                        maxlength = "200"
+                    })
+                    @Html.ValidationMessageFor(
+                        m => m.Title, "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Slug)
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">/</span>
+                        </div>
+
+                        @Html.TextBoxFor(m => m.Slug, new
+                        {
+                            @class = "form-control",
+                            placeholder = "about-us",
+                            maxlength = "250"
+                        })
+                    </div>
+
+                    @Html.ValidationMessageFor(
+                        m => m.Slug, "",
+                        new { @class = "text-danger" })
+
+                    <small class="form-text text-muted">
+                        Use lowercase letters, numbers, and hyphens only.
+                    </small>
+                </div>
+
+                <hr />
+                <h5>SEO Settings</h5>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MetaTitle)
+                    @Html.TextBoxFor(m => m.MetaTitle, new
+                    {
+                        @class = "form-control",
+                        maxlength = "200"
+                    })
+                    @Html.ValidationMessageFor(
+                        m => m.MetaTitle, "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MetaDescription)
+                    @Html.TextAreaFor(m => m.MetaDescription, new
+                    {
+                        @class = "form-control",
+                        rows = "3",
+                        maxlength = "500"
+                    })
+                    @Html.ValidationMessageFor(
+                        m => m.MetaDescription, "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.MetaKeywords)
+                    @Html.TextAreaFor(m => m.MetaKeywords, new
+                    {
+                        @class = "form-control",
+                        rows = "2",
+                        maxlength = "1000"
+                    })
+                    @Html.ValidationMessageFor(
+                        m => m.MetaKeywords, "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.CanonicalUrl)
+                    @Html.TextBoxFor(m => m.CanonicalUrl, new
+                    {
+                        @class = "form-control",
+                        maxlength = "500",
+                        placeholder = "https://example.com/about-us"
+                    })
+                    @Html.ValidationMessageFor(
+                        m => m.CanonicalUrl, "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.DisplayOrder)
+                    @Html.TextBoxFor(m => m.DisplayOrder, new
+                    {
+                        @class = "form-control",
+                        type = "number",
+                        min = "0"
+                    })
+                    @Html.ValidationMessageFor(
+                        m => m.DisplayOrder, "",
+                        new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        @Html.CheckBoxFor(m => m.Status, new
+                        {
+                            @class = "custom-control-input",
+                            id = "pageStatus"
+                        })
+
+                        <label class="custom-control-label" for="pageStatus">
+                            Published
+                        </label>
+                    </div>
+
+                    <small class="form-text text-muted">
+                        Draft pages should not be displayed publicly.
+                    </small>
+                </div>
+
+                <hr />
+
+                <button type="submit" class="btn btn-primary">
+                    Save Page
+                </button>
+
+                <a href="@Url.Action("Pages", "Admin")"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+            }
+        </div>
+    </div>
+</div>

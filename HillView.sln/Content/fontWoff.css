@@ -1,0 +1,35 @@
+﻿@font-face {
+    font-family: 'body';
+    src: url('/Content/fonts/jost.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'cursive';
+    src: url('/Content/fonts/liujian.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sfl';
+    src: url('/Content/fonts/sf-light.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sfi';
+    src: url('/Content/fonts/sf-regularItalic.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sfr';
+    src: url('/Content/fonts/sf-regular.woff2') format('woff2');
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'sfb';
+    src: url('/Content/fonts/sf-semibold.woff2') format('woff2');
+    font-display: swap;
+}

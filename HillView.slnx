@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/DTO/">
+    <Project Path="DTOs/DTOs.csproj" Id="c2499a5e-6381-44a4-acd3-aaa0105f97dc" />
+  </Folder>
+  <Folder Name="/Service/">
+    <Project Path="Services/Services.csproj" Id="11634e8f-4844-41af-9d12-4efd5b80c348" />
+  </Folder>
+  <Project Path="HillView.sln/HillView.sln.csproj" Id="845ec1d8-a003-40d1-964b-06bd5ac55192" />
+</Solution>

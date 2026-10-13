@@ -1,0 +1,19 @@
+﻿
+@model DTOs.LoggedInUserVM
+
+@if (Model != null)
+{
+    <a style="cursor: default;"
+       class="d-flex align-items-center gap-2 dropdown-item">
+        <i class="ti ti-user fs-6"></i>
+        <p class="mb-0 fs-3">@Model.UserName</p>
+    </a>
+}
+else
+{
+    <a class="d-flex align-items-center gap-2 dropdown-item"
+       href="@Url.Action("Login", "Account")">
+        <i class="ti ti-user fs-6"></i>
+        <p class="mb-0 fs-3">Guest</p>
+    </a>
+}

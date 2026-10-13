@@ -1,0 +1,186 @@
+﻿
+@model IEnumerable<DTOs.ButtonVM>
+
+@{
+    ViewBag.Title = "Buttons";
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Buttons</h2>
+            <p class="text-muted mb-0">
+                Manage buttons attached to sections and section items.
+            </p>
+        </div>
+
+        <a href="@Url.Action("ButtonAction", "Admin")"
+           class="btn btn-primary">
+            <i class="ti ti-plus"></i> Add Button
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close"
+                    data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>URL</th>
+                            <th>Target</th>
+                            <th>Button Type</th>
+                            <th>Parent</th>
+                            <th>Display Order</th>
+                            <th>Status</th>
+                            <th>Created At</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var button in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(button.Title)
+                                            ? "-"
+                                            : button.Title)
+                                    </td>
+
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(button.Url)
+                                            ? "-"
+                                            : button.Url)
+                                    </td>
+
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(button.Target)
+                                            ? "-"
+                                            : button.Target)
+                                    </td>
+
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(button.ButtonType)
+                                            ? "-"
+                                            : button.ButtonType)
+                                    </td>
+
+                                    <td>
+                                        @if (button.SectionId.HasValue)
+                                        {
+                                            <span class="badge bg-info">
+                                                Section
+                                            </span>
+                                        }
+                                        else if (button.SectionItemId.HasValue)
+                                        {
+                                            <span class="badge bg-primary">
+                                                Section Item
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted">
+                                                Unassigned
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>@button.DisplayOrder</td>
+
+                                    <td>
+                                        @if (button.Status)
+                                        {
+                                            <span class="badge bg-success">
+                                                Active
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                Inactive
+                                            </span>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @(button.CreatedAt.ToLocalTime()
+                                            .ToString("dd MMM yyyy"))
+                                    </td>
+
+                                    <td class="text-end">
+                                        <a href="@Url.Action(
+                                            "ButtonAction",
+                                            "Admin",
+                                            new { id = button.Id })"
+                                           class="btn btn-sm btn-outline-primary">
+                                            <i class="ti ti-edit"></i> Edit
+                                        </a>
+
+                                        @using (Html.BeginForm(
+                                            "DeleteButton",
+                                            "Admin",
+                                            new { id = button.Id },
+                                            FormMethod.Post,
+                                            new { @class = "d-inline delete-button-form" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger">
+                                                <i class="ti ti-trash"></i> Delete
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="9"
+                                    class="text-center text-muted py-4">
+                                    No buttons found.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $(".delete-button-form").on("submit", function (e) {
+                if (!confirm("Are you sure you want to delete this button?")) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

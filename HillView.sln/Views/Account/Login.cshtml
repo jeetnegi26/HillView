@@ -1,0 +1,169 @@
+﻿@{
+    Layout = null;
+    string logo = ViewBag.WebLogo;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+
+    <link href="~/Content/adminstyle.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
+    <style>
+        .error {
+            color: red;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+            .form-group input[type="password"] {
+                padding-right: 40px;
+            }
+
+            .form-group .toggle-password {
+                cursor: pointer;
+                font-size: 18px;
+            }
+    </style>
+</head>
+<body>
+    <!--  Body Wrapper -->
+    <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
+         data-sidebar-position="fixed" data-header-position="fixed">
+        <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
+            <div class="d-flex align-items-center justify-content-center w-100">
+                <div class="row justify-content-center w-100">
+                    <div class="col-md-8 col-lg-6 col-xxl-3">
+                        <div class="card mb-0">
+                            <div class="card-body">
+                                <a href="/" class="text-nowrap logo-img text-center d-block py-3 w-100">
+                                    <img src="/Content/Logo/@logo" width="150" alt="">
+                                </a>
+                                <div>
+                                    <label id="Invalidmessage" class="text-danger mb-2 text-center w-100"></label>
+                                </div>
+                                <form id="loginForm">
+                                    <div class="mb-3">
+                                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                                        <input type="text" name="Email" class="form-control" id="Email" required>
+                                    </div>
+                                    <div class="mb-4 form-group">
+                                        <label for="exampleInputPassword1" class="form-label">Password</label>
+                                        <input type="password" name="Password" class="form-control" id="Password" required>
+                                        <div style=" float: right; margin-top: -33px; margin-right: 16px;">
+                                            <i class="bi bi-eye toggle-password" toggle="#Password"></i>
+                                        </div>
+                                    </div>
+                                    @*<div class="d-flex align-items-center justify-content-between mb-4">
+                                            <div class="form-check">
+                                                <input class="form-check-input primary" type="checkbox" value="" id="flexCheckChecked" checked>
+                                                <label class="form-check-label text-dark" for="flexCheckChecked">
+                                                    Remeber this Device
+                                                </label>
+                                            </div>
+                                            <a class="text-primary fw-bold" href="./index.html">Forgot Password ?</a>
+                                        </div>*@
+                                    @*<button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2">Sign In</button>*@
+                                    <button class="btn btn-primary w-100 py-8 fs-4 mb-4 rounded-2" type="button" id="loginFormBtn">
+                                        <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Loading...</span>
+                                        Login
+                                    </button>
+                                    @*<div class="d-flex align-items-center justify-content-center">
+                                            <p class="fs-4 mb-0 fw-bold">New to Modernize?</p>
+                                            <a class="text-primary fw-bold ms-2" href="./authentication-register.html">Create an account</a>
+                                        </div>*@
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $(".toggle-password").click(function () {
+                $(this).toggleClass("bi-eye bi-eye-slash");
+                var input = $($(this).attr("toggle"));
+                if (input.attr("type") == "password") {
+                    input.attr("type", "text");
+                } else {
+                    input.attr("type", "password");
+                }
+            });
+        });
+        $("#Invalidmessage").html("");
+        const spinnerBorder = document.querySelector(".spinner-border");
+        $("#loginForm").validate({
+            rules: {
+                Email: {
+                    required: true,
+                },
+                Password: {
+                    required: true,
+                }
+            },
+            messages: {
+                Email: {
+                    required: "* Email is required",
+                },
+                Password: {
+                    required: "* Password is required",
+                }
+            }
+        });
+        $("#loginFormBtn").click(function () {
+            $("#Invalidmessage").html("");
+            spinnerBorder.classList.remove("d-none");
+            $("#loginFormBtn").prop("disabled", true);
+            if ($("#loginForm").valid()) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Account/Login",
+                    data: $("#loginForm").serialize(),
+                    success: function (response) {
+                        if (response.result == true) {
+                            window.location.href = response.redirectURL;
+                        }
+                        else {
+                            $("#Invalidmessage").html(response.message);
+                        }
+                    },
+                    error: function (response) {
+                        spinnerBorder.classList.add("d-none");
+                        $("#loginFormBtn").prop("disabled", false);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Something went wrong!",
+                        });
+                    },
+                    complete: function () {
+                        spinnerBorder.classList.add("d-none");
+                        $("#loginFormBtn").prop("disabled", false);
+                    }
+                })
+            }
+            else {
+                spinnerBorder.classList.add("d-none");
+                $("#loginFormBtn").prop("disabled", false);
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+

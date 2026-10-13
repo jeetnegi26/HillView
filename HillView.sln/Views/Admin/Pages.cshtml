@@ -1,0 +1,161 @@
+﻿
+@model IEnumerable<DTOs.PageVM>
+
+@{
+    ViewBag.Title = "Manage Pages";
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row mb-3 align-items-center">
+        <div class="col-md-8">
+            <h2>Manage Pages</h2>
+            <p class="text-muted">Create and manage website pages.</p>
+        </div>
+        <div class="col-md-4 text-right">
+            <a href="@Url.Action("PageAction", "Admin")"
+               class="btn btn-primary">
+                <i class="fa fa-plus"></i> Add Page
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["PageMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["PageMessage"]
+        </div>
+    }
+
+    <div id="pageMessage"></div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>URL Slug</th>
+                            <th>Status</th>
+                            <th>Display Order</th>
+                            <th style="width: 160px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var page in Model)
+                            {
+                                <tr>
+                                    <td>@page.Title</td>
+                                    <td>/@page.Slug</td>
+                                    <td>
+                                        @if (page.Status)
+                                        {
+                                            <span class="badge badge-success">
+                                                Published
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-secondary">
+                                                Draft
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>@page.DisplayOrder</td>
+                                    <td>
+                                        <a href="@Url.Action(
+                                            "PageAction", "Admin",
+                                            new { id = page.Id })"
+                                           class="btn btn-sm btn-info">
+                                            Edit
+                                        </a>
+
+                                        <a href="@Url.Action("PageContent", "Admin", new { id = page.Id })"
+                                           class="btn btn-sm btn-info">
+                                            <i class="fa fa-layer-group"></i> Edit Content
+                                        </a>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-danger btnDeletePage"
+                                                data-id="@page.Id"
+                                                data-title="@page.Title">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">
+                                    No pages found. Select Add Page to create one.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section scripts {
+    <script>
+        $(function () {
+            var deletePageUrl = '@Url.Action("DeletePage", "Admin")';
+            var pagesUrl = '@Url.Action("Pages", "Admin")';
+
+            function showMessage(message) {
+                $('#pageMessage').html(
+                    '<div class="alert alert-danger"></div>'
+                );
+
+                $('#pageMessage .alert').text(message);
+            }
+
+            $('.btnDeletePage').on('click', function () {
+                var id = $(this).data('id');
+                var title = $(this).data('title');
+                var token = $('input[name="__RequestVerificationToken"]')
+                    .first().val();
+
+                if (!confirm('Delete page "' + title + '"?')) {
+                    return;
+                }
+
+                var button = $(this);
+                button.prop('disabled', true);
+
+                $.ajax({
+                    url: deletePageUrl,
+                    type: 'POST',
+                    data: {
+                        id: id,
+                        __RequestVerificationToken: token
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            window.location.href = pagesUrl;
+                        } else {
+                            showMessage(response.message ||
+                                'Unable to delete the page.');
+                            button.prop('disabled', false);
+                        }
+                    },
+                    error: function () {
+                        showMessage(
+                            'An error occurred while deleting the page.'
+                        );
+                        button.prop('disabled', false);
+                    }
+                });
+            });
+        });
+    </script>
+}

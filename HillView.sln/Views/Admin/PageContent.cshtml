@@ -1,0 +1,498 @@
+﻿
+@model IEnumerable<DTOs.PageSectionVM>
+
+@{
+    ViewBag.Title = "Edit Page Content";
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+    var pageId = (Guid)ViewBag.PageId;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Edit Page Content</h2>
+            <p class="text-muted mb-0">
+                Page: <strong>@ViewBag.PageTitle</strong>
+            </p>
+        </div>
+
+        <a href="@Url.Action("Pages", "Admin")"
+           class="btn btn-secondary">
+            Back to Pages
+        </a>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="d-flex justify-content-end mb-3">
+        <a href="@Url.Action("PageSectionAction", "Admin")"
+           class="btn btn-primary">
+            <i class="fa fa-plus"></i> Assign Existing Section
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0">Page Sections</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th style="width: 70px;">Order</th>
+                            <th>Section</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th style="width: 180px;">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.DisplayOrder</td>
+                                    <td>@item.SectionTitle</td>
+                                    <td>
+                                        @if (item.Status)
+                                        {
+                                            <span class="badge badge-success">
+                                                Active
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-secondary">
+                                                Inactive
+                                            </span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.CreatedAt.ToString("dd MMM yyyy")
+                                    </td>
+                                    <td>
+                                        <button type="button"
+                                                class="btn btn-sm btn-primary edit-section-btn"
+                                                data-section-id="@item.SectionId"
+                                                data-section-title="@item.SectionTitle">
+                                            Edit Content
+                                        </button>
+
+                                        <a href="@Url.Action(
+        "PageSectionAction",
+        "Admin",
+        new { id = item.Id })"
+                                           class="btn btn-sm btn-outline-secondary">
+                                            Assignment
+                                        </a>
+
+                                        <button type="button"
+                                                class="btn btn-sm btn-info manage-section-items-btn"
+                                                data-section-id="@item.SectionId"
+                                                data-section-title="@item.SectionTitle">
+                                            Manage Cards
+                                        </button>
+
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center">
+                                    No sections have been assigned to this page yet.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mt-4" id="sectionEditor" style="display:none;">
+        <div class="card-header">
+            <h5 class="mb-0" id="editorTitle">Edit Section Content</h5>
+        </div>
+
+        <div class="card-body">
+            <div id="editorLoading" class="text-muted" style="display:none;">
+                Loading section...
+            </div>
+
+            <div id="editorError" class="alert alert-danger"
+                 style="display:none;"></div>
+
+            <div id="editorFields" style="display:none;">
+                <input type="hidden" id="editSectionId" />
+
+                <div class="form-group">
+                    <label for="editHeading">Heading</label>
+                    <input type="text" id="editHeading"
+                           class="form-control" maxlength="200" />
+                </div>
+
+                <div class="form-group">
+                    <label for="editSubHeading">Subheading</label>
+                    <input type="text" id="editSubHeading"
+                           class="form-control" maxlength="200" />
+                </div>
+
+                <div class="form-group">
+                    <label for="editDescription">Description</label>
+                    <textarea id="editDescription"
+                              class="form-control" rows="5"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="editBackgroundColor">Background Color</label>
+                    <input type="text" id="editBackgroundColor"
+                           class="form-control" maxlength="50"
+                           placeholder="#13092F" />
+                </div>
+
+                <div class="form-group">
+                    <label for="editCssClass">CSS Class</label>
+                    <input type="text" id="editCssClass"
+                           class="form-control" maxlength="200" />
+                </div>
+
+                <button type="button" id="saveSectionContent"
+                        class="btn btn-primary">
+                    Save Changes
+                </button>
+
+                <button type="button" id="cancelSectionEdit"
+                        class="btn btn-secondary">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card mt-4" id="sectionItemsEditor" style="display:none;">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0" id="itemsEditorTitle">Manage Section Items</h5>
+
+            <button type="button" class="btn btn-sm btn-primary"
+                    id="addSectionItem">
+                <i class="fa fa-plus"></i> Add Card
+            </button>
+        </div>
+
+        <div class="card-body">
+            <div id="itemsEditorError" class="alert alert-danger"
+                 style="display:none;"></div>
+
+            <div id="sectionItemsContainer"></div>
+
+            <p id="noSectionItems" class="text-muted"
+               style="display:none;">
+                No cards have been added to this section yet.
+            </p>
+        </div>
+    </div>
+
+
+    <div id="sectionAntiForgeryToken" style="display:none;">
+        @Html.AntiForgeryToken()
+    </div>
+
+</div>
+<script>
+
+$(document).ready(function () {
+
+    $(".edit-section-btn").on("click", function () {
+        var sectionId = $(this).data("section-id");
+        var sectionTitle = $(this).data("section-title");
+
+        $("#sectionEditor").show();
+        $("#editorTitle").text("Edit Content: " + sectionTitle);
+        $("#editorFields").hide();
+        $("#editorError").hide();
+        $("#editorLoading").show().text("Loading section...");
+
+        $.ajax({
+            url: '@Url.Action("GetSectionContent", "Admin")',
+            type: "GET",
+            data: { id: sectionId },
+            dataType: "json",
+
+            success: function (response) {
+                $("#editorLoading").hide();
+
+                if (!response.success) {
+                    $("#editorError")
+                        .text(response.message || "Unable to load section.")
+                        .show();
+                    return;
+                }
+
+                var section = response.data;
+
+                $("#editSectionId").val(section.id);
+                $("#editHeading").val(section.heading || "");
+                $("#editSubHeading").val(section.subHeading || "");
+                $("#editDescription").val(section.description || "");
+                $("#editBackgroundColor").val(section.backgroundColor || "");
+                $("#editCssClass").val(section.cssClass || "");
+
+                $("#editorFields").show();
+
+                $("html, body").animate({
+                    scrollTop: $("#sectionEditor").offset().top - 30
+                }, 300);
+            },
+
+            error: function () {
+                $("#editorLoading").hide();
+                $("#editorError")
+                    .text("An error occurred while loading section content.")
+                    .show();
+            }
+        });
+    });
+
+    $("#cancelSectionEdit").on("click", function () {
+        $("#sectionEditor").hide();
+        $("#editorError").hide();
+        $("#editorFields").hide();
+    });
+
+$("#saveSectionContent").on("click", function () {
+    var button = $(this);
+
+    var model = {
+        Id: $("#editSectionId").val(),
+        Heading: $("#editHeading").val(),
+        SubHeading: $("#editSubHeading").val(),
+        Description: $("#editDescription").val(),
+        BackgroundColor: $("#editBackgroundColor").val(),
+        CssClass: $("#editCssClass").val()
+    };
+
+    var token = $("#sectionAntiForgeryToken input[name='__RequestVerificationToken']")
+        .val();
+
+    button.prop("disabled", true).text("Saving...");
+    model.__RequestVerificationToken = token;
+    $.ajax({
+        url: '@Url.Action("SaveSectionContent", "Admin")',
+        type: "POST",
+        data: model,
+        headers: {
+            "RequestVerificationToken": token
+        },
+        success: function (response) {
+            if (response.success) {
+                alert(response.message);
+            } else {
+                alert(response.message || "Unable to save changes.");
+            }
+        },
+        error: function (xhr) {
+            alert("Save failed. Please check the browser console and server logs.");
+            console.error(xhr.responseText);
+        },
+        complete: function () {
+            button.prop("disabled", false).text("Save Changes");
+        }
+    });
+});
+
+
+
+var currentItemsSectionId = null;
+
+$(".manage-section-items-btn").on("click", function () {
+    var sectionId = $(this).data("section-id");
+    var sectionTitle = $(this).data("section-title");
+
+    currentItemsSectionId = sectionId;
+
+    $("#sectionItemsEditor").show();
+    $("#itemsEditorTitle").text("Manage Cards: " + sectionTitle);
+    $("#sectionItemsContainer").empty();
+    $("#itemsEditorError").hide();
+    $("#noSectionItems").hide();
+
+    $.ajax({
+        url: '@Url.Action("GetSectionItemsContent", "Admin")',
+        type: "GET",
+        data: { sectionId: sectionId },
+        dataType: "json",
+
+        success: function (response) {
+            if (!response.success) {
+                $("#itemsEditorError")
+                    .text(response.message || "Unable to load cards.")
+                    .show();
+                return;
+            }
+
+            var items = response.data || [];
+
+            if (items.length === 0) {
+                $("#noSectionItems").show();
+            }
+
+            $.each(items, function (index, item) {
+                renderSectionItem(item);
+            });
+
+            $("html, body").animate({
+                scrollTop: $("#sectionItemsEditor").offset().top - 30
+            }, 300);
+        },
+
+        error: function (xhr) {
+            $("#itemsEditorError")
+                .text("Unable to load cards. Check the browser console.")
+                .show();
+
+            console.error(xhr.responseText);
+        }
+    });
+});
+
+    function renderSectionItem(item) {
+        var html = `
+        <div class="border rounded p-3 mb-3 section-item-card"
+             data-item-id="${item.id || ""}">
+
+            <input type="hidden" class="item-id"
+                   value="${item.id || ""}" />
+
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" class="form-control item-title"
+                       maxlength="200"
+                       value="${escapeHtml(item.title || "")}" />
+            </div>
+
+            <div class="form-group">
+                <label>Heading</label>
+                <input type="text" class="form-control item-heading"
+                       maxlength="200"
+                       value="${escapeHtml(item.heading || "")}" />
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control item-description"
+                          rows="3">${escapeHtml(item.description || "")}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Display Order</label>
+                <input type="number" min="0"
+                       class="form-control item-display-order"
+                       value="${item.displayOrder || 0}" />
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox"
+                       class="form-check-input item-status"
+                       ${item.status ? "checked" : ""} />
+                <label class="form-check-label">Active</label>
+            </div>
+
+            <button type="button"
+                    class="btn btn-primary btn-sm save-section-item">
+                Save Card
+            </button>
+
+            <span class="item-save-message ml-2"></span>
+        </div>`;
+
+        $("#sectionItemsContainer").append(html);
+    }
+
+    $("#sectionItemsContainer").on("click", ".save-section-item", function () {
+    var $button = $(this);
+    var $card = $button.closest(".section-item-card");
+    var $message = $card.find(".item-save-message");
+
+    var title = $card.find(".item-title").val().trim();
+
+    if (!title) {
+        $message.text("Title is required.")
+                .css("color", "red");
+        return;
+    }
+
+    if (!currentItemsSectionId) {
+        $message.text("Please select a section first.")
+                .css("color", "red");
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find('input[name="__RequestVerificationToken"]')
+        .val();
+
+    var model = {
+        Id: $card.find(".item-id").val() || "00000000-0000-0000-0000-000000000000",
+        SectionId: currentItemsSectionId,
+        Title: title,
+        Heading: $card.find(".item-heading").val(),
+        Description: $card.find(".item-description").val(),
+        DisplayOrder: parseInt($card.find(".item-display-order").val(), 10) || 0,
+        Status: $card.find(".item-status").is(":checked"),
+        __RequestVerificationToken: token
+    };
+
+    $button.prop("disabled", true).text("Saving...");
+    $message.text("");
+
+    $.ajax({
+        url: '@Url.Action("SaveSectionItemContent", "Admin")',
+        type: "POST",
+        data: model,
+        success: function (response) {
+            if (response.success) {
+                $message.text(response.message)
+                        .css("color", "green");
+
+                // Update the card ID after inserting a new card.
+                // The server endpoint must return the saved ID for new cards.
+            } else {
+                $message.text(response.message || "Unable to save card.")
+                        .css("color", "red");
+            }
+        },
+        error: function () {
+            $message.text("An error occurred while saving.")
+                    .css("color", "red");
+        },
+        complete: function () {
+            $button.prop("disabled", false).text("Save Card");
+        }
+    });
+});
+function escapeHtml(value) {
+    return $("<div>").text(value).html();
+}
+
+});
+
+</script>

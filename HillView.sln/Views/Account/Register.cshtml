@@ -1,0 +1,182 @@
+﻿
+@model DTOs.RegisterViewModel
+
+@{
+    ViewBag.Title = "Register & Role Management";
+}
+
+<div class="container py-4">
+    <h2>Register & Role Management</h2>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info">
+            @Model.Message
+        </div>
+    }
+
+    @if (TempData["RegisterMessage"] != null)
+    {
+        <div class="alert alert-info">
+            @TempData["RegisterMessage"]
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Register User</h4>
+                </div>
+
+                <div class="card-body">
+                    @using (Html.BeginForm(
+                        "Register", "Account", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.UserName)
+                            @Html.TextBoxFor(m => m.UserName,
+                                new { @class = "form-control", type = "User Name" })
+                            @Html.ValidationMessageFor(m => m.Email,
+                                "", new { @class = "text-danger" })
+                        </div>
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Email)
+                            @Html.TextBoxFor(m => m.Email,
+                                new { @class = "form-control", type = "email" })
+                            @Html.ValidationMessageFor(m => m.Email,
+                                "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.Password)
+                            @Html.PasswordFor(m => m.Password,
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.Password,
+                                "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.ConfirmPassword,
+                                "Confirm Password")
+                            @Html.PasswordFor(m => m.ConfirmPassword,
+                                new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.ConfirmPassword,
+                                "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.RoleId, "Select Role")
+                            @Html.DropDownListFor(m => m.RoleId,
+                                Model.Roles,
+                                "-- Select Role --",
+                                new { @class = "form-select" })
+                            @Html.ValidationMessageFor(m => m.RoleId,
+                                "", new { @class = "text-danger" })
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            Register User
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h4>Add New Role</h4>
+                </div>
+
+                <div class="card-body">
+                    @using (Html.BeginForm(
+                        "AddRole", "Account", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.NewRoleTitle, "Role Name")
+                            @Html.TextBoxFor(m => m.NewRoleTitle,
+                                new
+                                     {
+                                         @class = "form-control",
+                                      placeholder = "e.g. Editor"
+                                     })
+                        </div>
+
+                        <button type="submit" class="btn btn-success">
+                            Add Role
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4>All Roles</h4>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Role</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var role in Model.AllRoles)
+            {
+                <tr>
+                    <td>@role.Id</td>
+                    <td>@role.Title</td>
+                    <td>@(role.Status ? "Active" : "Inactive")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h4 class="mt-4">All Users</h4>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>User Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.Id</td>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>@user.RoleTitle</td>
+                    <td>@(user.Status ? "Active" : "Inactive")</td>
+                    <td>
+                        @using (Html.BeginForm(
+                            "ResetPassword",
+                            "Account",
+                            new { userId = user.Id },
+                            FormMethod.Post,
+                            new { onsubmit = "return confirm('Reset this user password to the default password?');" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <button type="submit" class="btn btn-warning btn-sm">
+                                Reset Password
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

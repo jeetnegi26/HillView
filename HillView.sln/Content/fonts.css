@@ -1,0 +1,25 @@
+@font-face {
+    font-family: 'body';
+    src: url('fonts/jost-variablefont_wght.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'cursive';
+    src: url('fonts/liujianmaocao-regular.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'sfl';
+    src: url('fonts/sf-pro-display-light.otf') format('opentype');
+}
+@font-face {
+    font-family: 'sfi';
+    src: url('fonts/sf-pro-display-regularitalic.otf') format('opentype');
+}
+@font-face {
+    font-family: 'sfb';
+    src: url('fonts/sf-pro-display-semibold.otf') format('opentype');
+}
+@font-face {
+    font-family: 'sfr';
+    src: url('fonts/sf-pro-display-regular.otf') format('opentype');
+}

@@ -1,0 +1,86 @@
+﻿    <!-- Sidebar Start -->
+<aside class="left-sidebar">
+    <!-- Sidebar scroll-->
+    <div>
+        <div class="brand-logo text-lg-center text-start
+            align-items-center justify-content-between">
+            <a href="/Admin" class="text-nowrap logo-img">
+                <img id="adminWebLogo"
+                     src="/Content/profile/default-logo.png"
+                     alt="Website Logo"
+                     class="img-fluid w-50"/>
+            </a>
+
+            <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
+                 id="sidebarCollapse" style="position: absolute; top: 3%; right: 4%; ">
+                <i class="ti ti-x fs-8"></i>
+            </div>
+        </div>
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav scroll-sidebar data-simplebar">
+            <ul id="sidebarnav">
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="/Admin" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-sailboat"></i>
+                        </span>
+                        <span class="hide-menu">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-small-cap">
+                    <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                    <span class="hide-menu">Service</span>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="/Admin/Directors" aria-expanded="false">
+                        <span>
+                            <i class="ti ti-users"></i>
+                        </span>
+                        <span class="hide-menu">Job Listing</span>
+                    </a>
+                </li>
+                <li class="nav-small-cap">
+                    <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
+                    <span class="hide-menu">OTHERS</span>
+                </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link" href="@Url.Action("WebInfos","Admin")" aria-expanded="false">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2">
+                            <path d="M19.5 7a9 9 0 0 0 -7.5 -4a8.991 8.991 0 0 0 -7.484 4"></path>
+                            <path d="M11.5 3a16.989 16.989 0 0 0 -1.826 4"></path>
+                            <path d="M12.5 3a16.989 16.989 0 0 1 1.828 4"></path>
+                            <path d="M19.5 17a9 9 0 0 1 -7.5 4a8.991 8.991 0 0 1 -7.484 -4"></path>
+                            <path d="M11.5 21a16.989 16.989 0 0 1 -1.826 -4"></path>
+                            <path d="M12.5 21a16.989 16.989 0 0 0 1.828 -4"></path>
+                            <path d="M2 10l1 4l1.5 -4l1.5 4l1 -4"></path>
+                            <path d="M17 10l1 4l1.5 -4l1.5 4l1 -4"></path>
+                            <path d="M9.5 10l1 4l1.5 -4l1.5 4l1 -4"></path>
+                        </svg>
+                        <span class="hide-menu">Web Info</span>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <!-- End Sidebar navigation -->
+    </div>
+    <!-- End Sidebar scroll-->
+</aside>
+<!--  Sidebar End -->
+<script>
+    $(function () {
+        $.ajax({
+            url: '@Url.Action("GetSidebarLogo", "Admin")',
+            type: 'GET',
+            cache: true,
+            success: function (response) {
+                if (response && response.success && response.logo) {
+                    $('#adminWebLogo').attr('src', "/content/logo/" + response.logo);
+                }
+            },
+            error: function () {
+                // Keep the default logo if loading fails.
+            }
+        });
+    });
+</script>

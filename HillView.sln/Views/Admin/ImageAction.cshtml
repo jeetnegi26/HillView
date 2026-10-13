@@ -1,0 +1,251 @@
+﻿
+@model DTOs.ImageVM
+
+@{
+    ViewBag.Title = Model.Id == Guid.Empty ? "Add Image" : "Edit Image";
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>@ViewBag.Title</h2>
+            <p class="text-muted mb-0">Upload and manage website images.</p>
+        </div>
+
+        <a href="@Url.Action("Images", "Admin")"
+           class="btn btn-outline-secondary">
+            <i class="ti ti-arrow-left"></i> Back to Images
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm(
+                "ImageAction", "Admin", FormMethod.Post,
+                new { id = "imageForm" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.CreatedAt)
+                @Html.HiddenFor(m => m.UpdatedAt)
+
+                <div id="formErrors">
+                    @Html.ValidationSummary(false, "",
+                        new { @class = "alert alert-danger" })
+                </div>
+
+                @Html.HiddenFor(m => m.ImageUrl, new { id = "ImageUrl" })
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="SectionId">Section</label>
+                        @Html.DropDownListFor(
+                            m => m.SectionId,
+                            (SelectList)ViewBag.Sections,
+                            "-- Select Section --",
+                            new { @class = "form-select", id = "SectionId" })
+                        @Html.ValidationMessageFor(
+                            m => m.SectionId, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="SectionItemId">Section Item</label>
+                        @Html.DropDownListFor(
+                            m => m.SectionItemId,
+                            (SelectList)ViewBag.SectionItems,
+                            "-- Select Section Item --",
+                            new { @class = "form-select", id = "SectionItemId" })
+                        @Html.ValidationMessageFor(
+                            m => m.SectionItemId, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Image File</label>
+                        <input type="file" id="imageFile" class="form-control"
+                               accept="image/jpeg,image/png,image/webp,image/gif" />
+                        <small class="text-muted">
+                            Select a JPG, PNG, WebP, or GIF image.
+                        </small>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <div id="imagePreviewContainer"
+                             style="display:none;">
+                            <img id="imagePreview" src="" alt="Image preview"
+                                 style="max-width:260px;max-height:180px;object-fit:contain;"
+                                 class="border rounded p-1" />
+                        </div>
+                        <div id="uploadStatus" class="mt-2"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.AltText, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.AltText,
+                            new { @class = "form-control", placeholder = "Describe the image" })
+                        @Html.ValidationMessageFor(m => m.AltText, "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.Caption, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.Caption,
+                            new { @class = "form-control", placeholder = "Optional caption" })
+                        @Html.ValidationMessageFor(m => m.Caption, "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.ImageType, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.ImageType,
+                            new { @class = "form-control", placeholder = "e.g. Banner, Thumbnail" })
+                        @Html.ValidationMessageFor(m => m.ImageType, "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.DisplayOrder, new { @class = "form-label" })
+                        @Html.TextBoxFor(m => m.DisplayOrder,
+                            new { @class = "form-control", type = "number", min = "0" })
+                        @Html.ValidationMessageFor(m => m.DisplayOrder, "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(m => m.Status,
+                                new { @class = "form-check-input" })
+                            @Html.LabelFor(m => m.Status,
+                                new { @class = "form-check-label" })
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <button type="submit" id="saveImageButton"
+                        class="btn btn-primary">
+                    <i class="ti ti-device-floppy"></i> Save Image
+                </button>
+
+                <a href="@Url.Action("Images", "Admin")"
+                   class="btn btn-light">Cancel</a>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            var uploadedImageUrl = $("#ImageUrl").val() || "";
+
+            function showImage(url) {
+                if (url) {
+                    $("#imagePreview").attr("src", url);
+                    $("#imagePreviewContainer").show();
+                } else {
+                    $("#imagePreview").attr("src", "");
+                    $("#imagePreviewContainer").hide();
+                }
+            }
+
+            // Display the existing image while editing.
+            showImage(uploadedImageUrl);
+
+            // Only one parent can be selected.
+            $("#SectionId").on("change", function () {
+                if ($(this).val()) {
+                    $("#SectionItemId").val("");
+                }
+            });
+
+            $("#SectionItemId").on("change", function () {
+                if ($(this).val()) {
+                    $("#SectionId").val("");
+                }
+            });
+
+            $("#imageFile").on("change", function () {
+                var file = this.files[0];
+
+                if (!file) return;
+
+                var allowedTypes = [
+                    "image/jpeg", "image/png",
+                    "image/webp", "image/gif"
+                ];
+
+                if (allowedTypes.indexOf(file.type) === -1) {
+                    $("#uploadStatus").html(
+                        '<span class="text-danger">Unsupported image type.</span>');
+                    this.value = "";
+                    return;
+                }
+
+                if (file.size > 5 * 1024 * 1024) {
+                    $("#uploadStatus").html(
+                        '<span class="text-danger">Maximum image size is 5 MB.</span>');
+                    this.value = "";
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append("file", file);
+                formData.append("oldImage", uploadedImageUrl);
+
+                var token = $("#imageForm input[name='__RequestVerificationToken']").val();
+                formData.append("__RequestVerificationToken", token);
+
+                $("#uploadStatus").html(
+                    '<span class="text-muted">Uploading image...</span>');
+                $("#saveImageButton").prop("disabled", true);
+
+                $.ajax({
+                    url: '@Url.Action("Upload_Content_Image", "Admin")',
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response && response.Success && response.ImageUrl) {
+                            uploadedImageUrl = response.ImageUrl;
+                            $("#ImageUrl").val(uploadedImageUrl);
+                            showImage(uploadedImageUrl);
+
+                            $("#uploadStatus").html(
+                                '<span class="text-success">Image uploaded successfully.</span>');
+                        } else {
+                            $("#uploadStatus").html(
+                                '<span class="text-danger">' +
+                                (response && response.Message
+                                    ? response.Message
+                                    : "Upload failed.") +
+                                '</span>');
+                        }
+                    },
+                    error: function () {
+                        $("#uploadStatus").html(
+                            '<span class="text-danger">Unable to upload the image.</span>');
+                    },
+                    complete: function () {
+                        $("#saveImageButton").prop("disabled", false);
+                    }
+                });
+            });
+
+            $("#imageForm").on("submit", function (e) {
+                if (!uploadedImageUrl) {
+                    e.preventDefault();
+                    $("#uploadStatus").html(
+                        '<span class="text-danger">Please upload an image before saving.</span>');
+                    return;
+                }
+
+                if ($(this).valid()) {
+                    $("#saveImageButton").prop("disabled", true);
+                }
+            });
+        });
+    </script>
+}

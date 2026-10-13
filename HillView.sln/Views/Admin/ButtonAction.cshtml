@@ -1,0 +1,244 @@
+﻿
+@model DTOs.ButtonVM
+
+@{
+    ViewBag.Title = Model.Id == Guid.Empty
+        ? "Add Button"
+        : "Edit Button";
+
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>@ViewBag.Title</h2>
+            <p class="text-muted mb-0">
+                Configure a button for a section or section item.
+            </p>
+        </div>
+
+        <a href="@Url.Action("Buttons", "Admin")"
+           class="btn btn-outline-secondary">
+            <i class="ti ti-arrow-left"></i> Back to Buttons
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm(
+                "ButtonAction",
+                "Admin",
+                FormMethod.Post,
+                new { id = "buttonForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.CreatedAt)
+                @Html.HiddenFor(m => m.UpdatedAt)
+
+                @Html.ValidationSummary(
+                    false,
+                    "",
+                    new { @class = "alert alert-danger" })
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.SectionId,
+                            new { @class = "form-label" })
+
+                        @Html.DropDownListFor(
+                            m => m.SectionId,
+                            (SelectList)ViewBag.Sections,
+                            "-- Select Section --",
+                            new { @class = "form-select", id = "SectionId" })
+
+                        @Html.ValidationMessageFor(
+                            m => m.SectionId,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.SectionItemId,
+                            new { @class = "form-label" })
+
+                        @Html.DropDownListFor(
+                            m => m.SectionItemId,
+                            (SelectList)ViewBag.SectionItems,
+                            "-- Select Section Item --",
+                            new { @class = "form-select", id = "SectionItemId" })
+
+                        @Html.ValidationMessageFor(
+                            m => m.SectionItemId,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.Title,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(m => m.Title,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "Enter button title"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.Title,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.Url,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(m => m.Url,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "/contact or https://example.com"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.Url,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.Target,
+                            new { @class = "form-label" })
+
+                        @Html.DropDownListFor(
+                            m => m.Target,
+                            new SelectList(new[]
+                            {
+                                new { Value = "_self", Text = "Same tab (_self)" },
+                                new { Value = "_blank", Text = "New tab (_blank)" }
+                            }, "Value", "Text", Model.Target ?? "_self"),
+                            new { @class = "form-select" })
+
+                        @Html.ValidationMessageFor(
+                            m => m.Target,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.ButtonType,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(m => m.ButtonType,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "e.g. Primary, Secondary, CTA"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.ButtonType,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.CssClass,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(m => m.CssClass,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "e.g. btn btn-primary"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.CssClass,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(m => m.DisplayOrder,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(m => m.DisplayOrder,
+                            new
+                            {
+                                @class = "form-control",
+                                type = "number",
+                                min = "0"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.DisplayOrder,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(m => m.Status,
+                                new { @class = "form-check-input" })
+
+                            @Html.LabelFor(m => m.Status,
+                                new { @class = "form-check-label" })
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <button type="submit"
+                        id="saveButton"
+                        class="btn btn-primary">
+                    <i class="ti ti-device-floppy"></i> Save Button
+                </button>
+
+                <a href="@Url.Action("Buttons", "Admin")"
+                   class="btn btn-light">
+                    Cancel
+                </a>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // A button must belong to either a Section or a Section Item.
+            $("#SectionId").on("change", function () {
+                if ($(this).val()) {
+                    $("#SectionItemId").val("");
+                }
+            });
+
+            $("#SectionItemId").on("change", function () {
+                if ($(this).val()) {
+                    $("#SectionId").val("");
+                }
+            });
+
+            $("#buttonForm").on("submit", function (e) {
+                var sectionId = $("#SectionId").val();
+                var sectionItemId = $("#SectionItemId").val();
+
+                if (!!sectionId === !!sectionItemId) {
+                    e.preventDefault();
+                    alert("Select either a Section or a Section Item, but not both.");
+                    return;
+                }
+
+                if ($(this).valid()) {
+                    $("#saveButton").prop("disabled", true);
+                }
+            });
+        });
+    </script>
+}

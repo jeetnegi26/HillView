@@ -1,0 +1,1963 @@
+﻿using DTOs;
+using HillView.sln.App_Start;
+using HillView.sln.Controllers;
+using Services;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlClient;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Hosting;
+using System.Web.Mvc;
+using System.Web.Services;
+
+namespace HillView.sln.Admin
+{
+    [CustomAuthorize]
+    public class AdminController : Controller
+    {
+        private readonly WebInfoService _webService;
+        private readonly ImageService _imageService;
+        private readonly LogErrorService _logErrorService;
+        private readonly WebInfoService _webInfoService;
+        private readonly PageService _pageService;
+        private readonly SectionTypeService _sectionTypeService;
+        private readonly SectionService _sectionService;
+        private readonly SectionItemService _sectionItemService;
+        private readonly ButtonService _buttonService;
+        private readonly PageSectionService _pageSectionService;
+
+
+        public AdminController(WebInfoService webService, LogErrorService logErrorService, ImageService imageService, WebInfoService webInfoService, 
+            PageService pageService, SectionTypeService sectionTypeService, SectionService sectionService, SectionItemService sectionItemService,
+            ButtonService buttonService, PageSectionService pageSectionService)
+        {
+            _webService = webService;
+            _logErrorService = logErrorService;
+            _imageService = imageService;
+            _webInfoService = webInfoService;
+            _pageService = pageService;
+            _sectionTypeService = sectionTypeService;
+            _sectionService = sectionService;
+            _sectionItemService = sectionItemService;
+            _buttonService = buttonService;
+            _pageSectionService = pageSectionService;
+        }
+
+        #region Home
+        // GET: Admin
+        public ActionResult Index()
+        {
+            return View();
+        }
+
+        //[ChildActionOnly]
+        //public async Task<ActionResult> Sidebar()
+        //{
+        //    ViewBag.WebLogo = await _webInfoService.GetBrandLogoAsync();
+        //    return PartialView("~/Views/Shared/Admin/_AdminSidebar.cshtml");
+        //}
+        [HttpGet]
+        public async Task<JsonResult> GetSidebarLogo()
+        {
+            var logo = await _webInfoService.GetBrandLogoAsync();
+
+            return Json(new
+            {
+                success = logo != null,
+                logo = logo
+            }, JsonRequestBehavior.AllowGet);
+        }
+
+        #endregion
+
+        #region Pages CRUD
+
+        [HttpGet]
+        public async Task<ActionResult> Pages()
+        {
+            try
+            {
+                var pages = await _pageService.GetPagesAsync(
+                    Request.UserHostAddress);
+
+                return View(pages);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/Pages", "GET", 0,
+                    Request.UserHostAddress, "GetPages");
+
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> PageAction(Guid? id)
+        {
+            try
+            {
+                PageVM model = new PageVM();
+
+                if (id.HasValue && id.Value != Guid.Empty)
+                {
+                    model = await _pageService.GetPageByIdAsync(
+                        id.Value, Request.UserHostAddress);
+
+                    if (model == null)
+                        return HttpNotFound();
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/PageAction", "GET", 0,
+                    Request.UserHostAddress, "GetPageById");
+
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public async Task<ActionResult> PageAction(PageVM model)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                    return View(model);
+
+                bool saved = await _pageService.SavePageAsync(
+                    model, Request.UserHostAddress);
+
+                if (!saved)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "The page could not be saved. Please try again.");
+
+                    return View(model);
+                }
+
+                TempData["PageMessage"] = "Page saved successfully.";
+
+                return RedirectToAction("Pages");
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+                when (ex.Number == 2601 || ex.Number == 2627)
+            {
+                ModelState.AddModelError(
+                    nameof(model.Slug),
+                    "This URL slug already exists. Please use another slug.");
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/PageAction", "POST", 0,
+                    Request.UserHostAddress, "SavePage");
+
+                ModelState.AddModelError(
+                    "",
+                    "Unable to save the page. Please try again.");
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> DeletePage(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid page ID."
+                    });
+                }
+
+                bool deleted = await _pageService.DeletePageAsync(
+                    id, Request.UserHostAddress);
+
+                return Json(new
+                {
+                    success = deleted,
+                    message = deleted
+                        ? "Page deleted successfully."
+                        : "Page not found."
+                });
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+                when (ex.Number == 547)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "This page has sections assigned to it. Remove those assignments before deleting it."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/DeletePage", "POST", 0,
+                    Request.UserHostAddress, "DeletePage");
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Unable to delete the page. Please try again."
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> PageContent(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "Invalid page ID.";
+                    return RedirectToAction("Pages");
+                }
+
+                var page = await _pageService.GetPageByIdAsync(
+                    id, Request.UserHostAddress);
+
+                if (page == null)
+                {
+                    TempData["ErrorMessage"] = "Page not found.";
+                    return RedirectToAction("Pages");
+                }
+
+                var pageSections = await _pageSectionService
+                    .GetPageSectionsAsync(Request.UserHostAddress);
+
+                var assignedSections = pageSections
+                    .Where(x => x.PageId == id)
+                    .OrderBy(x => x.DisplayOrder)
+                    .ToList();
+
+                ViewBag.PageTitle = page.Title;
+                ViewBag.PageId = page.Id;
+
+                return View(assignedSections);
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(
+                    ex,
+                    Request.Url?.ToString(),
+                    nameof(PageContent),
+                    0,
+                    Request.UserHostAddress,
+                    null);
+
+                TempData["ErrorMessage"] =
+                    "Unable to load the page content editor.";
+
+                return RedirectToAction("Pages");
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<JsonResult> GetSectionContent(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid section ID."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                var section = await _sectionService.GetSectionByIdAsync(
+                    id, Request.UserHostAddress);
+
+                if (section == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Section not found."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    data = new
+                    {
+                        id = section.Id,
+                        title = section.Title,
+                        heading = section.Heading,
+                        subHeading = section.SubHeading,
+                        description = section.Description,
+                        backgroundColor = section.BackgroundColor,
+                        cssClass = section.CssClass
+                    }
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(
+                    ex,
+                    Request.Url?.ToString(),
+                    nameof(GetSectionContent),
+                    0,
+                    Request.UserHostAddress,
+                    null);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Unable to load section content."
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> SaveSectionContent(SectionVM model)
+        {
+            try
+            {
+                if (model == null || model.Id == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid section."
+                    });
+                }
+
+                // Only allow fields supported by the inline editor.
+                var existing = await _sectionService.GetSectionByIdAsync(
+                    model.Id, Request.UserHostAddress);
+
+                if (existing == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Section not found."
+                    });
+                }
+
+                existing.Heading = model.Heading;
+                existing.SubHeading = model.SubHeading;
+                existing.Description = model.Description;
+                existing.BackgroundColor = model.BackgroundColor;
+                existing.CssClass = model.CssClass;
+
+                var saved = await _sectionService.SaveSectionAsync(
+                    existing, Request.UserHostAddress);
+
+                return Json(new
+                {
+                    success = saved,
+                    message = saved
+                        ? "Section content saved successfully."
+                        : "Unable to save section content."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    Request.Url?.ToString(),
+                    nameof(SaveSectionContent),
+                    0,
+                    Request.UserHostAddress,
+                    null);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while saving section content."
+                });
+            }
+        }
+
+        #endregion
+
+        #region Section Types CRUD
+
+        [HttpGet]
+        public async Task<ActionResult> SectionTypes()
+        {
+            try
+            {
+                var sectionTypes = await _sectionTypeService
+                    .GetSectionTypesAsync(Request.UserHostAddress);
+
+                return View(sectionTypes);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/SectionTypes", "GET", 0,
+                    Request.UserHostAddress, "GetSectionTypes");
+
+                return View("Error");
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<ActionResult> SectionTypeAction(
+            int? id, bool validation = false)
+        {
+            try
+            {
+                SectionTypeVM model = new SectionTypeVM();
+
+                if (validation)
+                {
+                    model = TempData["SectionTypeFormModel"]
+                        as SectionTypeVM;
+
+                    var errors = TempData["SectionTypeModelErrors"]
+                        as Dictionary<string, string[]>;
+
+                    if (model == null)
+                        return RedirectToAction("SectionTypes");
+
+                    if (errors != null)
+                    {
+                        foreach (var entry in errors)
+                        {
+                            foreach (var error in entry.Value)
+                            {
+                                ModelState.AddModelError(
+                                    entry.Key, error);
+                            }
+                        }
+                    }
+
+                    return View(model);
+                }
+
+                if (id.HasValue && id.Value > 0)
+                {
+                    model = await _sectionTypeService.GetSectionTypeByIdAsync(
+                        id.Value, Request.UserHostAddress);
+
+                    if (model == null)
+                        return HttpNotFound();
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/SectionTypeAction", "GET", id ?? 0,
+                    Request.UserHostAddress, "GetSectionTypeById");
+
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SectionTypeAction(SectionTypeVM model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    bool saved = await _sectionTypeService
+                        .SaveSectionTypeAsync(
+                            model, Request.UserHostAddress);
+
+                    if (saved)
+                    {
+                        TempData["SectionTypeSuccess"] =
+                            "Section type saved successfully.";
+
+                        return RedirectToAction("SectionTypes");
+                    }
+
+                    ModelState.AddModelError(
+                        "",
+                        "The section type could not be saved. Please try again.");
+                }
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+                when (ex.Number == 2601 || ex.Number == 2627)
+            {
+                ModelState.AddModelError(
+                    nameof(model.Name),
+                    "This section type name already exists.");
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/SectionTypeAction", "POST", model.Id,
+                    Request.UserHostAddress, "SaveSectionType");
+
+                ModelState.AddModelError(
+                    "",
+                    "Unable to save the section type. Please try again.");
+            }
+
+            // Preserve the form values and validation errors for the GET request.
+            TempData["SectionTypeFormModel"] = model;
+
+            TempData["SectionTypeModelErrors"] = ModelState
+                .Where(x => x.Value.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value.Errors
+                        .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage)
+                            ? "The submitted value is invalid."
+                            : e.ErrorMessage)
+                        .ToArray());
+
+            return RedirectToAction(
+                "SectionTypeAction",
+                new
+                {
+                    id = model.Id > 0 ? (int?)model.Id : null,
+                    validation = true
+                });
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteSectionType(int id)
+        {
+            try
+            {
+                if (id <= 0)
+                {
+                    TempData["SectionTypeError"] = "Invalid section type ID.";
+                    return RedirectToAction("SectionTypes");
+                }
+
+                bool deleted = await _sectionTypeService.DeleteSectionTypeAsync(
+                    id, Request.UserHostAddress);
+
+                TempData[deleted ? "SectionTypeSuccess" : "SectionTypeError"] =
+                    deleted
+                        ? "Section type deleted successfully."
+                        : "Section type not found.";
+
+                return RedirectToAction("SectionTypes");
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+                when (ex.Number == 547)
+            {
+                TempData["SectionTypeError"] =
+                    "This section type is already used by sections and cannot be deleted.";
+
+                return RedirectToAction("SectionTypes");
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/DeleteSectionType", "POST", id,
+                    Request.UserHostAddress, "DeleteSectionType");
+
+                TempData["SectionTypeError"] =
+                    "Unable to delete the section type. Please try again.";
+
+                return RedirectToAction("SectionTypes");
+            }
+        }
+
+        #endregion
+
+        #region Sections CRUD
+
+        [HttpGet]
+        public async Task<ActionResult> Sections()
+        {
+            try
+            {
+                var sections = await _sectionService.GetSectionsAsync(
+                    Request.UserHostAddress);
+
+                return View(sections);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/Sections", "GET", 0,
+                    Request.UserHostAddress, "Sections");
+
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SectionAction(Guid? id, bool validation = false)
+        {
+            SectionVM model;
+
+            if (validation && TempData["SectionFormModel"] is SectionVM savedModel)
+            {
+                model = savedModel;
+
+                if (TempData["SectionFormErrors"] is Dictionary<string, string[]> errors)
+                {
+                    foreach (var item in errors)
+                    {
+                        foreach (var error in item.Value)
+                        {
+                            ModelState.AddModelError(item.Key, error);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                model = new SectionVM();
+
+                if (id.HasValue && id.Value != Guid.Empty)
+                {
+                    try
+                    {
+                        model = await _sectionService.GetSectionByIdAsync(
+                            id.Value, Request.UserHostAddress);
+
+                        if (model == null)
+                            return HttpNotFound();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logErrorService.LogError(
+                            ex, "Admin/SectionAction", "GET", 0,
+                            Request.UserHostAddress, "SectionAction");
+
+                        return View("Error");
+                    }
+                }
+            }
+
+            await LoadSectionTypesAsync(model.SectionTypeId);
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public async Task<ActionResult> SectionAction(SectionVM model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    bool saved = await _sectionService.SaveSectionAsync(
+                        model, Request.UserHostAddress);
+
+                    if (saved)
+                    {
+                        TempData["SuccessMessage"] = "Section saved successfully.";
+                        return RedirectToAction("Sections");
+                    }
+
+                    ModelState.AddModelError("", "No section was saved. Please try again.");
+                }
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+                when (ex.Number == 547)
+            {
+                ModelState.AddModelError(
+                    "SectionTypeId",
+                    "The selected section type is invalid or is being used by another record.");
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/SectionAction", "POST", 0,
+                    Request.UserHostAddress, "SectionAction");
+
+                ModelState.AddModelError(
+                    "", "Unable to save the section. Please try again.");
+            }
+
+            // Preserve the form and validation errors using Post/Redirect/Get.
+            TempData["SectionFormModel"] = model;
+
+            TempData["SectionFormErrors"] = ModelState
+                .Where(x => x.Value.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value.Errors
+                        .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage)
+                            ? "The submitted value is invalid."
+                            : e.ErrorMessage)
+                        .ToArray());
+
+            return RedirectToAction(
+                "SectionAction",
+                new { id = model.Id == Guid.Empty ? (Guid?)null : model.Id, validation = true });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteSection(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "Invalid section ID.";
+                    return RedirectToAction("Sections");
+                }
+
+                bool deleted = await _sectionService.DeleteSectionAsync(
+                    id, Request.UserHostAddress);
+
+                TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
+                    deleted
+                        ? "Section deleted successfully."
+                        : "Section not found.";
+            }
+            catch (System.Data.SqlClient.SqlException ex)
+                when (ex.Number == 547)
+            {
+                TempData["ErrorMessage"] =
+                    "This section is assigned to a page or has related content. Remove those assignments before deleting it.";
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/Sections", "DELETE", 0,
+                    Request.UserHostAddress, "DeleteSection");
+
+                TempData["ErrorMessage"] =
+                    "Unable to delete the section. Please try again.";
+            }
+
+            return RedirectToAction("Sections");
+        }
+
+        private async Task LoadSectionTypesAsync(int selectedId = 0)
+        {
+            var sectionTypes = await _sectionService.GetSectionTypesAsync(
+                Request.UserHostAddress);
+
+            ViewBag.SectionTypes = new SelectList(
+                sectionTypes, "Id", "Title", selectedId);
+        }
+
+        #endregion
+
+        #region Section Items CRUD
+
+        [HttpGet]
+        public async Task<ActionResult> SectionItems()
+        {
+            try
+            {
+                var items = await _sectionItemService.GetSectionItemsAsync(
+                    Request.UserHostAddress);
+
+                return View(items);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/SectionItems", "GET",
+                    null, Request.UserHostAddress, "SectionItems");
+
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> SectionItemAction(
+            Guid? id, bool validation = false)
+        {
+            SectionItemVM model;
+
+            if (validation &&
+                TempData["SectionItemFormModel"] is SectionItemVM savedModel)
+            {
+                model = savedModel;
+
+                if (TempData["SectionItemFormErrors"]
+                    is Dictionary<string, string[]> errors)
+                {
+                    foreach (var item in errors)
+                    {
+                        foreach (var error in item.Value)
+                        {
+                            ModelState.AddModelError(item.Key, error);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                model = new SectionItemVM();
+
+                if (id.HasValue && id.Value != Guid.Empty)
+                {
+                    try
+                    {
+                        model = await _sectionItemService.GetSectionItemByIdAsync(
+                            id.Value, Request.UserHostAddress);
+
+                        if (model == null)
+                            return HttpNotFound();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logErrorService.LogError(
+                            ex, "Admin/SectionItemAction", "GET",
+                            null, Request.UserHostAddress,
+                            "GetSectionItemByIdAsync");
+
+                        return View("Error");
+                    }
+                }
+            }
+
+            await LoadSectionsForItemAsync(model.SectionId);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public async Task<ActionResult> SectionItemAction(SectionItemVM model)
+        {
+            if (model.SectionId == Guid.Empty)
+            {
+                ModelState.AddModelError(
+                    "SectionId", "Please select a valid section.");
+            }
+
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    bool saved = await _sectionItemService.SaveSectionItemAsync(
+                        model, Request.UserHostAddress);
+
+                    if (saved)
+                    {
+                        TempData["SuccessMessage"] =
+                            "Section item saved successfully.";
+
+                        return RedirectToAction("SectionItems");
+                    }
+
+                    ModelState.AddModelError(
+                        "", "No section item was saved. Please try again.");
+                }
+            }
+            catch (SqlException ex) when (ex.Number == 547)
+            {
+                ModelState.AddModelError(
+                    "SectionId",
+                    "The selected section is invalid or cannot be used.");
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/SectionItemAction", "POST",
+                    null, Request.UserHostAddress, "SaveSectionItemAsync");
+
+                ModelState.AddModelError(
+                    "", "Unable to save the section item. Please try again.");
+            }
+
+            TempData["SectionItemFormModel"] = model;
+
+            TempData["SectionItemFormErrors"] = ModelState
+                .Where(x => x.Value.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value.Errors.Select(e =>
+                        string.IsNullOrWhiteSpace(e.ErrorMessage)
+                            ? "The submitted value is invalid."
+                            : e.ErrorMessage).ToArray());
+
+            return RedirectToAction(
+                "SectionItemAction",
+                new
+                {
+                    id = model.Id == Guid.Empty ? (Guid?)null : model.Id,
+                    validation = true
+                });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteSectionItem(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "Invalid section item ID.";
+                    return RedirectToAction("SectionItems");
+                }
+
+                bool deleted = await _sectionItemService.DeleteSectionItemAsync(
+                    id, Request.UserHostAddress);
+
+                TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
+                    deleted
+                        ? "Section item deleted successfully."
+                        : "Section item not found.";
+            }
+            catch (SqlException ex) when (ex.Number == 547)
+            {
+                TempData["ErrorMessage"] =
+                    "This item has related records. Remove those references before deleting it.";
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/SectionItems", "DELETE",
+                    null, Request.UserHostAddress, "DeleteSectionItem");
+
+                TempData["ErrorMessage"] =
+                    "Unable to delete the section item. Please try again.";
+            }
+
+            return RedirectToAction("SectionItems");
+        }
+
+        private async Task LoadSectionsForItemAsync(Guid selectedSectionId)
+        {
+            var sections = await _sectionItemService.GetSectionsAsync(
+                Request.UserHostAddress);
+
+            ViewBag.Sections = new SelectList(
+                sections, "Id", "Title", selectedSectionId);
+        }
+
+
+        [HttpGet]
+        public async Task<JsonResult> GetSectionItemsContent(Guid sectionId)
+        {
+            try
+            {
+                if (sectionId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid section ID."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                // Confirm the section exists.
+                var section = await _sectionService.GetSectionByIdAsync(
+                    sectionId, Request.UserHostAddress);
+
+                if (section == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Section not found."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                var items = await _sectionItemService
+                    .GetSectionItemsBySectionIdAsync(
+                        sectionId, Request.UserHostAddress);
+
+                return Json(new
+                {
+                    success = true,
+                    data = items.Select(item => new
+                    {
+                        id = item.Id,
+                        sectionId = item.SectionId,
+                        title = item.Title,
+                        heading = item.Heading,
+                        subHeading = item.SubHeading,
+                        description = item.Description,
+                        value = item.Value,
+                        label = item.Label,
+                        linkUrl = item.LinkUrl,
+                        additionalData = item.AdditionalData,
+                        displayOrder = item.DisplayOrder,
+                        status = item.Status
+                    })
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(
+                    ex,
+                    Request.Url?.ToString(),
+                    nameof(GetSectionItemsContent),
+                    0,
+                    Request.UserHostAddress,
+                    null);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Unable to load section items."
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> SaveSectionItemContent(SectionItemVM model)
+        {
+            try
+            {
+                var ip = Request.UserHostAddress ?? "Unknown";
+
+                if (model.SectionId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid section."
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(model.Title))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Card title is required."
+                    });
+                }
+
+                if (model.DisplayOrder < 0)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Display order cannot be negative."
+                    });
+                }
+
+                bool isNew = model.Id == Guid.Empty;
+
+                if (isNew)
+                {
+                    model.Id = Guid.NewGuid();
+                }
+
+                var saved = await _sectionItemService
+                    .SaveSectionItemAsync(model, ip);
+
+                if (!saved)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "The card could not be saved."
+                    });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Card saved successfully.",
+                    id = model.Id
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while saving the card."
+                });
+            }
+        }
+
+        #endregion
+
+        #region Images CRUD
+
+        [HttpGet]
+        public async Task<ActionResult> Images()
+        {
+            try
+            {
+                var images = await _imageService.GetImagesAsync(
+                    Request.UserHostAddress);
+
+                return View(images);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/Images", "GET", 0,
+                    Request.UserHostAddress, "Images");
+
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ImageAction(
+            Guid? id, bool validation = false)
+        {
+            ImageVM model;
+
+            if (validation &&
+                TempData["ImageFormModel"] is ImageVM savedModel)
+            {
+                model = savedModel;
+
+                if (TempData["ImageFormErrors"]
+                    is Dictionary<string, string[]> errors)
+                {
+                    foreach (var item in errors)
+                    {
+                        foreach (var error in item.Value)
+                        {
+                            ModelState.AddModelError(item.Key, error);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                model = new ImageVM();
+
+                if (id.HasValue && id.Value != Guid.Empty)
+                {
+                    try
+                    {
+                        model = await _imageService.GetImageByIdAsync(
+                            id.Value, Request.UserHostAddress);
+
+                        if (model == null)
+                            return HttpNotFound();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logErrorService.LogError(
+                            ex, "Admin/ImageAction", "GET", 0,
+                            Request.UserHostAddress, "GetImageByIdAsync");
+
+                        return View("Error");
+                    }
+                }
+            }
+
+            await LoadImageDropdownsAsync(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ImageAction(ImageVM model)
+        {
+            bool hasSection = model.SectionId.HasValue &&
+                              model.SectionId.Value != Guid.Empty;
+
+            bool hasSectionItem = model.SectionItemId.HasValue &&
+                                  model.SectionItemId.Value != Guid.Empty;
+
+            if (hasSection == hasSectionItem)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Select either a section or a section item, but not both.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    bool saved = await _imageService.SaveImageAsync(
+                        model, Request.UserHostAddress);
+
+                    if (saved)
+                    {
+                        TempData["SuccessMessage"] = "Image saved successfully.";
+                        return RedirectToAction("Images");
+                    }
+
+                    ModelState.AddModelError(
+                        "", "No image record was saved. Please try again.");
+                }
+                catch (SqlException ex) when (ex.Number == 547)
+                {
+                    ModelState.AddModelError(
+                        "", "The selected section or section item is invalid.");
+                }
+                catch (Exception ex)
+                {
+                    _logErrorService.LogError(
+                        ex, "Admin/ImageAction", "POST", 0,
+                        Request.UserHostAddress, "SaveImageAsync");
+
+                    ModelState.AddModelError(
+                        "", "Unable to save the image. Please try again.");
+                }
+            }
+
+            TempData["ImageFormModel"] = model;
+
+            TempData["ImageFormErrors"] = ModelState
+                .Where(x => x.Value.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value.Errors.Select(e =>
+                        string.IsNullOrWhiteSpace(e.ErrorMessage)
+                            ? "The submitted value is invalid."
+                            : e.ErrorMessage).ToArray());
+
+            return RedirectToAction(
+                "ImageAction",
+                new
+                {
+                    id = model.Id == Guid.Empty ? (Guid?)null : model.Id,
+                    validation = true
+                });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteImage(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "Invalid image ID.";
+                    return RedirectToAction("Images");
+                }
+
+                // Retrieve the URL before deleting the database record.
+                var image = await _imageService.GetImageByIdAsync(
+                    id, Request.UserHostAddress);
+
+                if (image == null)
+                {
+                    TempData["ErrorMessage"] = "Image not found.";
+                    return RedirectToAction("Images");
+                }
+
+                bool deleted = await _imageService.DeleteImageAsync(
+                    id, Request.UserHostAddress);
+
+                if (deleted)
+                {
+                    TempData["SuccessMessage"] = "Image record deleted successfully.";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Image record could not be deleted.";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/Images", "DELETE", 0,
+                    Request.UserHostAddress, "DeleteImage");
+
+                TempData["ErrorMessage"] =
+                    "Unable to delete the image. Please try again.";
+            }
+
+            return RedirectToAction("Images");
+        }
+
+        private async Task LoadImageDropdownsAsync(ImageVM model)
+        {
+            string ip = Request.UserHostAddress;
+
+            var sections = await _imageService.GetSectionsAsync(ip);
+            var sectionItems = await _imageService.GetSectionItemsAsync(ip);
+
+            ViewBag.Sections = new SelectList(
+                sections, "Id", "Title", model.SectionId);
+
+            ViewBag.SectionItems = new SelectList(
+                sectionItems, "Id", "Title", model.SectionItemId);
+        }
+
+        #endregion
+
+        #region Upload Content Image
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> Upload_Content_Image(HttpPostedFileBase file)
+        {
+            try
+            {
+                if (file == null || file.ContentLength == 0)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Please select an image file."
+                    });
+                }
+
+                const int maxFileSize = 5 * 1024 * 1024;
+
+                if (file.ContentLength > maxFileSize)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Maximum image size is 5 MB."
+                    });
+                }
+
+                string extension = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+
+                string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+
+                if (string.IsNullOrWhiteSpace(extension) ||
+                    !allowedExtensions.Contains(extension))
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Only JPG, PNG, WebP, and GIF files are allowed."
+                    });
+                }
+
+                // Validate the file signature instead of trusting the extension alone.
+                byte[] signature = new byte[12];
+                int bytesRead = await file.InputStream.ReadAsync(
+                    signature, 0, signature.Length);
+
+                file.InputStream.Position = 0;
+
+                bool validSignature =
+                    (extension == ".jpg" || extension == ".jpeg")
+                        ? bytesRead >= 3 &&
+                          signature[0] == 0xFF &&
+                          signature[1] == 0xD8 &&
+                          signature[2] == 0xFF
+                    : extension == ".png"
+                        ? bytesRead >= 8 &&
+                          signature[0] == 0x89 &&
+                          signature[1] == 0x50 &&
+                          signature[2] == 0x4E &&
+                          signature[3] == 0x47 &&
+                          signature[4] == 0x0D &&
+                          signature[5] == 0x0A &&
+                          signature[6] == 0x1A &&
+                          signature[7] == 0x0A
+                    : extension == ".gif"
+                        ? bytesRead >= 6 &&
+                          System.Text.Encoding.ASCII.GetString(signature, 0, 6)
+                              .StartsWith("GIF8")
+                    : extension == ".webp"
+                        ? bytesRead >= 12 &&
+                          System.Text.Encoding.ASCII.GetString(signature, 0, 4) == "RIFF" &&
+                          System.Text.Encoding.ASCII.GetString(signature, 8, 4) == "WEBP"
+                    : false;
+
+                if (!validSignature)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "The file contents do not match a supported image format."
+                    });
+                }
+
+                string folderPath = HostingEnvironment.MapPath("~/Content/Uploads/");
+
+                if (string.IsNullOrWhiteSpace(folderPath))
+                {
+                    throw new InvalidOperationException(
+                        "Unable to resolve the image upload directory.");
+                }
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                // Generate a unique filename to prevent overwriting existing images.
+                string fileName = Guid.NewGuid().ToString("N") + extension;
+                string physicalPath = Path.Combine(folderPath, fileName);
+
+                await Task.Run(() => file.SaveAs(physicalPath));
+
+                string imageUrl = "~/Content/Uploads/" + fileName;
+
+                return Json(new
+                {
+                    Success = true,
+                    ImageUrl = imageUrl,
+                    Message = "Image uploaded successfully."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/Upload_Content_Image",
+                    "POST",
+                    0,
+                    Request.UserHostAddress,
+                    "Content Image Upload");
+
+                Response.StatusCode = 500;
+
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Unable to upload the image. Please try again."
+                });
+            }
+        }
+
+        #endregion
+
+        #region Buttons CRUD
+
+        [HttpGet]
+        public async Task<ActionResult> Buttons()
+        {
+            try
+            {
+                var buttons = await _buttonService.GetButtonsAsync(
+                    Request.UserHostAddress);
+
+                return View(buttons);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/Buttons", "GET", 0,
+                    Request.UserHostAddress, "Buttons");
+
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ButtonAction(
+            Guid? id, bool validation = false)
+        {
+            ButtonVM model;
+
+            if (validation &&
+                TempData["ButtonFormModel"] is ButtonVM savedModel)
+            {
+                model = savedModel;
+
+                if (TempData["ButtonFormErrors"]
+                    is Dictionary<string, string[]> errors)
+                {
+                    foreach (var item in errors)
+                    {
+                        foreach (var error in item.Value)
+                        {
+                            ModelState.AddModelError(item.Key, error);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                model = new ButtonVM();
+
+                if (id.HasValue && id.Value != Guid.Empty)
+                {
+                    try
+                    {
+                        model = await _buttonService.GetButtonByIdAsync(
+                            id.Value, Request.UserHostAddress);
+
+                        if (model == null)
+                            return HttpNotFound();
+                    }
+                    catch (Exception ex)
+                    {
+                        _logErrorService.LogError(
+                            ex, "Admin/ButtonAction", "GET", 0,
+                            Request.UserHostAddress, "GetButtonByIdAsync");
+
+                        return View("Error");
+                    }
+                }
+            }
+
+            await LoadButtonDropdownsAsync(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ButtonAction(ButtonVM model)
+        {
+            bool hasSection = model.SectionId.HasValue &&
+                              model.SectionId.Value != Guid.Empty;
+
+            bool hasSectionItem = model.SectionItemId.HasValue &&
+                                  model.SectionItemId.Value != Guid.Empty;
+
+            if (hasSection == hasSectionItem)
+            {
+                ModelState.AddModelError(
+                    "",
+                    "Select either a section or a section item, but not both.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    bool saved = await _buttonService.SaveButtonAsync(
+                        model, Request.UserHostAddress);
+
+                    if (saved)
+                    {
+                        TempData["SuccessMessage"] =
+                            "Button saved successfully.";
+
+                        return RedirectToAction("Buttons");
+                    }
+
+                    ModelState.AddModelError(
+                        "", "No button was saved. Please try again.");
+                }
+                catch (SqlException ex) when (ex.Number == 547)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "The selected section or section item is invalid.");
+                }
+                catch (ArgumentException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    _logErrorService.LogError(
+                        ex, "Admin/ButtonAction", "POST", 0,
+                        Request.UserHostAddress, "SaveButtonAsync");
+
+                    ModelState.AddModelError(
+                        "", "Unable to save the button. Please try again.");
+                }
+            }
+
+            TempData["ButtonFormModel"] = model;
+
+            TempData["ButtonFormErrors"] = ModelState
+                .Where(x => x.Value.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value.Errors.Select(e =>
+                        string.IsNullOrWhiteSpace(e.ErrorMessage)
+                            ? "The submitted value is invalid."
+                            : e.ErrorMessage).ToArray());
+
+            return RedirectToAction(
+                "ButtonAction",
+                new
+                {
+                    id = model.Id == Guid.Empty ? (Guid?)null : model.Id,
+                    validation = true
+                });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteButton(Guid id)
+        {
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "Invalid button ID.";
+                    return RedirectToAction("Buttons");
+                }
+
+                bool deleted = await _buttonService.DeleteButtonAsync(
+                    id, Request.UserHostAddress);
+
+                TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
+                    deleted
+                        ? "Button deleted successfully."
+                        : "Button not found.";
+            }
+            catch (SqlException ex) when (ex.Number == 547)
+            {
+                TempData["ErrorMessage"] =
+                    "The button cannot be deleted because it is referenced by another record.";
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/Buttons", "DELETE", 0,
+                    Request.UserHostAddress, "DeleteButton");
+
+                TempData["ErrorMessage"] =
+                    "Unable to delete the button. Please try again.";
+            }
+
+            return RedirectToAction("Buttons");
+        }
+
+        private async Task LoadButtonDropdownsAsync(ButtonVM model)
+        {
+            string ip = Request.UserHostAddress;
+
+            var sections = await _buttonService.GetSectionsAsync(ip);
+            var sectionItems = await _buttonService.GetSectionItemsAsync(ip);
+
+            ViewBag.Sections = new SelectList(
+                sections, "Id", "Title", model.SectionId);
+
+            ViewBag.SectionItems = new SelectList(
+                sectionItems, "Id", "Title", model.SectionItemId);
+        }
+
+        #endregion
+
+
+        #region PageSections CRUD
+
+        [HttpGet]
+        public async Task<ActionResult> PageSections()
+        {
+            try
+            {
+                var pageSections = await _pageSectionService
+                    .GetPageSectionsAsync(Request.UserHostAddress);
+
+                return View(pageSections);
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(
+                    ex, Request.Url?.ToString(), nameof(PageSections),
+                    0, Request.UserHostAddress, null);
+
+                TempData["ErrorMessage"] =
+                    "Unable to load page section assignments.";
+
+                return View(new List<PageSectionVM>());
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> PageSectionAction(
+            Guid? id, bool validation = false)
+        {
+            PageSectionVM model;
+
+            if (validation)
+            {
+                model = TempData["PageSectionFormModel"]
+                    as PageSectionVM ?? new PageSectionVM();
+
+                var errors = TempData["PageSectionFormErrors"]
+                    as Dictionary<string, string[]>;
+
+                if (errors != null)
+                {
+                    foreach (var item in errors)
+                    {
+                        foreach (var error in item.Value)
+                        {
+                            ModelState.AddModelError(item.Key, error);
+                        }
+                    }
+                }
+            }
+            else if (id.HasValue && id.Value != Guid.Empty)
+            {
+                model = await _pageSectionService
+                    .GetPageSectionByIdAsync(
+                        id.Value, Request.UserHostAddress);
+
+                if (model == null)
+                {
+                    TempData["ErrorMessage"] =
+                        "Page section assignment not found.";
+
+                    return RedirectToAction("PageSections");
+                }
+            }
+            else
+            {
+                model = new PageSectionVM
+                {
+                    Status = true,
+                    DisplayOrder = 0
+                };
+            }
+
+            await LoadPageSectionDropdownsAsync(model);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> PageSectionAction(
+            PageSectionVM model)
+        {
+            if (model.PageId == Guid.Empty)
+            {
+                ModelState.AddModelError(
+                    nameof(model.PageId), "Please select a page.");
+            }
+
+            if (model.SectionId == Guid.Empty)
+            {
+                ModelState.AddModelError(
+                    nameof(model.SectionId), "Please select a section.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    bool saved = await _pageSectionService
+                        .SavePageSectionAsync(
+                            model, Request.UserHostAddress);
+
+                    if (saved)
+                    {
+                        TempData["SuccessMessage"] =
+                            "Page section assignment saved successfully.";
+
+                        return RedirectToAction("PageSections");
+                    }
+
+                    ModelState.AddModelError(
+                        "", "Unable to save the page section assignment.");
+                }
+                catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "This section is already assigned to the selected page.");
+                }
+                catch (SqlException ex) when (ex.Number == 547)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "The selected page or section no longer exists.");
+                }
+                catch (ArgumentException ex)
+                {
+                    ModelState.AddModelError("", ex.Message);
+                }
+                catch (Exception ex)
+                {
+                     _logErrorService.LogError(
+                        ex, Request.Url?.ToString(),
+                        nameof(PageSectionAction), 0,
+                        Request.UserHostAddress, null);
+
+                    ModelState.AddModelError(
+                        "", "An unexpected error occurred while saving.");
+                }
+            }
+
+            TempData["PageSectionFormModel"] = model;
+
+            TempData["PageSectionFormErrors"] = ModelState
+                .Where(x => x.Value.Errors.Count > 0)
+                .ToDictionary(
+                    x => x.Key,
+                    x => x.Value.Errors
+                        .Select(e => !string.IsNullOrWhiteSpace(e.ErrorMessage)
+                            ? e.ErrorMessage
+                            : "The supplied value is invalid.")
+                        .ToArray());
+
+            return RedirectToAction(
+                "PageSectionAction",
+                new
+                {
+                    id = model.Id == Guid.Empty
+                        ? (Guid?)null
+                        : model.Id,
+                    validation = true
+                });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeletePageSection(Guid id)
+        {
+            try
+            {
+                bool deleted = await _pageSectionService
+                    .DeletePageSectionAsync(
+                        id, Request.UserHostAddress);
+
+                TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
+                    deleted
+                        ? "Page section assignment removed successfully."
+                        : "Page section assignment was not found.";
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(
+                    ex, Request.Url?.ToString(),
+                    nameof(DeletePageSection), 0,
+                    Request.UserHostAddress, null);
+
+                TempData["ErrorMessage"] =
+                    "Unable to remove the page section assignment.";
+            }
+
+            return RedirectToAction("PageSections");
+        }
+
+        private async Task LoadPageSectionDropdownsAsync(
+            PageSectionVM model)
+        {
+            string ip = Request.UserHostAddress;
+
+            var pages = await _pageSectionService.GetPagesAsync(ip);
+            var sections = await _pageSectionService.GetSectionsAsync(ip);
+
+            ViewBag.Pages = new SelectList(
+                pages, "Id", "Title", model.PageId);
+
+            ViewBag.Sections = new SelectList(
+                sections, "Id", "Title", model.SectionId);
+        }
+
+        #endregion
+
+
+        #region Website Info
+        public async Task<ActionResult> WebInfos()
+        {
+            var ip = Request.UserHostAddress.ToString();
+            var webInfos = await _webService.GetWebInfoAsync(ip);
+            return View(webInfos);
+        }
+        public async Task<ActionResult> WebInfoAction(int id = 0)
+        {
+            var data = new Key();
+            var ip = Request.UserHostAddress.ToString();
+            TempData["KeyId"] = id;
+            if (id  > 0)
+            {
+                data = await _webService.GetWebInfoByIdAsync(id, ip);
+                if (data.Type == "BrandLogo")
+                {
+                    TempData["OldImage"] = data.Name;
+                }
+            }
+            return PartialView(data);
+        }
+        [ValidateInput(false)]
+        [HttpPost]
+        public async Task<ActionResult> WebInfoAction(Key Key, HttpPostedFileBase File)
+        {
+            var OldImage = TempData["OldImage"] != null ? TempData["OldImage"].ToString() : "";
+            var result = new ResponseVM();
+            var UserHostAdd = Request.UserHostAddress.ToString();
+            //int Id = Convert.ToInt32(TempData["KeyId"]);
+            //if (Id > 0)
+            //{
+            //    Key.Id = Id;
+            //}
+            if (!ModelState.IsValid)
+            {
+                TempData["KeyId"] = Key.Id;
+                result.Success = false;
+                result.Message = "Please fill all required fields.";
+                return Json(new { Result = result });
+            }
+            result = await _webService.UpInsertWebInfoAsync(Key, UserHostAdd);
+            if (!result.Success)
+            {
+                TempData["KeyId"] = Key.Id;
+                return Json(new { Result = result });
+            }
+            if (File != null && result.Success)
+            {
+                await Upload_Logo_File(File, OldImage);
+            }
+            return Json(new { Result = result });
+        }
+        #endregion
+
+        #region Upload Logo Image
+        [HttpPost]
+        public async Task<JsonResult> Upload_Logo_File(HttpPostedFileBase file, string oldImage)
+        {
+            JsonResult result = new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet
+            };
+            try
+            {
+                var basePath = HostingEnvironment.MapPath("~/Content/Logo/");
+                var clientFolderPath = Path.Combine(basePath);
+                if (!Directory.Exists(clientFolderPath))
+                {
+                    Directory.CreateDirectory(clientFolderPath);
+                }
+                // Delete the old file if it exists
+                if (!string.IsNullOrEmpty(oldImage))
+                {
+                    string virtualPath = oldImage.StartsWith("~/") ? oldImage : $"~/Content/Logo/{oldImage}";
+                    var oldFilePath = HostingEnvironment.MapPath(virtualPath);
+                    try
+                    {
+                        if (System.IO.File.Exists(oldFilePath))
+                        {
+                            System.IO.File.Delete(oldFilePath);
+                        }
+                    }
+                    catch (Exception exDel)
+                    {
+                        _logErrorService.LogError(exDel, "Unable to delete old file: " + oldFilePath, "DELETE", 0, Request.UserHostAddress, "Logo Upload");
+                    }
+                }
+                if (file != null)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var path = Path.Combine(clientFolderPath, fileName);
+                    await Task.Run(() => file.SaveAs(path));
+                }
+                result.Data = new { Success = true, Message = "Images have been saved on the server successfully." };
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, "Admin/Upload_Logo_File", "POST", 0, Request.UserHostAddress, "Logo Upload");
+                result.Data = new { Success = false, Message = "Oops! The images could not be saved on the server. " + ex.Message };
+            }
+            return result;
+        }
+        #endregion
+    }
+}
+
+

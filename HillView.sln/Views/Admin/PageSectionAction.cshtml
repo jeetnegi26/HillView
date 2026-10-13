@@ -1,0 +1,142 @@
+﻿
+@model DTOs.PageSectionVM
+
+@{
+    ViewBag.Title = Model.Id == Guid.Empty
+        ? "Assign Section to Page"
+        : "Edit Page Section";
+
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>@ViewBag.Title</h2>
+
+        <a href="@Url.Action("PageSections", "Admin")"
+           class="btn btn-secondary">
+            Back to Assignments
+        </a>
+    </div>
+
+    @using (Html.BeginForm(
+        "PageSectionAction",
+        "Admin",
+        FormMethod.Post,
+        new { id = "pageSectionForm" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.Id)
+        @Html.HiddenFor(m => m.CreatedAt)
+        @Html.HiddenFor(m => m.UpdatedAt)
+
+        <div class="card">
+            <div class="card-body">
+
+                @Html.ValidationSummary(
+                    false, "", new { @class = "text-danger mb-3" })
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.PageId)
+
+                    @Html.DropDownListFor(
+                        m => m.PageId,
+                        ViewBag.Pages as SelectList,
+                        "-- Select Page --",
+                        new { @class = "form-control", id = "PageId" })
+
+                    @Html.ValidationMessageFor(
+                        m => m.PageId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.SectionId)
+
+                    @Html.DropDownListFor(
+                        m => m.SectionId,
+                        ViewBag.Sections as SelectList,
+                        "-- Select Section --",
+                        new { @class = "form-control", id = "SectionId" })
+
+                    @Html.ValidationMessageFor(
+                        m => m.SectionId, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.DisplayOrder)
+
+                    @Html.TextBoxFor(
+                        m => m.DisplayOrder,
+                        new
+                        {
+                            @class = "form-control",
+                            type = "number",
+                            min = "0"
+                        })
+
+                    @Html.ValidationMessageFor(
+                        m => m.DisplayOrder, "", new { @class = "text-danger" })
+
+                    <small class="form-text text-muted">
+                        Sections with lower display order appear first.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-check">
+                        @Html.CheckBoxFor(
+                            m => m.Status,
+                            new { @class = "form-check-input" })
+
+                        @Html.LabelFor(
+                            m => m.Status,
+                            new { @class = "form-check-label" })
+                    </div>
+                </div>
+
+                <hr />
+
+                <button type="submit" id="saveButton"
+                        class="btn btn-primary">
+                    Save Assignment
+                </button>
+
+                <a href="@Url.Action("PageSections", "Admin")"
+                   class="btn btn-secondary">
+                    Cancel
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#pageSectionForm").on("submit", function (e) {
+                var pageId = $("#PageId").val();
+                var sectionId = $("#SectionId").val();
+
+                if (!pageId || pageId ===
+                    "00000000-0000-0000-0000-000000000000") {
+                    alert("Please select a page.");
+                    e.preventDefault();
+                    return;
+                }
+
+                if (!sectionId || sectionId ===
+                    "00000000-0000-0000-0000-000000000000") {
+                    alert("Please select a section.");
+                    e.preventDefault();
+                    return;
+                }
+
+                if ($(this).valid()) {
+                    $("#saveButton")
+                        .prop("disabled", true)
+                        .text("Saving...");
+                }
+            });
+        });
+    </script>
+}

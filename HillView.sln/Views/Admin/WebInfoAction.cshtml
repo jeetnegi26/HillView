@@ -1,0 +1,347 @@
+﻿@model DTOs.Key
+@{
+    Layout = null;
+}
+<style>
+    .img-pro-box {
+        width: 17%;
+        margin: 1rem;
+        border-radius: 10px;
+    }
+
+    #imageUpload {
+        padding-bottom: 0 !important;
+        padding: 10px !important;
+    }
+</style>
+
+<div class="adminpage-head">
+    <div class="card shadow mb-4">
+        <div class="form-horizontal">
+            <div class="card-header d-flex flex-row align-items-center justify-content-between">
+                <div>
+                    <h4 class="m-0 head-title">Add Information</h4>
+                </div>
+                <div>
+                    <p class="m-0">
+                        <a id="key-close" style="cursor:pointer;" class="text-danger">Back To List</a>
+                    </p>
+                </div>
+            </div>
+            <div class="card-body">
+                <form id="key-create">
+                    <div class="row">
+                        <div class="form-group col-md-4">
+                            <label class="form-label">Info Type</label>
+                            <div class="">
+                                <input class="d-none" name="Id" value="@Model.Id" />
+                                @if (Model != null && Model.Id > 0)
+                                {
+                                    <input class="d-none" name="Type" value="@Model.Type" />
+                                }
+                                <select id="key-type-dd" class="form-control" name="Type" style="-webkit-appearance: listbox !important" @(Model.Id > 0 ? "disabled" : "")>
+                                    <option value="" disabled selected>Select Info Type</option>
+                                    @*<option value="BrandName">BrandName</option>*@
+                                    <option value="BrandName" @(Model.Type == "BrandName" ? "selected" : "")>BrandName</option>
+                                    <option value="BrandInfo" @(Model.Type == "BrandInfo" ? "selected" : "")>BrandInfo</option>
+                                    <option value="BrandLogo" @(Model.Type == "BrandLogo" ? "selected" : "")>BrandLogo </option>
+                                    <option value="SocialMedia" @(Model.Type == "SocialMedia" ? "selected" : "")>SocialMedia</option>
+                                    <option value="DefaultKeys" @(Model.Type == "DefaultKeys" ? "selected" : "")>DefaultKeys</option>
+                                    @*<option value="BrandLogo">BrandLogo</option>*@
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-4 infoValue">
+                            <label class="form-label">Name</label><br />
+                            <input class="form-control" name="Name" id="Name" value="@Model.Name" placeholder="Address" required />
+                        </div>
+                        <div class="form-group col-md-4 infoDesc">
+                            <label class="form-label">Detail</label><br />
+                            <input class="form-control" name="Description" id="Description" value="@Model.Description" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-4 infoDesc">
+                            <label class="form-label">SVG Value</label><br />
+                            <input class="form-control" name="SVG" id="SVG" value="@Model.SVG" placeholder="" />
+                        </div>
+                        <div class="form-group col-md-2 infoEmpty" style="display:none">
+
+                        </div>
+                        <div class="form-group col-md-6 infoImage" style="display:none">
+                            <label class="form-label">Brand Logo</label><br />
+                            <div class="input-group" id="fileUpload-container">
+                                <div class="custom-file">
+                                    @*<input type="text" class="d-none" name="ImageOne" id="ImageOne" value="" />*@
+                                    <input type="file" class="custom-file-input" name="ImageOne" id="inputGroupFile04" aria-describedby="inputGroupFile04" accept="image/*">
+                                    <label class="custom-file-label" for="inputGroupFile04">@(!string.IsNullOrEmpty(Model.Name) ? Model.Name : "Choose file" )</label>
+                                </div>
+                            </div>
+                            @*<div class="img-container col-12">
+                                    <input id="imageUpload" type="file" name="ImageOne" accept="image/*" class="form-control-file" required>
+                                    <br />
+                                    <img id="PlaceImage" alt="" src="" style="width: 20%; margin-top: 5px;" />
+                                </div>*@
+                        </div>
+                    </div>
+                    <div class="d-flex mt-3">
+                        <div class="form-group">
+                            <div class="col-md-offset-2 col-md-10">
+                                <button id="Keycreate" class="btn btn-primary px-4 py-2" type="button">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+(function () {
+    // Initialize the partial view
+    let id = '@Model.Id';
+    let type = '@Model.Type';
+
+    if (id !== "" && id !== "0" && type === "BrandLogo") {
+        $(".infoDesc").hide();
+        $(".infoValue").hide();
+        $(".infoEmpty").show();
+        $(".infoImage").show();
+    } else {
+        $(".infoValue").show();
+        $(".infoDesc").show();
+        $(".infoImage").hide();
+        $(".infoEmpty").hide();
+    }
+
+    // Change key type
+    $("#key-add-container")
+        .off("change", "#key-type-dd")
+        .on("change", "#key-type-dd", function () {
+            if ($(this).val() === "BrandLogo") {
+                $(".infoDesc").hide();
+                $(".infoValue").hide();
+                $(".infoEmpty").show();
+                $(".infoImage").show();
+            } else {
+                $(".infoValue").show();
+                $(".infoDesc").show();
+                $(".infoImage").hide();
+                $(".infoEmpty").hide();
+            }
+        });
+
+    // Close partial view
+    $("#key-add-container")
+        .off("click", "#key-close")
+        .on("click", "#key-close", function () {
+            $("#key-add-container").hide();
+        });
+
+    // File upload
+    $("#key-add-container")
+        .off("change", "#inputGroupFile04")
+        .on("change", "#inputGroupFile04", function (e) {
+            const files = e.target.files;
+
+            if (files.length > 0) {
+                const file = files[0];
+
+                const customFileLabel =
+                    e.target.parentElement.querySelector(".custom-file-label");
+
+                if (customFileLabel) {
+                    customFileLabel.innerText = file.name;
+                }
+
+                $("#Name").val(file.name);
+            }
+        });
+
+    // Form submission
+$("#key-add-container")
+        .off("click.webInfo", "#Keycreate")
+        .on("click.webInfo", "#Keycreate", function (e) {
+            e.preventDefault();
+
+            const $saveButton = $(this);
+            const originalText = "Save";
+
+            // Prevent duplicate submissions
+            if ($saveButton.prop("disabled")) {
+                return;
+            }
+
+            const form = document.getElementById("key-create");
+
+            if (!form) {
+                return;
+            }
+
+            // Validate before changing button state
+            if (!$(form).valid()) {
+                return;
+            }
+
+            const formData = new FormData(form);
+            const fileInput = form.querySelector("input[type='file']");
+
+            // Add selected file(s)
+            if (fileInput && fileInput.files.length > 0) {
+                formData.delete("File");
+
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    formData.append("File", fileInput.files[i]);
+                }
+            }
+
+            // Disable button and show loading text
+            $saveButton.prop("disabled", true).text("Loading...");
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("WebInfoAction", "Admin")',
+                data: formData,
+                processData: false,
+                contentType: false
+            })
+            .done(function (response) {
+                if (response.Result.Success === true) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Action on web info, successfully completed.",
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+
+                    setTimeout(function () {
+                        window.location.reload();
+                    }, 1550);
+                } else {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: response.Result.Message
+                    });
+                }
+            })
+            .fail(function () {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!"
+                });
+            })
+            .always(function () {
+                // Restore button after request finishes
+                $saveButton.prop("disabled", false).text(originalText);
+            });
+        });
+
+
+            @*$("#key-close").click(function () {
+        $("#key-add-container").hide();
+    });
+    $('#key-create').validate({
+        rules: {
+            Name: {
+                required: true,
+            },
+        },
+        messages: {
+            Name: {
+                required: '* Info Name is required',
+            },
+        }
+    });
+    var fileUpload = document.getElementById("fileUpload-container");
+    var fileInput = fileUpload.querySelector("input[type='file']");
+    $("#Keycreate").click(function (e) {
+        const form = document.getElementById('key-create');
+        const formData = new FormData(form);
+        if (fileInput) {
+            if (fileInput.files.length > 0) {
+                for (let i = 0; i < fileInput.files.length; i++) {
+                    formData.append('File', fileInput.files[i]);  // Append each file
+                }
+            }
+        }
+         $.ajax({
+            type: 'Post',
+            url: '@Url.Action("WebInfoAction", "Admin")',
+             data: formData,
+             processData: false,
+             contentType: false,
+         })
+             .done(function (response) {
+                 if (response.Result.Success == true) {
+                     Swal.fire({
+                         position: 'top-end',
+                         icon: 'success',
+                         title: 'Action on web info, successfully completed.',
+                         showConfirmButton: false,
+                         timer: 1500
+                     })
+                     setTimeout(function () {// wait for 5 secs(2)
+                         window.location.reload(); // then reload the page.(3)
+                     }, 1550);
+                 }
+                 else {
+                     Swal.fire({
+                         icon: 'error',
+                         title: 'Oops...',
+                         text: response.Result.Message,
+                     });
+                 }
+                })
+                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: 'Something went wrong!',
+                    });
+         });
+     });*@
+
+    //File upload
+    const uploadedFile = [];
+    document.getElementById('inputGroupFile04').addEventListener('change', function (e) {
+        let fileName = document.getElementById('inputGroupFile04').files[0].name;
+        let customFileLabel = e.target.parentElement.querySelector('.custom-file-label');
+        // Update the label text if it exists
+        if (customFileLabel) {
+            customFileLabel.innerText = fileName;
+        }
+        const files = e.target.files;
+        if (uploadedFile.length > 0) {
+            const fileId = uploadedFile[0].fileId;
+            const fileIndex = uploadedFile.findIndex(item => item.fileId === fileId);
+            if (fileIndex !== -1) {
+                uploadedFile.splice(fileIndex, 1);
+            } else {
+                console.log(`File with fileId '${fileId}' not found in uploadedFile.`);
+            }
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileId = `file${i}`;
+                uploadedFile.push({ file, fileId });
+                $("#Name").val(file.name);
+            }
+        }
+        else {
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileId = `file${i}`;
+                uploadedFile.push({ file, fileId });
+                $("#Name").val(file.name);
+            }
+        }
+    });
+})();
+
+
+</script>
+
+
