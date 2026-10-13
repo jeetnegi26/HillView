@@ -718,6 +718,7 @@
     <Content Include="Content\icons\tabler-icons\tabler-icons.css" />
     <Content Include="Content\logo\logo.svg" />
     <Content Include="Content\profile\user-1.jpg" />
+    <Content Include="db.txt" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Content\ckeditor\CHANGES.md" />
