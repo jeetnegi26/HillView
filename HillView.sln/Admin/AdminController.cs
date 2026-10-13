@@ -28,11 +28,11 @@ namespace HillView.sln.Admin
         private readonly SectionItemService _sectionItemService;
         private readonly ButtonService _buttonService;
         private readonly PageSectionService _pageSectionService;
-
+        private readonly AdminMenuService _adminMenuService;
 
         public AdminController(WebInfoService webService, LogErrorService logErrorService, ImageService imageService, WebInfoService webInfoService, 
             PageService pageService, SectionTypeService sectionTypeService, SectionService sectionService, SectionItemService sectionItemService,
-            ButtonService buttonService, PageSectionService pageSectionService)
+            ButtonService buttonService, PageSectionService pageSectionService, AdminMenuService adminMenuService)
         {
             _webService = webService;
             _logErrorService = logErrorService;
@@ -43,6 +43,7 @@ namespace HillView.sln.Admin
             _sectionService = sectionService;
             _sectionItemService = sectionItemService;
             _buttonService = buttonService;
+            _adminMenuService = adminMenuService;
             _pageSectionService = pageSectionService;
         }
 
@@ -70,6 +71,36 @@ namespace HillView.sln.Admin
                 logo = logo
             }, JsonRequestBehavior.AllowGet);
         }
+
+
+        [ChildActionOnly]
+        public ActionResult AdminSidebar()
+        {
+            try
+            {
+                var ip = Request.UserHostAddress;
+
+                var sidebar = _adminMenuService
+                    .GetSidebarMenu(ip);
+
+                return PartialView(
+                    "~/Views/Shared/Admin/_AdminSidebar.cshtml",
+                    sidebar);
+            }
+            catch (Exception ex)
+            {
+                var ip = Request.UserHostAddress;
+
+                _logErrorService.LogError(
+                    ex, "Admin/Sidebar", "GET", 0, ip, "AdminSidebar");
+
+                return PartialView(
+                    "~/Views/Shared/Admin/_AdminSidebar.cshtml",
+                    new AdminSidebarVM());
+            }
+        }
+
+
 
         #endregion
 
@@ -853,10 +884,10 @@ namespace HillView.sln.Admin
             {
                 if (ModelState.IsValid)
                 {
-                    bool saved = await _sectionItemService.SaveSectionItemAsync(
-                        model, Request.UserHostAddress);
+                    Guid? savedId = await _sectionItemService
+                        .SaveSectionItemAsync(model, Request.UserHostAddress);
 
-                    if (saved)
+                    if (savedId.HasValue)
                     {
                         TempData["SuccessMessage"] =
                             "Section item saved successfully.";
@@ -951,7 +982,6 @@ namespace HillView.sln.Admin
                 sections, "Id", "Title", selectedSectionId);
         }
 
-
         [HttpGet]
         public async Task<JsonResult> GetSectionItemsContent(Guid sectionId)
         {
@@ -1023,6 +1053,51 @@ namespace HillView.sln.Admin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<JsonResult> DeleteSectionItemContent(Guid id)
+        {
+            try
+            {
+                var ip = Request.UserHostAddress ?? "Unknown";
+
+                if (id == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid card ID."
+                    });
+                }
+
+                bool deleted = await _sectionItemService
+                    .DeleteSectionItemAsync(id, ip);
+
+                if (!deleted)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Card not found or already deleted."
+                    });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Card deleted successfully."
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while deleting the card."
+                });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveSectionItemContent(SectionItemVM model)
         {
             try
@@ -1056,17 +1131,10 @@ namespace HillView.sln.Admin
                     });
                 }
 
-                bool isNew = model.Id == Guid.Empty;
-
-                if (isNew)
-                {
-                    model.Id = Guid.NewGuid();
-                }
-
-                var saved = await _sectionItemService
+                Guid? savedId = await _sectionItemService
                     .SaveSectionItemAsync(model, ip);
 
-                if (!saved)
+                if (!savedId.HasValue)
                 {
                     return Json(new
                     {
@@ -1079,7 +1147,7 @@ namespace HillView.sln.Admin
                 {
                     success = true,
                     message = "Card saved successfully.",
-                    id = model.Id
+                    id = savedId.Value
                 });
             }
             catch (Exception)
@@ -1091,6 +1159,937 @@ namespace HillView.sln.Admin
                 });
             }
         }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSectionItemImages(Guid sectionItemId)
+        {
+            try
+            {
+                var ip = Request.UserHostAddress ?? "Unknown";
+
+                if (sectionItemId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid card ID."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                var images = await _imageService
+                    .GetImagesBySectionItemIdAsync(sectionItemId, ip);
+
+                return Json(new
+                {
+                    success = true,
+                    images = images.Select(image => new
+                    {
+                        id = image.Id,
+                        sectionItemId = image.SectionItemId,
+                        imageUrl = image.ImageUrl,
+                        altText = image.AltText,
+                        caption = image.Caption,
+                        imageType = image.ImageType,
+                        displayOrder = image.DisplayOrder,
+                        status = image.Status
+                    })
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while loading card images."
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> UpdateSectionItemImage(Guid id, string altText, string caption, int displayOrder, bool status)
+        {
+            try
+            {
+                var ip = Request.UserHostAddress ?? "Unknown";
+
+                if (id == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid image ID."
+                    });
+                }
+
+                var image = await _imageService.GetImageByIdAsync(id, ip);
+
+                if (image == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Image not found."
+                    });
+                }
+
+                if (displayOrder < 0)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Display order cannot be negative."
+                    });
+                }
+
+                image.AltText = altText;
+                image.Caption = caption;
+                image.DisplayOrder = displayOrder;
+                image.Status = status;
+
+                bool saved = await _imageService.SaveImageAsync(image, ip);
+
+                return Json(new
+                {
+                    success = saved,
+                    message = saved
+                        ? "Image details updated successfully."
+                        : "Unable to update image details."
+                });
+            }
+            catch (Exception)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while updating the image."
+                });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> DeleteSectionItemImage(Guid id)
+        {
+            try
+            {
+                var ip = Request.UserHostAddress ?? "Unknown";
+
+                if (id == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid image ID."
+                    });
+                }
+
+                var image = await _imageService.GetImageByIdAsync(id, ip);
+
+                if (image == null)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Image not found."
+                    });
+                }
+
+                // Resolve the physical file path.
+                string imageUrl = image.ImageUrl ?? string.Empty;
+                string fileName = Path.GetFileName(imageUrl);
+
+                if (string.IsNullOrWhiteSpace(fileName) ||
+                    fileName != imageUrl)
+                {
+                    // Support older records containing a relative upload path.
+                    fileName = Path.GetFileName(imageUrl.Replace('\\', '/'));
+                }
+
+                string folderPath = HostingEnvironment.MapPath("~/Content/Uploads/");
+
+                if (string.IsNullOrWhiteSpace(folderPath))
+                {
+                    throw new InvalidOperationException(
+                        "Unable to resolve the image upload directory.");
+                }
+
+                string physicalPath = Path.Combine(folderPath, fileName);
+
+                // Delete the database record first.
+                bool deleted = await _imageService.DeleteImageAsync(id, ip);
+
+                if (!deleted)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Unable to delete the image record."
+                    });
+                }
+
+
+                bool fileCleanupFailed = false;
+
+                try
+                {
+                    bool isReferenced = await _imageService.IsImageUrlReferencedAsync(
+                        image.ImageUrl,
+                        id,
+                        ip);
+
+                    if (!isReferenced && System.IO.File.Exists(physicalPath))
+                    {
+                        System.IO.File.Delete(physicalPath);
+                    }
+                }
+                catch (Exception fileEx)
+                {
+                    fileCleanupFailed = true;
+
+                    _logErrorService.LogError(
+                        fileEx,
+                        "Admin/DeleteSectionItemImage/FileCleanup",
+                        "POST",
+                        0,
+                        ip,
+                        "Card image record deleted, but physical-file cleanup failed.");
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    fileCleanupFailed = fileCleanupFailed,
+                    message = fileCleanupFailed
+                        ? "Image record deleted, but its physical file could not be removed. Please check the server logs."
+                        : "Image deleted successfully."
+                });
+
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/DeleteSectionItemImage",
+                    "POST",
+                    0,
+                    Request.UserHostAddress,
+                    "Delete Section Item Image");
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while deleting the image."
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> GetSectionImages(Guid sectionId)
+        {
+            try
+            {
+                var ip = Request.UserHostAddress ?? "Unknown";
+
+                if (sectionId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid section ID."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                var images = await _imageService
+                    .GetImagesBySectionIdAsync(sectionId, ip);
+
+                return Json(new
+                {
+                    success = true,
+                    images = images.Select(image => new
+                    {
+                        id = image.Id,
+                        sectionId = image.SectionId,
+                        imageUrl = image.ImageUrl,
+                        altText = image.AltText,
+                        caption = image.Caption,
+                        imageType = image.ImageType,
+                        displayOrder = image.DisplayOrder,
+                        status = image.Status
+                    })
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/GetSectionImages",
+                    "GET",
+                    0,
+                    Request.UserHostAddress,
+                    "Get Section Images");
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while loading section images."
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> UpdateSectionImage(
+            Guid id,
+            Guid sectionId,
+            string altText,
+            string caption,
+            int displayOrder,
+            bool status)
+        {
+            try
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                if (id == Guid.Empty || sectionId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid image or section ID."
+                    });
+                }
+
+                if (displayOrder < 0)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Display order cannot be negative."
+                    });
+                }
+
+                var image = await _imageService.GetImageByIdAsync(id, ip);
+
+                // Ensure this image belongs to the specified section,
+                // not to a section item/card.
+                if (image == null ||
+                    image.SectionId != sectionId ||
+                    image.SectionItemId.HasValue)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Section image not found."
+                    });
+                }
+
+                image.AltText = altText;
+                image.Caption = caption;
+                image.DisplayOrder = displayOrder;
+                image.Status = status;
+
+                bool saved = await _imageService.SaveImageAsync(image, ip);
+
+                return Json(new
+                {
+                    success = saved,
+                    message = saved
+                        ? "Section image updated successfully."
+                        : "Unable to update section image."
+                });
+            }
+            catch (Exception ex)
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/UpdateSectionImage",
+                    "POST",
+                    0,
+                    ip,
+                    "Update Section Image");
+
+                Response.StatusCode = 500;
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while updating the section image."
+                });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> DeleteSectionImage(Guid id, Guid sectionId)
+        {
+            try
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                if (id == Guid.Empty || sectionId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid image or section ID."
+                    });
+                }
+
+                var image = await _imageService.GetImageByIdAsync(id, ip);
+
+                // Ensure this is an image belonging directly to the section.
+                if (image == null ||
+                    image.SectionId != sectionId ||
+                    image.SectionItemId.HasValue)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Section image not found."
+                    });
+                }
+
+                // Support filename-only and legacy relative-path records.
+                string storedUrl = (image.ImageUrl ?? "").Replace('\\', '/');
+                string fileName = System.IO.Path.GetFileName(storedUrl);
+
+                bool isLegacyUploadPath =
+                    storedUrl.StartsWith(
+                        "~/Content/Uploads/",
+                        StringComparison.OrdinalIgnoreCase) ||
+                    storedUrl.StartsWith(
+                        "Content/Uploads/",
+                        StringComparison.OrdinalIgnoreCase);
+
+                bool isFilenameOnly =
+                    !string.IsNullOrWhiteSpace(storedUrl) &&
+                    storedUrl == fileName;
+
+                if (string.IsNullOrWhiteSpace(fileName) ||
+                    (!isFilenameOnly && !isLegacyUploadPath))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "The stored image path is invalid."
+                    });
+                }
+
+                string uploadFolder = Server.MapPath("~/Content/Uploads/");
+                string fullUploadFolder =
+                    System.IO.Path.GetFullPath(uploadFolder);
+
+                string physicalPath = System.IO.Path.GetFullPath(
+                    System.IO.Path.Combine(fullUploadFolder, fileName));
+
+                // Prevent deleting files outside the uploads directory.
+                string allowedPrefix =
+                    fullUploadFolder.TrimEnd(
+                        System.IO.Path.DirectorySeparatorChar,
+                        System.IO.Path.AltDirectorySeparatorChar)
+                    + System.IO.Path.DirectorySeparatorChar;
+
+                if (!physicalPath.StartsWith(
+                        allowedPrefix,
+                        StringComparison.OrdinalIgnoreCase))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "The image path is invalid."
+                    });
+                }
+
+                bool deleted = await _imageService.DeleteImageAsync(id, ip);
+
+                if (!deleted)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Unable to delete the section image record."
+                    });
+                }
+
+
+                bool fileCleanupFailed = false;
+
+                try
+                {
+                    bool isReferenced = await _imageService.IsImageUrlReferencedAsync(
+                        image.ImageUrl,
+                        id,
+                        ip);
+
+                    if (!isReferenced && System.IO.File.Exists(physicalPath))
+                    {
+                        System.IO.File.Delete(physicalPath);
+                    }
+                }
+                catch (Exception fileEx)
+                {
+                    fileCleanupFailed = true;
+
+                    _logErrorService.LogError(
+                        fileEx,
+                        "Admin/DeleteSectionImage/FileCleanup",
+                        "POST",
+                        0,
+                        ip,
+                        "Section image record deleted, but physical-file cleanup failed.");
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    fileCleanupFailed = fileCleanupFailed,
+                    message = fileCleanupFailed
+                        ? "Image record deleted, but its physical file could not be removed. Please check the server logs."
+                        : "Section image deleted successfully."
+                });
+
+            }
+            catch (Exception ex)
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/DeleteSectionImage",
+                    "POST",
+                    0,
+                    ip,
+                    "Delete Section Image");
+
+                Response.StatusCode = 500;
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while deleting the section image."
+                });
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<JsonResult> GetSectionButtons(Guid sectionId)
+        {
+            try
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                if (sectionId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid section ID."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                var buttons = await _buttonService.GetButtonsAsync(ip);
+
+                var sectionButtons = buttons
+                    .Where(b => b.SectionId == sectionId &&
+                                !b.SectionItemId.HasValue)
+                    .OrderBy(b => b.DisplayOrder)
+                    .Select(b => new
+                    {
+                        id = b.Id,
+                        sectionId = b.SectionId,
+                        title = b.Title,
+                        url = b.Url,
+                        target = b.Target,
+                        cssClass = b.CssClass,
+                        buttonType = b.ButtonType,
+                        displayOrder = b.DisplayOrder,
+                        status = b.Status
+                    })
+                    .ToList();
+
+                return Json(new
+                {
+                    success = true,
+                    buttons = sectionButtons
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/GetSectionButtons",
+                    "GET",
+                    0,
+                    ip,
+                    "Get Section Buttons");
+
+                Response.StatusCode = 500;
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Unable to load section buttons."
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> SaveSectionButton(
+            Guid sectionId,
+            Guid? id,
+            string title,
+            string url,
+            string target,
+            string cssClass,
+            string buttonType,
+            int displayOrder,
+            bool status)
+        {
+            try
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                if (sectionId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid section ID."
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(title))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Button title is required."
+                    });
+                }
+
+                if (displayOrder < 0)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Display order cannot be negative."
+                    });
+                }
+
+                ButtonVM button;
+
+                if (id.HasValue && id.Value != Guid.Empty)
+                {
+                    button = await _buttonService.GetButtonByIdAsync(id.Value, ip);
+
+                    if (button == null ||
+                        button.SectionId != sectionId ||
+                        button.SectionItemId.HasValue)
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "Section button not found."
+                        });
+                    }
+                }
+                else
+                {
+                    button = new ButtonVM
+                    {
+                        Id = Guid.Empty,
+                        SectionId = sectionId,
+                        SectionItemId = null,
+                        Status = true
+                    };
+                }
+
+                button.SectionId = sectionId;
+                button.SectionItemId = null;
+                button.Title = title.Trim();
+                button.Url = url?.Trim();
+                button.Target = string.IsNullOrWhiteSpace(target)
+                    ? "_self"
+                    : target.Trim();
+                button.CssClass = cssClass?.Trim();
+                button.ButtonType = buttonType?.Trim();
+                button.DisplayOrder = displayOrder;
+                button.Status = status;
+
+                bool saved = await _buttonService.SaveButtonAsync(button, ip);
+
+                return Json(new
+                {
+                    success = saved,
+                    message = saved
+                        ? "Section button saved successfully."
+                        : "Unable to save section button."
+                });
+            }
+            catch (Exception ex)
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/SaveSectionButton",
+                    "POST",
+                    0,
+                    ip,
+                    "Save Section Button");
+
+                Response.StatusCode = 500;
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while saving the section button."
+                });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteSectionButton(Guid sectionId, Guid id)
+        {
+            var ip = Request.UserHostAddress ?? string.Empty;
+
+            try
+            {
+                var button = await _buttonService.GetButtonByIdAsync(id, ip);
+
+                if (button == null ||
+                    button.SectionId != sectionId ||
+                    button.SectionItemId.HasValue)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Button not found for this section."
+                    });
+                }
+
+                bool deleted = await _buttonService.DeleteButtonAsync(id, ip);
+
+                return Json(new
+                {
+                    success = deleted,
+                    message = deleted
+                        ? "Button deleted successfully."
+                        : "Button could not be deleted."
+                });
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(ex, ip);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while deleting the button."
+                });
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetSectionItemButtons(Guid sectionItemId)
+        {
+            var ip = Request.UserHostAddress ?? string.Empty;
+
+            try
+            {
+                var buttons = await _buttonService.GetButtonsAsync(ip);
+
+                var result = buttons
+                    .Where(b => b.SectionItemId == sectionItemId
+                             && !b.SectionId.HasValue)
+                    .OrderBy(b => b.DisplayOrder)
+                    .Select(b => new
+                    {
+                        id = b.Id,
+                        sectionItemId = b.SectionItemId,
+                        title = b.Title,
+                        url = b.Url,
+                        target = b.Target,
+                        cssClass = b.CssClass,
+                        buttonType = b.ButtonType,
+                        displayOrder = b.DisplayOrder,
+                        status = b.Status
+                    })
+                    .ToList();
+
+                return Json(new
+                {
+                    success = true,
+                    buttons = result
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(ex, ip);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Unable to load card buttons."
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SaveSectionItemButton(
+            Guid sectionItemId,
+            Guid? id,
+            string title,
+            string url,
+            string target,
+            string cssClass,
+            string buttonType,
+            int displayOrder,
+            bool status)
+        {
+            var ip = Request.UserHostAddress ?? string.Empty;
+
+            try
+            {
+                if (sectionItemId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Please select a valid card."
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(title))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Button text is required."
+                    });
+                }
+
+                if (displayOrder < 0)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Display order cannot be negative."
+                    });
+                }
+
+                ButtonVM model;
+
+                if (id.HasValue && id.Value != Guid.Empty)
+                {
+                    model = await _buttonService.GetButtonByIdAsync(id.Value, ip);
+
+                    if (model == null ||
+                        model.SectionItemId != sectionItemId ||
+                        model.SectionId.HasValue)
+                    {
+                        return Json(new
+                        {
+                            success = false,
+                            message = "Button not found for this card."
+                        });
+                    }
+                }
+                else
+                {
+                    model = new ButtonVM
+                    {
+                        Id = Guid.Empty,
+                        SectionId = null,
+                        SectionItemId = sectionItemId
+                    };
+                }
+
+                model.Title = title.Trim();
+                model.Url = url;
+                model.Target = target;
+                model.CssClass = cssClass;
+                model.ButtonType = buttonType;
+                model.DisplayOrder = displayOrder;
+                model.Status = status;
+
+                await _buttonService.SaveButtonAsync(model, ip);
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Card button saved successfully."
+                });
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(ex, ip);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while saving the card button."
+                });
+            }
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteSectionItemButton(
+            Guid sectionItemId,
+            Guid id)
+        {
+            var ip = Request.UserHostAddress ?? string.Empty;
+
+            try
+            {
+                var button = await _buttonService.GetButtonByIdAsync(id, ip);
+
+                if (button == null ||
+                    button.SectionItemId != sectionItemId ||
+                    button.SectionId.HasValue)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Button not found for this card."
+                    });
+                }
+
+                bool deleted = await _buttonService.DeleteButtonAsync(id, ip);
+
+                return Json(new
+                {
+                    success = deleted,
+                    message = deleted
+                        ? "Card button deleted successfully."
+                        : "Card button could not be deleted."
+                });
+            }
+            catch (Exception ex)
+            {
+                 _logErrorService.LogError(ex, ip);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while deleting the card button."
+                });
+            }
+        }
+
 
         #endregion
 
@@ -1305,10 +2304,33 @@ namespace HillView.sln.Admin
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> Upload_Content_Image(HttpPostedFileBase file)
+        public async Task<JsonResult> Upload_Content_Image(
+    HttpPostedFileBase file,
+    Guid? sectionItemId,
+    Guid? sectionId,
+    string altText,
+    string caption)
+
         {
             try
             {
+
+                bool hasSectionItem = sectionItemId.HasValue &&
+                                      sectionItemId.Value != Guid.Empty;
+
+                bool hasSection = sectionId.HasValue &&
+                                  sectionId.Value != Guid.Empty;
+
+                if (hasSectionItem == hasSection)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Select exactly one section or card for this image."
+                    });
+                }
+
+
                 if (file == null || file.ContentLength == 0)
                 {
                     return Json(new
@@ -1318,14 +2340,14 @@ namespace HillView.sln.Admin
                     });
                 }
 
-                const int maxFileSize = 5 * 1024 * 1024;
+                const int maxFileSize = 15 * 1024 * 1024;
 
                 if (file.ContentLength > maxFileSize)
                 {
                     return Json(new
                     {
                         Success = false,
-                        Message = "Maximum image size is 5 MB."
+                        Message = "Maximum image size is 15 MB."
                     });
                 }
 
@@ -1385,7 +2407,7 @@ namespace HillView.sln.Admin
                     });
                 }
 
-                string folderPath = HostingEnvironment.MapPath("~/Content/Uploads/");
+                string folderPath = HostingEnvironment.MapPath("/Content/Uploads/");
 
                 if (string.IsNullOrWhiteSpace(folderPath))
                 {
@@ -1404,14 +2426,57 @@ namespace HillView.sln.Admin
 
                 await Task.Run(() => file.SaveAs(physicalPath));
 
-                string imageUrl = "~/Content/Uploads/" + fileName;
+
+                string imageUrl = fileName;
+
+
+                var image = new ImageVM
+                {
+                    Id = Guid.Empty,
+
+                    SectionId = hasSection
+                        ? sectionId.Value
+                        : (Guid?)null,
+
+                    SectionItemId = hasSectionItem
+                        ? sectionItemId.Value
+                        : (Guid?)null,
+
+                    ImageUrl = imageUrl,
+                    AltText = altText,
+                    Caption = caption,
+                    ImageType = hasSection ? "Section" : "Card",
+                    DisplayOrder = 1,
+                    Status = true
+                };
+
+
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                bool saved = await _imageService.SaveImageAsync(image, ip);
+
+                if (!saved)
+                {
+                    // Remove the uploaded file if the database save fails.
+                    if (System.IO.File.Exists(physicalPath))
+                    {
+                        System.IO.File.Delete(physicalPath);
+                    }
+
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "The image was uploaded but could not be saved to the database."
+                    });
+                }
 
                 return Json(new
                 {
                     Success = true,
                     ImageUrl = imageUrl,
-                    Message = "Image uploaded successfully."
+                    Message = "Image uploaded and saved successfully."
                 });
+
             }
             catch (Exception ex)
             {

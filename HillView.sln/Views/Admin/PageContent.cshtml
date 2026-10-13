@@ -184,6 +184,170 @@
                     Cancel
                 </button>
             </div>
+
+            <!-- Section Image Management -->
+            <hr class="my-4" />
+
+            <div id="sectionImageManager" style="display:none;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Section Images</h5>
+                    <button type="button" id="loadSectionImages"
+                            class="btn btn-outline-primary btn-sm">
+                        Load Images
+                    </button>
+                </div>
+
+                <div id="sectionImagesError"
+                     class="alert alert-danger"
+                     style="display:none;"></div>
+
+                <div id="sectionImagesLoading"
+                     class="text-muted mb-2"
+                     style="display:none;">
+                    Loading section images...
+                </div>
+
+                <div id="sectionImagesList"></div>
+
+                <p id="noSectionImages"
+                   class="text-muted"
+                   style="display:none;">
+                    No images have been added to this section yet.
+                </p>
+
+                <hr />
+
+                <h6>Upload Section Image</h6>
+
+                <div class="form-group">
+                    <label for="sectionImageFile">Choose Image</label>
+                    <input type="file"
+                           id="sectionImageFile"
+                           class="form-control-file"
+                           accept="image/jpeg,image/png,image/gif,image/webp" />
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionImageAlt">Alt Text</label>
+                    <input type="text"
+                           id="sectionImageAlt"
+                           class="form-control"
+                           maxlength="500"
+                           placeholder="Describe the image" />
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionImageCaption">Caption</label>
+                    <input type="text"
+                           id="sectionImageCaption"
+                           class="form-control"
+                           maxlength="500"
+                           placeholder="Optional caption" />
+                </div>
+
+                <button type="button" id="uploadSectionImage"
+                        class="btn btn-success btn-sm">
+                    Upload Image
+                </button>
+
+                <span id="sectionImageUploadMessage" class="ml-2"></span>
+            </div>
+
+
+            <div id="sectionButtonManager" style="display:none;">
+                <hr />
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5>Section Buttons</h5>
+                    <button type="button" id="loadSectionButtons"
+                            class="btn btn-outline-primary btn-sm">
+                        Load Buttons
+                    </button>
+                </div>
+
+                <div id="sectionButtonsError"
+                     class="alert alert-danger"
+                     style="display:none;"></div>
+
+                <div id="sectionButtonsLoading" style="display:none;">
+                    Loading section buttons...
+                </div>
+
+                <div id="sectionButtonsList"></div>
+
+                <p id="noSectionButtons" class="text-muted" style="display:none;">
+                    No buttons have been added to this section yet.
+                </p>
+
+                <hr />
+
+                <h6 id="sectionButtonFormTitle">Add Section Button</h6>
+
+                <input type="hidden" id="sectionButtonId" />
+
+                <div class="form-group">
+                    <label for="sectionButtonTitle">Button Text</label>
+                    <input type="text" id="sectionButtonTitle"
+                           class="form-control" maxlength="200"
+                           placeholder="e.g. Learn More" />
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionButtonUrl">URL</label>
+                    <input type="text" id="sectionButtonUrl"
+                           class="form-control" maxlength="1000"
+                           placeholder="e.g. /About or https://example.com" />
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionButtonTarget">Link Target</label>
+                    <select id="sectionButtonTarget" class="form-control">
+                        <option value="_self">Same tab</option>
+                        <option value="_blank">New tab</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionButtonCssClass">CSS Class</label>
+                    <input type="text" id="sectionButtonCssClass"
+                           class="form-control" maxlength="200"
+                           placeholder="e.g. btn btn-primary" />
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionButtonType">Button Type</label>
+                    <input type="text" id="sectionButtonType"
+                           class="form-control" maxlength="100"
+                           placeholder="e.g. Primary or Secondary" />
+                </div>
+
+                <div class="form-group">
+                    <label for="sectionButtonDisplayOrder">Display Order</label>
+                    <input type="number" id="sectionButtonDisplayOrder"
+                           class="form-control" min="0" value="1" />
+                </div>
+
+                <div class="form-check mb-3">
+                    <input type="checkbox" id="sectionButtonStatus"
+                           class="form-check-input" checked />
+                    <label class="form-check-label" for="sectionButtonStatus">
+                        Active
+                    </label>
+                </div>
+
+                <button type="button" id="saveSectionButton"
+                        class="btn btn-primary">
+                    Save Button
+                </button>
+
+                <button type="button" id="cancelSectionButtonEdit"
+                        class="btn btn-secondary">
+                    Clear Form
+                </button>
+
+                <span id="sectionButtonSaveMessage" class="ml-2"></span>
+            </div>
+
         </div>
     </div>
 
@@ -204,6 +368,99 @@
 
             <div id="sectionItemsContainer"></div>
 
+            <div id="cardButtonManager" style="display:none;">
+                <hr />
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5>Card Buttons</h5>
+                    <button type="button" id="loadCardButtons"
+                            class="btn btn-outline-primary btn-sm">
+                        Load Buttons
+                    </button>
+                </div>
+
+                <div id="cardButtonsError" class="alert alert-danger"
+                     style="display:none;"></div>
+
+                <div id="cardButtonsLoading" style="display:none;">
+                    Loading card buttons...
+                </div>
+
+                <div id="cardButtonsList"></div>
+
+                <p id="noCardButtons" class="text-muted" style="display:none;">
+                    No buttons have been added to this card yet.
+                </p>
+
+                <hr />
+                <h6 id="cardButtonFormTitle">Add Card Button</h6>
+
+                <input type="hidden" id="cardButtonId" />
+                <input type="hidden" id="cardButtonSectionItemId" />
+
+                <div class="form-group">
+                    <label for="cardButtonTitle">Button Text</label>
+                    <input type="text" id="cardButtonTitle"
+                           class="form-control" maxlength="200"
+                           placeholder="e.g. View Details" />
+                </div>
+
+                <div class="form-group">
+                    <label for="cardButtonUrl">URL</label>
+                    <input type="text" id="cardButtonUrl"
+                           class="form-control" maxlength="1000"
+                           placeholder="e.g. /Property/Details/123" />
+                </div>
+
+                <div class="form-group">
+                    <label for="cardButtonTarget">Link Target</label>
+                    <select id="cardButtonTarget" class="form-control">
+                        <option value="_self">Same tab</option>
+                        <option value="_blank">New tab</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cardButtonCssClass">CSS Class</label>
+                    <input type="text" id="cardButtonCssClass"
+                           class="form-control" maxlength="200"
+                           placeholder="e.g. btn btn-primary" />
+                </div>
+
+                <div class="form-group">
+                    <label for="cardButtonType">Button Type</label>
+                    <input type="text" id="cardButtonType"
+                           class="form-control" maxlength="100"
+                           placeholder="e.g. Primary or Secondary" />
+                </div>
+
+                <div class="form-group">
+                    <label for="cardButtonDisplayOrder">Display Order</label>
+                    <input type="number" id="cardButtonDisplayOrder"
+                           class="form-control" min="0" value="1" />
+                </div>
+
+                <div class="form-check mb-3">
+                    <input type="checkbox" id="cardButtonStatus"
+                           class="form-check-input" checked />
+                    <label class="form-check-label" for="cardButtonStatus">
+                        Active
+                    </label>
+                </div>
+
+                <button type="button" id="saveCardButton"
+                        class="btn btn-primary">
+                    Save Button
+                </button>
+
+                <button type="button" id="cancelCardButtonEdit"
+                        class="btn btn-secondary">
+                    Clear Form
+                </button>
+
+                <span id="cardButtonSaveMessage" class="ml-2"></span>
+            </div>
+
+
             <p id="noSectionItems" class="text-muted"
                style="display:none;">
                 No cards have been added to this section yet.
@@ -219,11 +476,42 @@
 </div>
 <script>
 
-$(document).ready(function () {
+$(document).ready(function() {
+    var currentItemsSectionId = null;
 
     $(".edit-section-btn").on("click", function () {
         var sectionId = $(this).data("section-id");
         var sectionTitle = $(this).data("section-title");
+
+
+        $("#sectionImageManager").hide();
+        $("#sectionButtonManager").hide();
+        $("#sectionImagesList").empty();
+        $("#sectionImagesError").hide();
+        $("#sectionImagesLoading").hide();
+        $("#noSectionImages").hide();
+        $("#sectionImageUploadMessage").text("");
+
+        $("#sectionImageFile").val("");
+        $("#sectionImageAlt").val("");
+        $("#sectionImageCaption").val("");
+
+
+        $("#sectionButtonId").val("");
+        $("#sectionButtonTitle").val("");
+        $("#sectionButtonUrl").val("");
+        $("#sectionButtonTarget").val("_self");
+        $("#sectionButtonCssClass").val("");
+        $("#sectionButtonType").val("");
+        $("#sectionButtonDisplayOrder").val("1");
+        $("#sectionButtonStatus").prop("checked", true);
+        $("#sectionButtonFormTitle").text("Add Section Button");
+        $("#sectionButtonSaveMessage").text("");
+        $("#sectionButtonsList").empty();
+        $("#noSectionButtons").hide();
+        $("#sectionButtonsError").hide();
+
+
 
         $("#sectionEditor").show();
         $("#editorTitle").text("Edit Content: " + sectionTitle);
@@ -258,6 +546,13 @@ $(document).ready(function () {
 
                 $("#editorFields").show();
 
+                // Show image management for the selected section.
+                $("#sectionImageManager").show();
+
+                // Show button management for the selected section.
+                $("#sectionButtonManager").show(); // ADD THIS LINE
+
+
                 $("html, body").animate({
                     scrollTop: $("#sectionEditor").offset().top - 30
                 }, 300);
@@ -272,11 +567,16 @@ $(document).ready(function () {
         });
     });
 
+
     $("#cancelSectionEdit").on("click", function () {
         $("#sectionEditor").hide();
         $("#editorError").hide();
         $("#editorFields").hide();
+        $("#sectionImageManager").hide();
+        $("#sectionButtonManager").hide();
+        $("#editSectionId").val("");
     });
+
 
 $("#saveSectionContent").on("click", function () {
     var button = $(this);
@@ -321,7 +621,6 @@ $("#saveSectionContent").on("click", function () {
 
 
 
-var currentItemsSectionId = null;
 
 $(".manage-section-items-btn").on("click", function () {
     var sectionId = $(this).data("section-id");
@@ -374,58 +673,141 @@ $(".manage-section-items-btn").on("click", function () {
     });
 });
 
+
     function renderSectionItem(item) {
         var html = `
-        <div class="border rounded p-3 mb-3 section-item-card"
-             data-item-id="${item.id || ""}">
+    <div class="border rounded p-3 mb-3 section-item-card"
+         data-item-id="${item.id || ""}">
 
-            <input type="hidden" class="item-id"
-                   value="${item.id || ""}" />
+        <input type="hidden" class="item-id"
+               value="${item.id || ""}" />
 
-            <div class="form-group">
-                <label>Title *</label>
-                <input type="text" class="form-control item-title"
-                       maxlength="200"
-                       value="${escapeHtml(item.title || "")}" />
-            </div>
+        <div class="form-group">
+            <label>Title *</label>
+            <input type="text" class="form-control item-title"
+                   maxlength="200"
+                   value="${escapeHtml(item.title || "")}" />
+        </div>
 
-            <div class="form-group">
-                <label>Heading</label>
-                <input type="text" class="form-control item-heading"
-                       maxlength="200"
-                       value="${escapeHtml(item.heading || "")}" />
-            </div>
+        <div class="form-group">
+            <label>Heading</label>
+            <input type="text" class="form-control item-heading"
+                   maxlength="200"
+                   value="${escapeHtml(item.heading || "")}" />
+        </div>
 
-            <div class="form-group">
-                <label>Description</label>
-                <textarea class="form-control item-description"
-                          rows="3">${escapeHtml(item.description || "")}</textarea>
-            </div>
+        <div class="form-group">
+            <label>Description</label>
+            <textarea class="form-control item-description"
+                      rows="3">${escapeHtml(item.description || "")}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label>Display Order</label>
-                <input type="number" min="0"
-                       class="form-control item-display-order"
-                       value="${item.displayOrder || 0}" />
-            </div>
+        <div class="form-group">
+            <label>Display Order</label>
+            <input type="number" min="0"
+                   class="form-control item-display-order"
+                   value="${item.displayOrder || 0}" />
+        </div>
 
-            <div class="form-check mb-3">
-                <input type="checkbox"
-                       class="form-check-input item-status"
-                       ${item.status ? "checked" : ""} />
-                <label class="form-check-label">Active</label>
-            </div>
+        <div class="form-check mb-3">
+            <input type="checkbox"
+                   class="form-check-input item-status"
+                   ${item.status ? "checked" : ""} />
+            <label class="form-check-label">Active</label>
+        </div>
 
+        <div class="d-flex align-items-center flex-wrap">
             <button type="button"
                     class="btn btn-primary btn-sm save-section-item">
                 Save Card
             </button>
 
+            <button type="button"
+                    class="btn btn-danger btn-sm delete-section-item ml-2">
+                Delete Card
+            </button>
+
             <span class="item-save-message ml-2"></span>
-        </div>`;
+        </div>
+
+        <!-- NEW: Image management area -->
+        <hr class="my-3" />
+
+        <div class="section-item-image-manager mt-3">
+
+<div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+    <h6 class="mb-0">Card Images</h6>
+
+    <div>
+        <button type="button"
+                class="btn btn-outline-primary btn-sm manage-card-images">
+            Manage Images
+        </button>
+
+        <button type="button"
+                class="btn btn-outline-success btn-sm manage-card-buttons ml-2">
+            Manage Buttons
+        </button>
+    </div>
+</div>
+
+
+            <div class="card-images-container" style="display: none;">
+                <div class="card-images-loading text-muted small"
+                     style="display: none;">
+                    Loading images...
+                </div>
+
+                <div class="card-images-list"></div>
+
+<div class="card-image-upload mt-3">
+    <div class="form-group">
+        <label>Choose Image</label>
+        <input type="file"
+               class="form-control-file card-image-file"
+               accept="image/jpeg,image/png,image/gif,image/webp" />
+    </div>
+
+    <div class="form-group">
+        <label>Alt Text</label>
+        <input type="text"
+               class="form-control card-image-alt"
+               maxlength="500"
+               placeholder="Describe the image" />
+    </div>
+
+    <div class="form-group">
+        <label>Caption</label>
+        <input type="text"
+               class="form-control card-image-caption"
+               maxlength="500"
+               placeholder="Optional image caption" />
+    </div>
+
+    <button type="button"
+            class="btn btn-success btn-sm upload-card-image">
+        Upload Image
+    </button>
+
+    <span class="card-image-upload-message ml-2"></span>
+</div>
+
+
+                <div class="card-images-empty text-muted small"
+                     style="display: none;">
+                    No images have been added to this card yet.
+                </div>
+
+                <div class="card-images-error text-danger small"
+                     style="display: none;"></div>
+            </div>
+        </div>
+
+    </div>`;
 
         $("#sectionItemsContainer").append(html);
     }
+
 
     $("#sectionItemsContainer").on("click", ".save-section-item", function () {
     var $button = $(this);
@@ -470,6 +852,8 @@ $(".manage-section-items-btn").on("click", function () {
         data: model,
         success: function (response) {
             if (response.success) {
+                $card.find(".item-id").val(response.id);
+                $card.attr("data-item-id", response.id);
                 $message.text(response.message)
                         .css("color", "green");
 
@@ -492,6 +876,1506 @@ $(".manage-section-items-btn").on("click", function () {
 function escapeHtml(value) {
     return $("<div>").text(value).html();
 }
+
+$("#addSectionItem").on("click", function () {
+
+    if (!currentItemsSectionId) {
+        $("#itemsEditorError")
+            .text("Please select a section before adding a card.")
+            .show();
+        return;
+    }
+
+    $("#itemsEditorError").hide();
+    $("#noSectionItems").hide();
+
+    var nextOrder =
+        $("#sectionItemsContainer .section-item-card").length + 1;
+
+    renderSectionItem({
+        id: "",
+        title: "",
+        heading: "",
+        description: "",
+        displayOrder: nextOrder,
+        status: true
+    });
+
+    // Scroll to the newly added card.
+    var $newCard = $("#sectionItemsContainer .section-item-card").last();
+
+    $("html, body").animate({
+        scrollTop: $newCard.offset().top - 30
+    }, 300);
+
+    $newCard.find(".item-title").focus();
+});
+
+
+$("#sectionItemsContainer").on("click", ".delete-section-item", function () {
+    var $button = $(this);
+    var $card = $button.closest(".section-item-card");
+    var itemId = $card.find(".item-id").val();
+
+    // Unsaved card: remove it directly without calling the API.
+    if (!itemId ||
+        itemId === "00000000-0000-0000-0000-000000000000") {
+
+        $card.remove();
+
+        if ($("#sectionItemsContainer .section-item-card").length === 0) {
+            $("#noSectionItems").show();
+        }
+
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this card?")) {
+        return;
+    }
+
+    var token = $(
+        "#sectionAntiForgeryToken input[name='__RequestVerificationToken']"
+    ).val();
+
+    $button.prop("disabled", true).text("Deleting...");
+
+    $.ajax({
+        url: '@Url.Action("DeleteSectionItemContent", "Admin")',
+        type: "POST",
+        data: {
+            id: itemId,
+            __RequestVerificationToken: token
+        },
+        success: function (response) {
+            if (response.success) {
+                $card.remove();
+
+                if ($("#sectionItemsContainer .section-item-card").length === 0) {
+                    $("#noSectionItems").show();
+                }
+            } else {
+                alert(response.message || "Unable to delete the card.");
+                $button.prop("disabled", false).text("Delete Card");
+            }
+        },
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            alert("An error occurred while deleting the card.");
+            $button.prop("disabled", false).text("Delete Card");
+        }
+    });
+});
+
+
+$("#sectionItemsContainer").on("click", ".manage-card-images", function () {
+    var $button = $(this);
+    var $card = $button.closest(".section-item-card");
+    var itemId = $card.find(".item-id").val();
+
+    // The card must be saved before its images can be managed.
+    if (!itemId ||
+        itemId === "00000000-0000-0000-0000-000000000000") {
+        alert("Please save this card before managing its images.");
+        return;
+    }
+
+    var $container = $card.find(".card-images-container");
+    var $list = $card.find(".card-images-list");
+    var $loading = $card.find(".card-images-loading");
+    var $empty = $card.find(".card-images-empty");
+    var $error = $card.find(".card-images-error");
+
+    // Toggle the image panel.
+    if ($container.is(":visible")) {
+        $container.hide();
+        return;
+    }
+
+    $container.show();
+    $list.empty();
+    $empty.hide();
+    $error.hide();
+    $loading.show();
+
+    $.ajax({
+        url: '@Url.Action("GetSectionItemImages", "Admin")',
+        type: "GET",
+        data: { sectionItemId: itemId },
+
+        success: function (response) {
+            $loading.hide();
+
+            if (!response.success) {
+                $error.text(
+                    response.message || "Unable to load images."
+                ).show();
+                return;
+            }
+
+            if (!response.images || response.images.length === 0) {
+                $empty.show();
+                return;
+            }
+
+
+$.each(response.images, function (_, image) {
+    var $imageRow = $("<div>")
+        .addClass("border rounded p-2 mb-2 card-image-row")
+        .attr("data-image-id", image.id);
+
+
+    var $editForm = $("<div>")
+        .addClass("card-image-edit-form mt-3")
+        .hide();
+
+    var $altLabel = $("<label>").text("Alt Text");
+    var $altInput = $("<input>")
+        .attr("type", "text")
+        .addClass("form-control edit-image-alt")
+        .attr("maxlength", "500")
+        .val(image.altText || "");
+
+    var $captionLabel = $("<label>").addClass("mt-2").text("Caption");
+    var $captionInput = $("<input>")
+        .attr("type", "text")
+        .addClass("form-control edit-image-caption")
+        .attr("maxlength", "500")
+        .val(image.caption || "");
+
+    var $orderLabel = $("<label>").addClass("mt-2").text("Display Order");
+    var $orderInput = $("<input>")
+        .attr("type", "number")
+        .attr("min", "0")
+        .addClass("form-control edit-image-order")
+        .val(image.displayOrder || 0);
+
+    var $statusLabel = $("<label>").addClass("form-check-label").text("Active");
+    var $statusInput = $("<input>")
+        .attr("type", "checkbox")
+        .addClass("form-check-input edit-image-status")
+        .prop("checked", image.status);
+
+    var $statusContainer = $("<div>")
+        .addClass("form-check mt-2")
+        .append($statusInput, " ", $statusLabel);
+
+    var $saveEditButton = $("<button>")
+        .attr("type", "button")
+        .addClass("btn btn-primary btn-sm mt-3 save-card-image-edit")
+        .text("Save Changes");
+
+    var $cancelEditButton = $("<button>")
+        .attr("type", "button")
+        .addClass("btn btn-secondary btn-sm mt-3 ml-2 cancel-card-image-edit")
+        .text("Cancel");
+
+    var $editMessage = $("<span>")
+        .addClass("card-image-edit-message small ml-2");
+
+    $editForm.append(
+        $altLabel, $altInput,
+        $captionLabel, $captionInput,
+        $orderLabel, $orderInput,
+        $statusContainer,
+        $saveEditButton, $cancelEditButton, $editMessage
+    );
+
+
+
+    var $preview = $("<img>")
+        .attr("src", image.imageUrl
+            ? '@Url.Content("~/Content/Uploads/")' + image.imageUrl
+            : "")
+        .attr("alt", image.altText || "")
+        .css({
+            "max-width": "150px",
+            "max-height": "100px",
+            "object-fit": "contain"
+        });
+
+    var $details = $("<div>")
+        .addClass("small mt-2")
+        .text(
+            "Alt text: " + (image.altText || "Not set") +
+            " | Caption: " + (image.caption || "Not set")
+        );
+
+    var $editButton = $("<button>")
+        .attr("type", "button")
+        .addClass("btn btn-outline-primary btn-sm mt-2 edit-card-image")
+        .text("Edit");
+
+    var $deleteButton = $("<button>")
+        .attr("type", "button")
+        .addClass("btn btn-outline-danger btn-sm mt-2 ml-2 delete-card-image")
+        .text("Delete");
+
+    $imageRow.append(
+        $preview,
+        $details,
+        $("<div>").append($editButton, " ", $deleteButton),
+        $editForm
+    );
+    $list.append($imageRow);
+});
+
+        },
+
+        error: function (xhr) {
+            $loading.hide();
+            $error.text("An error occurred while loading images.").show();
+            console.error(xhr.responseText);
+        }
+    });
+});
+
+
+$("#sectionItemsContainer").on("click", ".upload-card-image", function () {
+    var $button = $(this);
+    var $card = $button.closest(".section-item-card");
+    var itemId = $card.find(".item-id").val();
+
+    var $file = $card.find(".card-image-file");
+    var $altText = $card.find(".card-image-alt");
+    var $caption = $card.find(".card-image-caption");
+    var $message = $card.find(".card-image-upload-message");
+
+    if (!itemId ||
+        itemId === "00000000-0000-0000-0000-000000000000") {
+        alert("Please save the card before uploading an image.");
+        return;
+    }
+
+    var file = $file[0].files[0];
+
+    if (!file) {
+        $message.text("Please select an image file.")
+            .removeClass("text-success")
+            .addClass("text-danger");
+        return;
+    }
+
+    var formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("sectionItemId", itemId);
+    formData.append("altText", $altText.val());
+    formData.append("caption", $caption.val());
+
+    var token = $(
+        "#sectionAntiForgeryToken input[name='__RequestVerificationToken']"
+    ).val();
+
+    formData.append("__RequestVerificationToken", token);
+
+    $button.prop("disabled", true).text("Uploading...");
+    $message.text("").removeClass("text-success text-danger");
+
+    $.ajax({
+        url: '@Url.Action("Upload_Content_Image", "Admin")',
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+
+        success: function (response) {
+            if (response.Success) {
+                $message.text(response.Message)
+                    .addClass("text-success");
+
+                $file.val("");
+                $altText.val("");
+                $caption.val("");
+
+                // Refresh the images displayed for this card.
+                $card.find(".manage-card-images").trigger("click");
+                $card.find(".manage-card-images").trigger("click");
+            } else {
+                $message.text(
+                    response.Message || "Image upload failed."
+                ).addClass("text-danger");
+            }
+        },
+
+        error: function (xhr) {
+            console.error(xhr.responseText);
+
+            $message.text("An error occurred while uploading the image.")
+                .addClass("text-danger");
+        },
+
+        complete: function () {
+            $button.prop("disabled", false).text("Upload Image");
+        }
+    });
+});
+
+
+$("#sectionItemsContainer").on("click", ".edit-card-image", function () {
+    var $row = $(this).closest(".card-image-row");
+
+    $row.find(".card-image-edit-form").show();
+    $row.find(".edit-image-alt").focus();
+});
+
+$("#sectionItemsContainer").on("click", ".cancel-card-image-edit", function () {
+    var $row = $(this).closest(".card-image-row");
+
+    // Close the form without saving changes.
+    $row.find(".card-image-edit-form").hide();
+});
+
+$("#sectionItemsContainer").on("click", ".save-card-image-edit", function () {
+    var $button = $(this);
+    var $row = $button.closest(".card-image-row");
+    var imageId = $row.attr("data-image-id");
+
+    var displayOrder = Number($row.find(".edit-image-order").val());
+
+    if (!imageId) {
+        alert("Invalid image ID.");
+        return;
+    }
+
+    if (!Number.isInteger(displayOrder) || displayOrder < 0) {
+        alert("Display order must be a non-negative whole number.");
+        return;
+    }
+
+    var token = $(
+        "#sectionAntiForgeryToken input[name='__RequestVerificationToken']"
+    ).val();
+
+    var $message = $row.find(".card-image-edit-message");
+
+    $button.prop("disabled", true).text("Saving...");
+    $message.text("").removeClass("text-success text-danger");
+
+    $.ajax({
+        url: '@Url.Action("UpdateSectionItemImage", "Admin")',
+        type: "POST",
+        data: {
+            id: imageId,
+            altText: $row.find(".edit-image-alt").val(),
+            caption: $row.find(".edit-image-caption").val(),
+            displayOrder: displayOrder,
+            status: $row.find(".edit-image-status").is(":checked"),
+            __RequestVerificationToken: token
+        },
+
+        success: function (response) {
+            if (response.success) {
+                $message.text(response.message)
+                    .addClass("text-success");
+
+                // Refresh the image list to display updated metadata.
+                var $card = $row.closest(".section-item-card");
+                $card.find(".manage-card-images").trigger("click");
+                $card.find(".manage-card-images").trigger("click");
+            } else {
+                $message.text(
+                    response.message || "Unable to update image."
+                ).addClass("text-danger");
+            }
+        },
+
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            $message.text("An error occurred while saving.")
+                .addClass("text-danger");
+        },
+
+        complete: function () {
+            $button.prop("disabled", false).text("Save Changes");
+        }
+    });
+});
+
+
+$("#sectionItemsContainer").on("click", ".delete-card-image", function () {
+    var $button = $(this);
+    var $row = $button.closest(".card-image-row");
+    var imageId = $row.attr("data-image-id");
+
+    if (!imageId) {
+        alert("Invalid image ID.");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to permanently delete this image?")) {
+        return;
+    }
+
+    var token = $(
+        "#sectionAntiForgeryToken input[name='__RequestVerificationToken']"
+    ).val();
+
+    var $message = $row.find(".card-image-edit-message");
+
+    $button.prop("disabled", true).text("Deleting...");
+
+    $.ajax({
+        url: '@Url.Action("DeleteSectionItemImage", "Admin")',
+        type: "POST",
+        data: {
+            id: imageId,
+            __RequestVerificationToken: token
+        },
+
+        success: function (response) {
+            if (response.success) {
+                // Remove the deleted image from the UI.
+                var $card = $row.closest(".section-item-card");
+                $row.remove();
+
+                var $list = $card.find(".card-images-list");
+
+                if ($list.find(".card-image-row").length === 0) {
+                    $card.find(".card-images-empty").show();
+                }
+            } else {
+                alert(response.message || "Unable to delete image.");
+                $button.prop("disabled", false).text("Delete");
+            }
+        },
+
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            $message.text("An error occurred while deleting the image.")
+                .addClass("text-danger");
+
+            $button.prop("disabled", false).text("Delete");
+        }
+    });
+});
+
+
+$("#loadSectionImages").on("click", function () {
+    var sectionId = $("#editSectionId").val();
+
+    if (!sectionId) {
+        $("#sectionImagesError")
+            .text("Please select a section first.")
+            .show();
+        return;
+    }
+
+    var $button = $(this);
+    var $list = $("#sectionImagesList");
+
+    $("#sectionImagesError").hide();
+    $("#noSectionImages").hide();
+    $list.empty();
+
+    $("#sectionImagesLoading").show();
+    $button.prop("disabled", true).text("Loading...");
+
+    $.ajax({
+        url: '@Url.Action("GetSectionImages", "Admin")',
+        type: "GET",
+        data: { sectionId: sectionId },
+
+        success: function (response) {
+            if (!response.success) {
+                $("#sectionImagesError")
+                    .text(response.message || "Unable to load images.")
+                    .show();
+                return;
+            }
+
+            var images = response.images || [];
+
+            if (images.length === 0) {
+                $("#noSectionImages").show();
+                return;
+            }
+
+            $.each(images, function (_, image) {
+                var $row = $("<div>")
+                    .addClass("border rounded p-3 mb-3 section-image-row")
+                    .attr("data-image-id", image.id);
+
+                var imageUrl = image.imageUrl || "";
+
+                // Support both filename-only and legacy relative-path records.
+                if (imageUrl.indexOf("~/") === 0) {
+                    imageUrl = imageUrl.substring(2);
+                } else {
+                    imageUrl = "Content/Uploads/" + imageUrl;
+                }
+
+                var $preview = $("<img>")
+                    .attr("src", '@Url.Content("~/")' + imageUrl)
+                    .attr("alt", image.altText || "")
+                    .css({
+                        "max-width": "180px",
+                        "max-height": "120px",
+                        "object-fit": "contain"
+                    });
+
+                var $details = $("<div>")
+                    .addClass("small mt-2")
+                    .text(
+                        "Alt text: " + (image.altText || "Not set") +
+                        " | Caption: " + (image.caption || "Not set")
+                    );
+
+
+                var $editButton = $("<button>")
+                    .attr("type", "button")
+                    .addClass("btn btn-outline-primary btn-sm mt-2 edit-section-image")
+                    .text("Edit");
+
+                var $deleteButton = $("<button>")
+                    .attr("type", "button")
+                    .addClass("btn btn-outline-danger btn-sm mt-2 ml-2 delete-section-image")
+                    .text("Delete");
+
+                var $editForm = $("<div>")
+                    .addClass("section-image-edit-form mt-3")
+                    .hide();
+
+                var $altLabel = $("<label>").text("Alt Text");
+                var $altInput = $("<input>")
+                    .attr("type", "text")
+                    .attr("maxlength", "500")
+                    .addClass("form-control edit-section-image-alt")
+                    .val(image.altText || "");
+
+                var $captionLabel = $("<label>").addClass("mt-2").text("Caption");
+                var $captionInput = $("<input>")
+                    .attr("type", "text")
+                    .attr("maxlength", "500")
+                    .addClass("form-control edit-section-image-caption")
+                    .val(image.caption || "");
+
+                var $orderLabel = $("<label>").addClass("mt-2").text("Display Order");
+                var $orderInput = $("<input>")
+                    .attr("type", "number")
+                    .attr("min", "0")
+                    .addClass("form-control edit-section-image-order")
+                    .val(image.displayOrder || 0);
+
+                var $statusInput = $("<input>")
+                    .attr("type", "checkbox")
+                    .addClass("form-check-input edit-section-image-status")
+                    .prop("checked", image.status);
+
+                var $statusContainer = $("<div>")
+                    .addClass("form-check mt-2")
+                    .append(
+                        $statusInput,
+                        " ",
+                        $("<label>").addClass("form-check-label").text("Active")
+                    );
+
+                var $saveButton = $("<button>")
+                    .attr("type", "button")
+                    .addClass("btn btn-primary btn-sm mt-3 save-section-image-edit")
+                    .text("Save Changes");
+
+                var $cancelButton = $("<button>")
+                    .attr("type", "button")
+                    .addClass("btn btn-secondary btn-sm mt-3 ml-2 cancel-section-image-edit")
+                    .text("Cancel");
+
+                var $message = $("<span>")
+                    .addClass("section-image-edit-message small ml-2");
+
+                $editForm.append(
+                    $altLabel, $altInput,
+                    $captionLabel, $captionInput,
+                    $orderLabel, $orderInput,
+                    $statusContainer,
+                    $saveButton, $cancelButton, $message
+                );
+
+                $row.append(
+                    $preview,
+                    $details,
+                    $("<div>").append($editButton, " ", $deleteButton),
+                    $editForm
+                );
+
+                $list.append($row);
+
+            });
+        },
+
+        error: function (xhr) {
+            console.error(xhr.responseText);
+
+            $("#sectionImagesError")
+                .text("An error occurred while loading section images.")
+                .show();
+        },
+
+        complete: function () {
+            $("#sectionImagesLoading").hide();
+            $button.prop("disabled", false).text("Load Images");
+        }
+    });
+});
+
+
+$("#uploadSectionImage").on("click", function () {
+    var sectionId = $("#editSectionId").val();
+    var file = $("#sectionImageFile")[0].files[0];
+
+    var $message = $("#sectionImageUploadMessage");
+    var $button = $(this);
+
+    if (!sectionId) {
+        $message.text("Please select a section.")
+            .removeClass("text-success")
+            .addClass("text-danger");
+        return;
+    }
+
+    if (!file) {
+        $message.text("Please select an image file.")
+            .removeClass("text-success")
+            .addClass("text-danger");
+        return;
+    }
+
+    var formData = new FormData();
+
+    formData.append("file", file);
+    formData.append("sectionId", sectionId);
+    formData.append("altText", $("#sectionImageAlt").val());
+    formData.append("caption", $("#sectionImageCaption").val());
+
+    var token = $(
+        "#sectionAntiForgeryToken input[name='__RequestVerificationToken']"
+    ).val();
+
+    formData.append("__RequestVerificationToken", token);
+
+    $button.prop("disabled", true).text("Uploading...");
+    $message.text("").removeClass("text-success text-danger");
+
+    $.ajax({
+        url: '@Url.Action("Upload_Content_Image", "Admin")',
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+
+        success: function (response) {
+            if (response.Success) {
+                $message.text(response.Message)
+                    .addClass("text-success");
+
+                $("#sectionImageFile").val("");
+                $("#sectionImageAlt").val("");
+                $("#sectionImageCaption").val("");
+
+                // Reload the section's images.
+                $("#loadSectionImages").trigger("click");
+            } else {
+                $message.text(
+                    response.Message || "Image upload failed."
+                ).addClass("text-danger");
+            }
+        },
+
+        error: function (xhr) {
+            console.error(xhr.responseText);
+
+            $message.text("An error occurred while uploading the image.")
+                .addClass("text-danger");
+        },
+
+        complete: function () {
+            $button.prop("disabled", false).text("Upload Image");
+        }
+    });
+});
+
+
+$("#sectionImagesList").on("click", ".edit-section-image", function () {
+    var $row = $(this).closest(".section-image-row");
+
+    $row.find(".section-image-edit-form").slideDown(150);
+    $row.find(".edit-section-image-alt").trigger("focus");
+});
+
+$("#sectionImagesList").on("click", ".cancel-section-image-edit", function () {
+    $(this).closest(".section-image-edit-form").slideUp(150);
+});
+
+$("#sectionImagesList").on("click", ".save-section-image-edit", function () {
+    var $button = $(this);
+    var $row = $button.closest(".section-image-row");
+    var $message = $row.find(".section-image-edit-message");
+
+    var imageId = $row.attr("data-image-id");
+    var sectionId = $("#editSectionId").val();
+    var altText = $row.find(".edit-section-image-alt").val();
+    var caption = $row.find(".edit-section-image-caption").val();
+    var displayOrderValue = $row.find(".edit-section-image-order").val();
+    var status = $row.find(".edit-section-image-status").is(":checked");
+
+    var displayOrder = Number(displayOrderValue);
+
+    if (!imageId || !sectionId) {
+        $message.text("Image or section ID is missing.")
+            .removeClass("text-success")
+            .addClass("text-danger");
+        return;
+    }
+
+    if (displayOrderValue.trim() === "" ||
+        !Number.isInteger(displayOrder) ||
+        displayOrder < 0) {
+        $message.text("Enter a valid display order (0 or greater).")
+            .removeClass("text-success")
+            .addClass("text-danger");
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find("input[name='__RequestVerificationToken']")
+        .val();
+
+    $button.prop("disabled", true);
+    $message.text("Saving...")
+        .removeClass("text-danger text-success");
+
+    $.ajax({
+        url: '@Url.Action("UpdateSectionImage", "Admin")',
+        type: "POST",
+        data: {
+            id: imageId,
+            sectionId: sectionId,
+            altText: altText,
+            caption: caption,
+            displayOrder: displayOrder,
+            status: status,
+            __RequestVerificationToken: token
+        },
+        success: function (response) {
+            if (response && response.success) {
+                $message.text(response.message || "Image updated successfully.")
+                    .removeClass("text-danger")
+                    .addClass("text-success");
+
+                $("#loadSectionImages").trigger("click");
+            } else {
+                $message.text(
+                    response && response.message
+                        ? response.message
+                        : "Unable to update image."
+                ).removeClass("text-success")
+                 .addClass("text-danger");
+            }
+        },
+        error: function (xhr) {
+            var message = "An error occurred while updating the image.";
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                message = xhr.responseJSON.message;
+            }
+
+            $message.text(message)
+                .removeClass("text-success")
+                .addClass("text-danger");
+        },
+        complete: function () {
+            $button.prop("disabled", false);
+        }
+    });
+});
+
+
+$("#sectionImagesList").on("click", ".delete-section-image", function () {
+    var $button = $(this);
+    var $row = $button.closest(".section-image-row");
+
+    var imageId = $row.attr("data-image-id");
+    var sectionId = $("#editSectionId").val();
+
+    if (!imageId || !sectionId) {
+        alert("Image or section ID is missing.");
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this section image?")) {
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find("input[name='__RequestVerificationToken']")
+        .val();
+
+    $button.prop("disabled", true).text("Deleting...");
+
+    $.ajax({
+        url: '@Url.Action("DeleteSectionImage", "Admin")',
+        type: "POST",
+        data: {
+            id: imageId,
+            sectionId: sectionId,
+            __RequestVerificationToken: token
+        },
+        success: function (response) {
+            if (response && response.success) {
+                $row.slideUp(150, function () {
+                    $(this).remove();
+
+                    if ($("#sectionImagesList .section-image-row").length === 0) {
+                        $("#noSectionImages").show();
+                    }
+                });
+            } else {
+                alert(
+                    response && response.message
+                        ? response.message
+                        : "Unable to delete section image."
+                );
+
+                $button.prop("disabled", false).text("Delete");
+            }
+        },
+        error: function (xhr) {
+            console.error(xhr.responseText);
+
+            var message = "An error occurred while deleting the image.";
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                message = xhr.responseJSON.message;
+            }
+
+            alert(message);
+            $button.prop("disabled", false).text("Delete");
+        }
+    });
+});
+
+
+$("#loadSectionButtons").on("click", function () {
+    var sectionId = $("#editSectionId").val();
+
+    if (!sectionId) {
+        $("#sectionButtonsError")
+            .text("Please select a section first.")
+            .show();
+        return;
+    }
+
+    $("#sectionButtonsError").hide();
+    $("#sectionButtonsList").empty();
+    $("#noSectionButtons").hide();
+    $("#sectionButtonsLoading").show();
+
+    $.ajax({
+        url: '@Url.Action("GetSectionButtons", "Admin")',
+        type: "GET",
+        data: { sectionId: sectionId },
+        dataType: "json",
+
+        success: function (response) {
+            $("#sectionButtonsLoading").hide();
+
+            if (!response.success) {
+                $("#sectionButtonsError")
+                    .text(response.message || "Unable to load section buttons.")
+                    .show();
+                return;
+            }
+
+            var buttons = response.buttons || [];
+
+            if (buttons.length === 0) {
+                $("#noSectionButtons").show();
+                return;
+            }
+
+            buttons.forEach(function (button) {
+                var $row = $("<div>", {
+                    "class": "border rounded p-3 mb-2"
+                });
+
+                var $details = $("<div>");
+
+                $("<strong>")
+                    .text(button.title || "(Untitled button)")
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("URL: " + (button.url || "Not set"))
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("Target: " + (button.target || "_self"))
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("CSS Class: " + (button.cssClass || "None"))
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("Type: " + (button.buttonType || "None"))
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("Display Order: " + button.displayOrder)
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("Status: " + (button.status ? "Active" : "Inactive"))
+                    .appendTo($details);
+
+                var $editButton = $("<button>", {
+                    type: "button",
+                    "class": "btn btn-sm btn-primary mr-2 mt-2",
+                    text: "Edit"
+                });
+
+                $editButton.on("click", function () {
+                    $("#sectionButtonId").val(button.id);
+                    $("#sectionButtonTitle").val(button.title || "");
+                    $("#sectionButtonUrl").val(button.url || "");
+                    $("#sectionButtonTarget").val(button.target || "_self");
+                    $("#sectionButtonCssClass").val(button.cssClass || "");
+                    $("#sectionButtonType").val(button.buttonType || "");
+                    $("#sectionButtonDisplayOrder").val(button.displayOrder);
+                    $("#sectionButtonStatus").prop("checked", button.status);
+
+                    $("#sectionButtonFormTitle").text("Edit Section Button");
+                    $("#sectionButtonSaveMessage").text("");
+
+                    $("html, body").animate({
+                        scrollTop: $("#sectionButtonFormTitle").offset().top - 100
+                    }, 300);
+                });
+
+
+var $deleteButton = $("<button>", {
+    type: "button",
+    "class": "btn btn-sm btn-danger mt-2",
+    text: "Delete"
+});
+
+$deleteButton.on("click", function () {
+    if (!confirm("Are you sure you want to delete this button?")) {
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find('input[name="__RequestVerificationToken"]')
+        .val();
+
+    $deleteButton.prop("disabled", true).text("Deleting...");
+
+    $.ajax({
+        url: '@Url.Action("DeleteSectionButton", "Admin")',
+        type: "POST",
+        dataType: "json",
+        data: {
+            __RequestVerificationToken: token,
+            sectionId: $("#editSectionId").val(),
+            id: button.id
+        },
+
+        success: function (response) {
+            if (!response.success) {
+                alert(response.message || "Unable to delete the button.");
+                $deleteButton.prop("disabled", false).text("Delete");
+                return;
+            }
+
+            $("#loadSectionButtons").trigger("click");
+            $("#sectionButtonSaveMessage")
+                .removeClass("text-danger")
+                .addClass("text-success")
+                .text(response.message || "Button deleted successfully.");
+
+            // Clear the form if the deleted button was being edited.
+            if ($("#sectionButtonId").val() === button.id) {
+                $("#cancelSectionButtonEdit").trigger("click");
+            }
+        },
+
+        error: function () {
+            alert("An error occurred while deleting the button.");
+            $deleteButton.prop("disabled", false).text("Delete");
+        }
+    });
+});
+
+
+                $row.append($details, $editButton, $deleteButton);
+                $("#sectionButtonsList").append($row);
+            });
+        },
+
+        error: function () {
+            $("#sectionButtonsLoading").hide();
+
+            $("#sectionButtonsError")
+                .text("An error occurred while loading section buttons.")
+                .show();
+        }
+    });
+});
+
+
+$("#loadCardButtons").on("click", function () {
+    var sectionItemId = $("#cardButtonSectionItemId").val();
+
+    if (!sectionItemId) {
+        $("#cardButtonsError")
+            .text("Please select a card first.")
+            .show();
+        return;
+    }
+
+    $("#cardButtonsError").hide();
+    $("#cardButtonsList").empty();
+    $("#noCardButtons").hide();
+    $("#cardButtonsLoading").show();
+
+    $.ajax({
+        url: '@Url.Action("GetSectionItemButtons", "Admin")',
+        type: "GET",
+        data: { sectionItemId: sectionItemId },
+        dataType: "json",
+
+        success: function (response) {
+            $("#cardButtonsLoading").hide();
+
+            if (!response.success) {
+                $("#cardButtonsError")
+                    .text(response.message || "Unable to load card buttons.")
+                    .show();
+                return;
+            }
+
+            var buttons = response.buttons || [];
+
+            if (buttons.length === 0) {
+                $("#noCardButtons").show();
+                return;
+            }
+
+            buttons.forEach(function (button) {
+                var $row = $("<div>", {
+                    "class": "border rounded p-3 mb-2"
+                });
+
+                var $details = $("<div>");
+
+                $("<strong>")
+                    .text(button.title || "(Untitled button)")
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("URL: " + (button.url || "Not set"))
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("Target: " + (button.target || "_self"))
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("CSS Class: " + (button.cssClass || "None"))
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("Type: " + (button.buttonType || "None"))
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("Display Order: " + button.displayOrder)
+                    .appendTo($details);
+
+                $("<div>")
+                    .text("Status: " + (button.status ? "Active" : "Inactive"))
+                    .appendTo($details);
+
+                var $editButton = $("<button>", {
+                    type: "button",
+                    "class": "btn btn-sm btn-primary mt-2",
+                    text: "Edit"
+                });
+
+                $editButton.on("click", function () {
+                    $("#cardButtonId").val(button.id);
+                    $("#cardButtonTitle").val(button.title || "");
+                    $("#cardButtonUrl").val(button.url || "");
+                    $("#cardButtonTarget").val(button.target || "_self");
+                    $("#cardButtonCssClass").val(button.cssClass || "");
+                    $("#cardButtonType").val(button.buttonType || "");
+                    $("#cardButtonDisplayOrder").val(button.displayOrder);
+                    $("#cardButtonStatus").prop("checked", button.status);
+
+                    $("#cardButtonFormTitle").text("Edit Card Button");
+                    $("#cardButtonSaveMessage")
+                        .removeClass("text-danger text-success")
+                        .text("");
+
+                    $("html, body").animate({
+                        scrollTop: $("#cardButtonFormTitle").offset().top - 100
+                    }, 300);
+                });
+
+
+var $deleteButton = $("<button>", {
+    type: "button",
+    "class": "btn btn-sm btn-danger mt-2 ml-2",
+    text: "Delete"
+});
+
+$deleteButton.on("click", function () {
+    if (!confirm("Are you sure you want to delete this card button?")) {
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find('input[name="__RequestVerificationToken"]')
+        .val();
+
+    $deleteButton.prop("disabled", true).text("Deleting...");
+
+    $.ajax({
+        url: '@Url.Action("DeleteSectionItemButton", "Admin")',
+        type: "POST",
+        dataType: "json",
+        data: {
+            __RequestVerificationToken: token,
+            sectionItemId: $("#cardButtonSectionItemId").val(),
+            id: button.id
+        },
+
+        success: function (response) {
+            if (!response.success) {
+                alert(response.message || "Unable to delete the card button.");
+                $deleteButton.prop("disabled", false).text("Delete");
+                return;
+            }
+
+            $("#loadCardButtons").trigger("click");
+
+            $("#cardButtonSaveMessage")
+                .removeClass("text-danger")
+                .addClass("text-success")
+                .text(response.message || "Card button deleted successfully.");
+
+            if ($("#cardButtonId").val() === button.id) {
+                $("#cancelCardButtonEdit").trigger("click");
+            }
+        },
+
+        error: function () {
+            alert("An error occurred while deleting the card button.");
+            $deleteButton.prop("disabled", false).text("Delete");
+        }
+    });
+});
+
+
+                $row.append($details, $editButton, $deleteButton);
+                $("#cardButtonsList").append($row);
+            });
+        },
+
+        error: function () {
+            $("#cardButtonsLoading").hide();
+
+            $("#cardButtonsError")
+                .text("An error occurred while loading card buttons.")
+                .show();
+        }
+    });
+});
+
+
+
+$("#saveSectionButton").on("click", function () {
+    var sectionId = $("#editSectionId").val();
+    var buttonId = $("#sectionButtonId").val();
+    var title = $("#sectionButtonTitle").val().trim();
+    var url = $("#sectionButtonUrl").val().trim();
+    var displayOrder = $("#sectionButtonDisplayOrder").val();
+
+    if (!sectionId) {
+        $("#sectionButtonSaveMessage")
+            .text("Please select a section.")
+            .addClass("text-danger");
+        return;
+    }
+
+    if (!title) {
+        $("#sectionButtonSaveMessage")
+            .text("Button text is required.")
+            .addClass("text-danger");
+        $("#sectionButtonTitle").focus();
+        return;
+    }
+
+    if (displayOrder === "" || Number(displayOrder) < 0) {
+        $("#sectionButtonSaveMessage")
+            .text("Display order must be zero or greater.")
+            .addClass("text-danger");
+        $("#sectionButtonDisplayOrder").focus();
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find('input[name="__RequestVerificationToken"]')
+        .val();
+
+    $("#saveSectionButton").prop("disabled", true);
+    $("#sectionButtonSaveMessage")
+        .removeClass("text-danger text-success")
+        .text("Saving...");
+
+    $.ajax({
+        url: '@Url.Action("SaveSectionButton", "Admin")',
+        type: "POST",
+        dataType: "json",
+        data: {
+            __RequestVerificationToken: token,
+            sectionId: sectionId,
+            id: buttonId || null,
+            title: title,
+            url: url,
+            target: $("#sectionButtonTarget").val(),
+            cssClass: $("#sectionButtonCssClass").val().trim(),
+            buttonType: $("#sectionButtonType").val().trim(),
+            displayOrder: Number(displayOrder),
+            status: $("#sectionButtonStatus").is(":checked")
+        },
+
+        success: function (response) {
+            if (!response.success) {
+                $("#sectionButtonSaveMessage")
+                    .removeClass("text-success")
+                    .addClass("text-danger")
+                    .text(response.message || "Unable to save the button.");
+                return;
+            }
+
+            $("#sectionButtonSaveMessage")
+                .removeClass("text-danger")
+                .addClass("text-success")
+                .text(response.message || "Button saved successfully.");
+
+            // Reset the form for the next button.
+            $("#sectionButtonId").val("");
+            $("#sectionButtonTitle").val("");
+            $("#sectionButtonUrl").val("");
+            $("#sectionButtonTarget").val("_self");
+            $("#sectionButtonCssClass").val("");
+            $("#sectionButtonType").val("");
+            $("#sectionButtonDisplayOrder").val("1");
+            $("#sectionButtonStatus").prop("checked", true);
+            $("#sectionButtonFormTitle").text("Add Section Button");
+
+            // Refresh the list.
+            $("#loadSectionButtons").trigger("click");
+        },
+
+        error: function (xhr) {
+            var message = "An error occurred while saving the button.";
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                message = xhr.responseJSON.message;
+            }
+
+            $("#sectionButtonSaveMessage")
+                .removeClass("text-success")
+                .addClass("text-danger")
+                .text(message);
+        },
+
+        complete: function () {
+            $("#saveSectionButton").prop("disabled", false);
+        }
+    });
+});
+
+    $("#sectionItemsContainer").on("click", ".manage-card-buttons", function () {
+        var $button = $(this);
+        var $card = $button.closest(".section-item-card");
+        var itemId = $card.find(".item-id").val();
+
+        // A card must be saved before buttons can be managed.
+        if (!itemId ||
+            itemId === "00000000-0000-0000-0000-000000000000") {
+            alert("Please save this card before managing its buttons.");
+            return;
+        }
+
+        // Associate the button manager with the selected card.
+        $("#cardButtonSectionItemId").val(itemId);
+        $("#cardButtonId").val("");
+        $("#cardButtonTitle").val("");
+        $("#cardButtonUrl").val("");
+        $("#cardButtonTarget").val("_self");
+        $("#cardButtonCssClass").val("");
+        $("#cardButtonType").val("");
+        $("#cardButtonDisplayOrder").val("1");
+        $("#cardButtonStatus").prop("checked", true);
+
+        $("#cardButtonFormTitle").text("Add Card Button");
+        $("#cardButtonSaveMessage")
+            .removeClass("text-danger text-success")
+            .text("");
+
+        $("#cardButtonsError").hide();
+        $("#cardButtonsLoading").hide();
+        $("#noCardButtons").hide();
+
+        // Display the card button manager.
+
+        // Move the shared manager into the card that was clicked.
+        $("#cardButtonManager").appendTo($card).show();
+
+
+        // Load buttons belonging to this card.
+        $("#loadCardButtons").trigger("click");
+
+        $("html, body").animate({
+            scrollTop: $("#cardButtonManager").offset().top - 30
+        }, 300);
+    });
+
+
+$("#saveCardButton").on("click", function () {
+    var sectionItemId = $("#cardButtonSectionItemId").val();
+    var buttonId = $("#cardButtonId").val();
+    var title = $("#cardButtonTitle").val().trim();
+    var url = $("#cardButtonUrl").val().trim();
+    var displayOrder = $("#cardButtonDisplayOrder").val();
+
+    if (!sectionItemId) {
+        $("#cardButtonSaveMessage")
+            .removeClass("text-success")
+            .addClass("text-danger")
+            .text("Please select a card first.");
+        return;
+    }
+
+    if (!title) {
+        $("#cardButtonSaveMessage")
+            .removeClass("text-success")
+            .addClass("text-danger")
+            .text("Button text is required.");
+        $("#cardButtonTitle").focus();
+        return;
+    }
+
+    if (displayOrder === "" || Number(displayOrder) < 0) {
+        $("#cardButtonSaveMessage")
+            .removeClass("text-success")
+            .addClass("text-danger")
+            .text("Display order must be zero or greater.");
+        $("#cardButtonDisplayOrder").focus();
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find('input[name="__RequestVerificationToken"]')
+        .val();
+
+    $("#saveCardButton").prop("disabled", true);
+
+    $("#cardButtonSaveMessage")
+        .removeClass("text-danger text-success")
+        .text("Saving...");
+
+    $.ajax({
+        url: '@Url.Action("SaveSectionItemButton", "Admin")',
+        type: "POST",
+        dataType: "json",
+        data: {
+            __RequestVerificationToken: token,
+            sectionItemId: sectionItemId,
+            id: buttonId || null,
+            title: title,
+            url: url,
+            target: $("#cardButtonTarget").val(),
+            cssClass: $("#cardButtonCssClass").val().trim(),
+            buttonType: $("#cardButtonType").val().trim(),
+            displayOrder: Number(displayOrder),
+            status: $("#cardButtonStatus").is(":checked")
+        },
+
+        success: function (response) {
+            if (!response.success) {
+                $("#cardButtonSaveMessage")
+                    .removeClass("text-success")
+                    .addClass("text-danger")
+                    .text(response.message || "Unable to save the card button.");
+                return;
+            }
+
+            $("#cardButtonSaveMessage")
+                .removeClass("text-danger")
+                .addClass("text-success")
+                .text(response.message || "Card button saved successfully.");
+
+            // Reset the form for the next button.
+            $("#cardButtonId").val("");
+            $("#cardButtonTitle").val("");
+            $("#cardButtonUrl").val("");
+            $("#cardButtonTarget").val("_self");
+            $("#cardButtonCssClass").val("");
+            $("#cardButtonType").val("");
+            $("#cardButtonDisplayOrder").val("1");
+            $("#cardButtonStatus").prop("checked", true);
+            $("#cardButtonFormTitle").text("Add Card Button");
+
+            // Reload buttons for the currently selected card.
+            $("#loadCardButtons").trigger("click");
+        },
+
+        error: function (xhr) {
+            var message = "An error occurred while saving the card button.";
+
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                message = xhr.responseJSON.message;
+            }
+
+            $("#cardButtonSaveMessage")
+                .removeClass("text-success")
+                .addClass("text-danger")
+                .text(message);
+        },
+
+        complete: function () {
+            $("#saveCardButton").prop("disabled", false);
+        }
+    });
+});
+    $("#cancelCardButtonEdit").on("click", function () {
+        // Reset hidden IDs
+        $("#cardButtonId").val("");
+
+        // Clear form fields
+        $("#cardButtonTitle").val("");
+        $("#cardButtonUrl").val("");
+        $("#cardButtonTarget").val("_self");
+        $("#cardButtonCssClass").val("");
+        $("#cardButtonType").val("");
+        $("#cardButtonDisplayOrder").val("1");
+        $("#cardButtonStatus").prop("checked", true);
+
+        // Reset form heading
+        $("#cardButtonFormTitle").text("Add Card Button");
+
+        // Clear messages
+        $("#cardButtonSaveMessage")
+            .removeClass("text-danger text-success")
+            .text("");
+
+        $("#cardButtonsError").hide();
+    });
+
 
 });
 

@@ -36,6 +36,7 @@ namespace HillView.sln
             container.RegisterType<SectionItemService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
             container.RegisterType<ButtonService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
             container.RegisterType<PageSectionService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
+            container.RegisterType<AdminMenuService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
 
             container.RegisterType<AdminController>();
             container.RegisterType<AccountController>();

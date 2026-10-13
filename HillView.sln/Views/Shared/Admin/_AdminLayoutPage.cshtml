@@ -47,7 +47,8 @@
 <body>
     <div class="page-wrapper" id="main-wrapper" data-layout="vertical" data-navbarbg="skin6" data-sidebartype="full"
          data-sidebar-position="fixed" data-header-position="fixed">
-        @Html.Partial("~/views/shared/admin/_adminsidebar.cshtml")
+        @*@Html.Partial("~/views/shared/admin/_adminsidebar.cshtml")*@
+        @Html.Action("AdminSidebar", "Admin")
         <div class="body-wrapper">
             @Html.Partial("~/Views/Shared/Admin/_AdminNavbar.cshtml")
             <div class="container-fluid">

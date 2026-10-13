@@ -322,6 +322,60 @@ namespace Services
             };
         }
 
+
+        public async Task<bool> IsImageUrlReferencedAsync(
+            string imageUrl,
+            Guid excludedImageId,
+            string ip)
+        {
+            if (string.IsNullOrWhiteSpace(imageUrl))
+                return false;
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(@"
+            SELECT CASE
+                WHEN EXISTS (
+                    SELECT 1
+                    FROM Images
+                    WHERE ImageUrl = @ImageUrl
+                      AND Id <> @ExcludedImageId
+                )
+                THEN 1
+                ELSE 0
+            END;", connection))
+                {
+                    command.Parameters.Add(
+                        "@ImageUrl", SqlDbType.NVarChar, 1000).Value = imageUrl;
+
+                    command.Parameters.Add(
+                        "@ExcludedImageId", SqlDbType.UniqueIdentifier)
+                        .Value = excludedImageId;
+
+                    await connection.OpenAsync();
+
+                    int result = Convert.ToInt32(
+                        await command.ExecuteScalarAsync());
+
+                    return result == 1;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/ImageAction",
+                    "GET",
+                    0,
+                    ip,
+                    "IsImageUrlReferencedAsync");
+
+                throw;
+            }
+        }
+
+
         private static Guid? GetGuid(SqlDataReader reader, string column)
         {
             int ordinal = reader.GetOrdinal(column);
@@ -348,6 +402,102 @@ namespace Services
 
             parameter.Value = (object)value ?? DBNull.Value;
         }
+
+
+        public async Task<List<ImageVM>> GetImagesBySectionItemIdAsync(Guid sectionItemId, string ip)
+        {
+            var images = new List<ImageVM>();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(@"
+            SELECT Id, SectionId, SectionItemId, ImageUrl,
+                   AltText, Caption, ImageType, DisplayOrder,
+                   Status, CreatedAt, UpdatedAt
+            FROM Images
+            WHERE SectionItemId = @SectionItemId
+            ORDER BY DisplayOrder, CreatedAt DESC;", connection))
+                {
+                    command.Parameters.Add(
+                        "@SectionItemId", SqlDbType.UniqueIdentifier)
+                        .Value = sectionItemId;
+
+                    await connection.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            images.Add(MapImage(reader));
+                        }
+                    }
+                }
+
+                return images;
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/SectionItems",
+                    "GET",
+                    0,
+                    ip,
+                    "GetImagesBySectionItemIdAsync");
+
+                throw;
+            }
+        }
+
+
+        public async Task<List<ImageVM>> GetImagesBySectionIdAsync(
+            Guid sectionId, string ip)
+        {
+            var images = new List<ImageVM>();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(@"
+            SELECT Id, SectionId, SectionItemId, ImageUrl,
+                   AltText, Caption, ImageType, DisplayOrder,
+                   Status, CreatedAt, UpdatedAt
+            FROM Images
+            WHERE SectionId = @SectionId
+            ORDER BY DisplayOrder, CreatedAt DESC;", connection))
+                {
+                    command.Parameters.Add(
+                        "@SectionId", SqlDbType.UniqueIdentifier)
+                        .Value = sectionId;
+
+                    await connection.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            images.Add(MapImage(reader));
+                        }
+                    }
+                }
+
+                return images;
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/Sections",
+                    "GET",
+                    0,
+                    ip,
+                    "GetImagesBySectionIdAsync");
+
+                throw;
+            }
+        }
+
     }
 }
 

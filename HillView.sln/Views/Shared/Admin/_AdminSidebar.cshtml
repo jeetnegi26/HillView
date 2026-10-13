@@ -1,4 +1,9 @@
-﻿    <!-- Sidebar Start -->
+﻿@model DTOs.AdminSidebarVM
+
+@using System
+@using System.Linq
+<!-- Sidebar Start -->
+
 <aside class="left-sidebar">
     <!-- Sidebar scroll-->
     <div>
@@ -8,7 +13,7 @@
                 <img id="adminWebLogo"
                      src="/Content/profile/default-logo.png"
                      alt="Website Logo"
-                     class="img-fluid w-50"/>
+                     class="img-fluid w-50" />
             </a>
 
             <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer"
@@ -18,54 +23,152 @@
         </div>
         <!-- Sidebar navigation-->
         <nav class="sidebar-nav scroll-sidebar data-simplebar">
-            <ul id="sidebarnav">
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="/Admin" aria-expanded="false">
-                        <span>
-                            <i class="ti ti-sailboat"></i>
-                        </span>
-                        <span class="hide-menu">Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-small-cap">
-                    <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                    <span class="hide-menu">Service</span>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="/Admin/Directors" aria-expanded="false">
-                        <span>
-                            <i class="ti ti-users"></i>
-                        </span>
-                        <span class="hide-menu">Job Listing</span>
-                    </a>
-                </li>
-                <li class="nav-small-cap">
-                    <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                    <span class="hide-menu">OTHERS</span>
-                </li>
-                <li class="sidebar-item">
-                    <a class="sidebar-link" href="@Url.Action("WebInfos","Admin")" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" width="24" height="24" stroke-width="2">
-                            <path d="M19.5 7a9 9 0 0 0 -7.5 -4a8.991 8.991 0 0 0 -7.484 4"></path>
-                            <path d="M11.5 3a16.989 16.989 0 0 0 -1.826 4"></path>
-                            <path d="M12.5 3a16.989 16.989 0 0 1 1.828 4"></path>
-                            <path d="M19.5 17a9 9 0 0 1 -7.5 4a8.991 8.991 0 0 1 -7.484 -4"></path>
-                            <path d="M11.5 21a16.989 16.989 0 0 1 -1.826 -4"></path>
-                            <path d="M12.5 21a16.989 16.989 0 0 0 1.828 -4"></path>
-                            <path d="M2 10l1 4l1.5 -4l1.5 4l1 -4"></path>
-                            <path d="M17 10l1 4l1.5 -4l1.5 4l1 -4"></path>
-                            <path d="M9.5 10l1 4l1.5 -4l1.5 4l1 -4"></path>
-                        </svg>
-                        <span class="hide-menu">Web Info</span>
-                    </a>
-                </li>
+            <ul class="list-unstyled components">
+                @* Standalone menu items *@
+                @foreach (var item in Model.StandaloneItems)
+                {
+                    @RenderMenuItem(item)
+                }
 
+                @* Grouped menu items *@
+                @foreach (var group in Model.Groups)
+                {
+                    var groupId = "menu-" + group.Id.ToString("N");
+                    var groupIsActive = HasActiveGroup(group);
+
+                    <li class="sidebar-item">
+                        <a class="sidebar-link has-arrow @(groupIsActive ? "" : "collapsed")"
+                           href="javascript:void(0)"
+                           data-bs-toggle="collapse"
+                           data-bs-target="#@groupId"
+                           aria-controls="@groupId"
+                           aria-expanded="@(groupIsActive ? "true" : "false")">
+
+                            <i class="ti ti-folder"></i>
+                            <span class="hide-menu">@group.Title</span>
+                        </a>
+
+                        <ul id="@groupId"
+                            class="collapse first-level @(groupIsActive ? "show" : "")">
+
+                            @foreach (var item in group.Items)
+                            {
+                                @RenderMenuItem(item)
+                            }
+
+                        </ul>
+                    </li>
+                }
             </ul>
         </nav>
         <!-- End Sidebar navigation -->
     </div>
     <!-- End Sidebar scroll-->
 </aside>
+@functions {
+    public string GetMenuUrl(DTOs.AdminMenuItemVM item)
+    {
+        if (!string.IsNullOrWhiteSpace(item.Url))
+        {
+            return Url.Content(item.Url);
+        }
+
+        if (!string.IsNullOrWhiteSpace(item.Controller) &&
+            !string.IsNullOrWhiteSpace(item.Action))
+        {
+            return Url.Action(item.Action, item.Controller);
+        }
+
+        return "#";
+    }
+
+private bool IsCurrentMenuItem(DTOs.AdminMenuItemVM item)
+    {
+        var currentController = Convert.ToString(
+            ViewContext.RouteData.Values["controller"]);
+
+        var currentAction = Convert.ToString(
+            ViewContext.RouteData.Values["action"]);
+
+        return !string.IsNullOrWhiteSpace(item.Controller)
+            && string.Equals(
+                item.Controller.Trim(),
+                currentController,
+                StringComparison.OrdinalIgnoreCase)
+            && (
+                string.IsNullOrWhiteSpace(item.Action)
+                || string.Equals(
+                    item.Action.Trim(),
+                    currentAction,
+                    StringComparison.OrdinalIgnoreCase)
+            );
+    }
+
+    private bool HasActiveMenuItem(DTOs.AdminMenuItemVM item)
+    {
+        if (IsCurrentMenuItem(item))
+            return true;
+
+        return item.Children != null &&
+               item.Children.Any(HasActiveMenuItem);
+    }
+
+    private bool HasActiveGroup(DTOs.AdminMenuGroupVM group)
+    {
+        return group.Items != null &&
+               group.Items.Any(HasActiveMenuItem);
+    }
+}
+
+@helper RenderMenuItem(DTOs.AdminMenuItemVM item)
+{
+    var hasChildren = item.Children != null && item.Children.Count > 0;
+    var menuId = "item-" + item.Id.ToString("N");
+    var isActive = IsCurrentMenuItem(item);
+    var hasActiveChild = hasChildren && HasActiveMenuItem(item);
+
+    <li class="sidebar-item @(isActive ? "selected" : "")">
+        @if (hasChildren)
+        {
+            <a class="sidebar-link has-arrow @(hasActiveChild ? "" : "collapsed")"
+               href="javascript:void(0)"
+               data-bs-toggle="collapse"
+               data-bs-target="#@menuId"
+               aria-controls="@menuId"
+               aria-expanded="@(hasActiveChild ? "true" : "false")">
+
+                @if (!string.IsNullOrWhiteSpace(item.Icon))
+                {
+                    <i class="@item.Icon"></i>
+                }
+
+                <span class="hide-menu">@item.Title</span>
+            </a>
+
+            <ul id="@menuId"
+                class="collapse second-level @(hasActiveChild ? "show" : "")">
+
+                @foreach (var child in item.Children)
+                {
+                    @RenderMenuItem(child)
+                }
+            </ul>
+        }
+        else
+        {
+            <a class="sidebar-link @(isActive ? "active" : "")"
+               href="@GetMenuUrl(item)">
+
+                @if (!string.IsNullOrWhiteSpace(item.Icon))
+                {
+                    <i class="@item.Icon"></i>
+                }
+
+                <span class="hide-menu">@item.Title</span>
+            </a>
+        }
+    </li>
+}
 <!--  Sidebar End -->
 <script>
     $(function () {

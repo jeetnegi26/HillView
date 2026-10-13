@@ -98,7 +98,7 @@ namespace Services
             }
         }
 
-        public async Task<bool> SaveSectionItemAsync(
+        public async Task<Guid?> SaveSectionItemAsync(
             SectionItemVM model, string ip)
         {
             try
@@ -111,41 +111,42 @@ namespace Services
                     {
                         command.Connection = connection;
 
-                        if (model.Id == Guid.Empty)
+                        bool isNew = model.Id == Guid.Empty;
+
+                        if (isNew)
                         {
                             command.CommandText = @"
-INSERT INTO SectionItems
-(
-    SectionId, Title, Heading, SubHeading,
-    Description, Value, Label, LinkUrl,
-    AdditionalData, DisplayOrder, Status
-)
-OUTPUT INSERTED.Id
-VALUES
-(
-    @SectionId, @Title, @Heading, @SubHeading,
-    @Description, @Value, @Label, @LinkUrl,
-    @AdditionalData, @DisplayOrder, @Status
-);
-";
+                        INSERT INTO SectionItems
+                        (
+                            SectionId, Title, Heading, SubHeading,
+                            Description, Value, Label, LinkUrl,
+                            AdditionalData, DisplayOrder, Status
+                        )
+                        OUTPUT INSERTED.Id
+                        VALUES
+                        (
+                            @SectionId, @Title, @Heading, @SubHeading,
+                            @Description, @Value, @Label, @LinkUrl,
+                            @AdditionalData, @DisplayOrder, @Status
+                        );";
                         }
                         else
                         {
                             command.CommandText = @"
-                                UPDATE SectionItems
-                                SET SectionId = @SectionId,
-                                    Title = @Title,
-                                    Heading = @Heading,
-                                    SubHeading = @SubHeading,
-                                    Description = @Description,
-                                    Value = @Value,
-                                    Label = @Label,
-                                    LinkUrl = @LinkUrl,
-                                    AdditionalData = @AdditionalData,
-                                    DisplayOrder = @DisplayOrder,
-                                    Status = @Status,
-                                    UpdatedAt = SYSUTCDATETIME()
-                                WHERE Id = @Id;";
+                        UPDATE SectionItems
+                        SET SectionId = @SectionId,
+                            Title = @Title,
+                            Heading = @Heading,
+                            SubHeading = @SubHeading,
+                            Description = @Description,
+                            Value = @Value,
+                            Label = @Label,
+                            LinkUrl = @LinkUrl,
+                            AdditionalData = @AdditionalData,
+                            DisplayOrder = @DisplayOrder,
+                            Status = @Status,
+                            UpdatedAt = SYSUTCDATETIME()
+                        WHERE Id = @Id;";
 
                             command.Parameters.Add(
                                 "@Id", SqlDbType.UniqueIdentifier).Value = model.Id;
@@ -169,9 +170,19 @@ VALUES
                         command.Parameters.Add(
                             "@Status", SqlDbType.Bit).Value = model.Status;
 
+                        if (isNew)
+                        {
+                            object result = await command.ExecuteScalarAsync();
+
+                            if (result == null || result == DBNull.Value)
+                                return null;
+
+                            return (Guid)result;
+                        }
+
                         int affected = await command.ExecuteNonQueryAsync();
 
-                        return affected > 0;
+                        return affected > 0 ? model.Id : (Guid?)null;
                     }
                 }
             }

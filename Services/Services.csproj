@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccountService.cs" />
+    <Compile Include="AdminMenuService.cs" />
     <Compile Include="ButtonService.cs" />
     <Compile Include="ImageService.cs" />
     <Compile Include="LogErrorService.cs" />
