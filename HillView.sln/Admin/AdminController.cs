@@ -49,6 +49,7 @@ namespace HillView.sln.Admin
 
         #region Home
         // GET: Admin
+        [Route("admin/dashboard")]
         public ActionResult Index()
         {
             return View();
@@ -200,7 +201,6 @@ namespace HillView.sln.Admin
                     TempData["SuccessMessage"] = "Menu item added successfully.";
                 }
 
-                TempData["SuccessMessage"] = "Menu item added successfully.";
 
                 return RedirectToAction("MenuManagement");
             }
@@ -270,7 +270,6 @@ namespace HillView.sln.Admin
             }
         }
 
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteMenuItem(Guid id)
@@ -299,8 +298,6 @@ namespace HillView.sln.Admin
 
             return RedirectToAction("MenuManagement");
         }
-
-
         #endregion
 
         #region Pages CRUD
@@ -770,48 +767,51 @@ namespace HillView.sln.Admin
         }
 
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteSectionType(int id)
+        public async Task<ActionResult> DeleteSection(Guid id, Guid? pageId)
         {
             try
             {
-                if (id <= 0)
+                if (id == Guid.Empty)
                 {
-                    TempData["SectionTypeError"] = "Invalid section type ID.";
-                    return RedirectToAction("SectionTypes");
+                    TempData["ErrorMessage"] = "Invalid section ID.";
+                    return RedirectToAction("Sections");
                 }
 
-                bool deleted = await _sectionTypeService.DeleteSectionTypeAsync(
+                bool deleted = await _sectionService.DeleteSectionAsync(
                     id, Request.UserHostAddress);
 
-                TempData[deleted ? "SectionTypeSuccess" : "SectionTypeError"] =
+                TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
                     deleted
-                        ? "Section type deleted successfully."
-                        : "Section type not found.";
-
-                return RedirectToAction("SectionTypes");
+                        ? "Section deleted successfully."
+                        : "Section not found.";
             }
             catch (System.Data.SqlClient.SqlException ex)
                 when (ex.Number == 547)
             {
-                TempData["SectionTypeError"] =
-                    "This section type is already used by sections and cannot be deleted.";
-
-                return RedirectToAction("SectionTypes");
+                TempData["ErrorMessage"] =
+                    "This section is assigned to a page or has related content. Remove those assignments before deleting it.";
             }
             catch (Exception ex)
             {
                 _logErrorService.LogError(
-                    ex, "Admin/DeleteSectionType", "POST", id,
-                    Request.UserHostAddress, "DeleteSectionType");
+                    ex, "Admin/Sections", "DELETE", 0,
+                    Request.UserHostAddress, "DeleteSection");
 
-                TempData["SectionTypeError"] =
-                    "Unable to delete the section type. Please try again.";
-
-                return RedirectToAction("SectionTypes");
+                TempData["ErrorMessage"] =
+                    "Unable to delete the section. Please try again.";
             }
+
+            if (pageId.HasValue && pageId.Value != Guid.Empty)
+            {
+                return RedirectToAction("PageContent", new { id = pageId.Value });
+            }
+
+            return RedirectToAction("Sections");
         }
+
 
         #endregion
 
@@ -942,44 +942,44 @@ namespace HillView.sln.Admin
                 new { id = model.Id == Guid.Empty ? (Guid?)null : model.Id, validation = true });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteSection(Guid id)
-        {
-            try
-            {
-                if (id == Guid.Empty)
-                {
-                    TempData["ErrorMessage"] = "Invalid section ID.";
-                    return RedirectToAction("Sections");
-                }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> DeleteSection(Guid id)
+        //{
+        //    try
+        //    {
+        //        if (id == Guid.Empty)
+        //        {
+        //            TempData["ErrorMessage"] = "Invalid section ID.";
+        //            return RedirectToAction("Sections");
+        //        }
 
-                bool deleted = await _sectionService.DeleteSectionAsync(
-                    id, Request.UserHostAddress);
+        //        bool deleted = await _sectionService.DeleteSectionAsync(
+        //            id, Request.UserHostAddress);
 
-                TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
-                    deleted
-                        ? "Section deleted successfully."
-                        : "Section not found.";
-            }
-            catch (System.Data.SqlClient.SqlException ex)
-                when (ex.Number == 547)
-            {
-                TempData["ErrorMessage"] =
-                    "This section is assigned to a page or has related content. Remove those assignments before deleting it.";
-            }
-            catch (Exception ex)
-            {
-                _logErrorService.LogError(
-                    ex, "Admin/Sections", "DELETE", 0,
-                    Request.UserHostAddress, "DeleteSection");
+        //        TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
+        //            deleted
+        //                ? "Section deleted successfully."
+        //                : "Section not found.";
+        //    }
+        //    catch (System.Data.SqlClient.SqlException ex)
+        //        when (ex.Number == 547)
+        //    {
+        //        TempData["ErrorMessage"] =
+        //            "This section is assigned to a page or has related content. Remove those assignments before deleting it.";
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logErrorService.LogError(
+        //            ex, "Admin/Sections", "DELETE", 0,
+        //            Request.UserHostAddress, "DeleteSection");
 
-                TempData["ErrorMessage"] =
-                    "Unable to delete the section. Please try again.";
-            }
+        //        TempData["ErrorMessage"] =
+        //            "Unable to delete the section. Please try again.";
+        //    }
 
-            return RedirectToAction("Sections");
-        }
+        //    return RedirectToAction("Sections");
+        //}
 
         private async Task LoadSectionTypesAsync(int selectedId = 0)
         {
@@ -3070,15 +3070,22 @@ namespace HillView.sln.Admin
                 });
         }
 
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeletePageSection(Guid id)
+        public async Task<ActionResult> DeletePageSection(Guid id, Guid pageId)
         {
             try
             {
+                if (id == Guid.Empty || pageId == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "Invalid page or section assignment ID.";
+                    return RedirectToAction("PageSections");
+                }
+
                 bool deleted = await _pageSectionService
-                    .DeletePageSectionAsync(
-                        id, Request.UserHostAddress);
+                    .DeletePageSectionAsync(id, Request.UserHostAddress);
 
                 TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
                     deleted
@@ -3087,7 +3094,7 @@ namespace HillView.sln.Admin
             }
             catch (Exception ex)
             {
-                 _logErrorService.LogError(
+                _logErrorService.LogError(
                     ex, Request.Url?.ToString(),
                     nameof(DeletePageSection), 0,
                     Request.UserHostAddress, null);
@@ -3096,8 +3103,10 @@ namespace HillView.sln.Admin
                     "Unable to remove the page section assignment.";
             }
 
-            return RedirectToAction("PageSections");
+            return RedirectToAction("PageContent", new { id = pageId });
         }
+
+
 
         private async Task LoadPageSectionDropdownsAsync(
             PageSectionVM model)

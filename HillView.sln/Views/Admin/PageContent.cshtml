@@ -109,6 +109,41 @@
                                             Manage Cards
                                         </button>
 
+                                        @* Remove section from this page only *@
+                                        @using (Html.BeginForm(
+                                            "DeletePageSection",
+                                            "Admin",
+                                            new { id = item.Id },
+                                            FormMethod.Post,
+                                            new { style = "display:inline;" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="pageId" value="@pageId" />
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-warning"
+                                                    onclick="return confirm('Remove this section from the current page?');">
+                                                <i class="fa fa-unlink"></i> Remove
+                                            </button>
+                                        }
+
+                                        @* Permanently delete the actual section *@
+                                        @using (Html.BeginForm(
+                                            "DeleteSection",
+                                            "Admin",
+                                            new { id = item.SectionId, pageId = pageId },
+                                            FormMethod.Post,
+                                            new { style = "display:inline;" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('WARNING: Permanently delete this section? This may affect other pages using it. This action cannot be undone.');">
+                                                <i class="fa fa-trash"></i> Permanent Delete
+                                            </button>
+                                        }
+
                                     </td>
                                 </tr>
                             }

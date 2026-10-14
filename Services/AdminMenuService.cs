@@ -81,6 +81,54 @@ namespace Services
                     SELECT Id, GroupId, ParentMenuItemId, Title, Icon,
                            Controller, Action, Url, DisplayOrder, Status
                     FROM AdminMenuItems
+                    ORDER BY DisplayOrder, Title;", connection))
+                {
+                    await connection.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            items.Add(new AdminMenuItemVM
+                            {
+                                Id = reader.GetGuid(reader.GetOrdinal("Id")),
+                                GroupId = GetNullableGuid(reader, "GroupId"),
+                                ParentMenuItemId = GetNullableGuid(reader, "ParentMenuItemId"),
+                                Title = reader.GetString(reader.GetOrdinal("Title")),
+                                Icon = GetNullableString(reader, "Icon"),
+                                Controller = GetNullableString(reader, "Controller"),
+                                Action = GetNullableString(reader, "Action"),
+                                Url = GetNullableString(reader, "Url"),
+                                DisplayOrder = reader.GetInt32(reader.GetOrdinal("DisplayOrder")),
+                                Status = reader.GetBoolean(reader.GetOrdinal("Status"))
+                            });
+                        }
+                    }
+                }
+
+                return items;
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "Admin/Sidebar", "GET", 0, ip,
+                    "GetMenuItemsAsync");
+
+                throw;
+            }
+        }
+
+        public async Task<List<AdminMenuItemVM>> GetActiveMenuItemsAsync(string ip)
+        {
+            var items = new List<AdminMenuItemVM>();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(@"
+                    SELECT Id, GroupId, ParentMenuItemId, Title, Icon,
+                           Controller, Action, Url, DisplayOrder, Status
+                    FROM AdminMenuItems
                     WHERE Status = 1
                     ORDER BY DisplayOrder, Title;", connection))
                 {

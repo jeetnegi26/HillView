@@ -1,0 +1,17 @@
+﻿
+/* Parent menu items */
+.left-sidebar .sidebar-nav .sidebar-item > .sidebar-link.has-arrow {
+    font-weight: 600;
+}
+
+/* First-level child menus */
+.left-sidebar .sidebar-nav .first-level > .sidebar-item > .sidebar-link {
+    padding-left: 28px;
+    font-size: 13px;
+}
+
+/* Second-level child menus */
+.left-sidebar .sidebar-nav .second-level > .sidebar-item > .sidebar-link {
+    padding-left: 42px;
+    font-size: 12px;
+}

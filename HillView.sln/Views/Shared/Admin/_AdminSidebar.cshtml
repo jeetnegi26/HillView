@@ -9,7 +9,7 @@
     <div>
         <div class="brand-logo text-lg-center text-start
             align-items-center justify-content-between">
-            <a href="/Admin" class="text-nowrap logo-img">
+            <a href="/admin/dashboard" class="text-nowrap logo-img">
                 <img id="adminWebLogo"
                      src="/Content/profile/default-logo.png"
                      alt="Website Logo"
@@ -82,27 +82,35 @@
         return "#";
     }
 
-private bool IsCurrentMenuItem(DTOs.AdminMenuItemVM item)
+
+
+
+    private bool IsCurrentMenuItem(DTOs.AdminMenuItemVM item)
     {
-        var currentController = Convert.ToString(
-            ViewContext.RouteData.Values["controller"]);
+        string menuUrl = GetMenuUrl(item);
 
-        var currentAction = Convert.ToString(
-            ViewContext.RouteData.Values["action"]);
+        if (string.IsNullOrWhiteSpace(menuUrl) || menuUrl == "#")
+            return false;
 
-        return !string.IsNullOrWhiteSpace(item.Controller)
-            && string.Equals(
-                item.Controller.Trim(),
-                currentController,
-                StringComparison.OrdinalIgnoreCase)
-            && (
-                string.IsNullOrWhiteSpace(item.Action)
-                || string.Equals(
-                    item.Action.Trim(),
-                    currentAction,
-                    StringComparison.OrdinalIgnoreCase)
-            );
+        Uri resolvedMenuUri;
+        if (!Uri.TryCreate(
+                Request.Url,
+                menuUrl,
+                out resolvedMenuUri))
+        {
+            return false;
+        }
+
+        string menuPath = resolvedMenuUri.AbsolutePath.TrimEnd('/');
+        string currentPath = Request.Url.AbsolutePath.TrimEnd('/');
+
+        return string.Equals(
+            menuPath,
+            currentPath,
+            StringComparison.OrdinalIgnoreCase);
     }
+
+
 
     private bool HasActiveMenuItem(DTOs.AdminMenuItemVM item)
     {

@@ -9,6 +9,7 @@
     <link href="~/Content/icons/tabler-icons/tabler-icons.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.min.css" />
     <link href="~/Content/adminstyle.min.css" rel="stylesheet" />
+    <link href="~/Content/admin-custom.css" rel="stylesheet" />
 
     <script src="~/Scripts/jquery-3.4.1.min.js"></script>
     <script src="~/Scripts/bootstrap.bundle.min.js"></script>
@@ -52,7 +53,7 @@
         <div class="body-wrapper">
             @Html.Partial("~/Views/Shared/Admin/_AdminNavbar.cshtml")
             <div class="container-fluid">
-                <div class="row p-0 m-0 data_display-box">
+                <div class="row p-4 m-0 data_display-box">
                     @RenderBody()
                 </div>
             </div>

@@ -109,7 +109,7 @@ namespace HillView.sln.Controllers
             {
                 result = true,
                 message = "",
-                redirectURL = "/Admin"
+                redirectURL = "/admin/dashboard"
             });
         }
 

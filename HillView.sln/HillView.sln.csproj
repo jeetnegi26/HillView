@@ -204,6 +204,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\admin-custom.css" />
     <Content Include="Content\adminstyle.min.css" />
     <Content Include="Content\all.min.css" />
     <Content Include="Content\bootstrap-icons.min.css" />
