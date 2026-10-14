@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminMenuGroupVM.cs" />
+    <Compile Include="AdminMenuItemEditVM.cs" />
     <Compile Include="Base.cs" />
     <Compile Include="ButtonVM.cs" />
     <Compile Include="ChangePasswordModel.cs" />

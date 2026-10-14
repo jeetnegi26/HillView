@@ -1,6 +1,48 @@
 USE [OBG_HillView]
 GO
-/****** Object:  Table [dbo].[Blogs]    Script Date: 13-10-2026 07:56:06 ******/
+/****** Object:  Table [dbo].[AdminMenuGroups]    Script Date: 14-10-2026 08:18:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AdminMenuGroups](
+	[Id] [uniqueidentifier] NOT NULL,
+	[Title] [nvarchar](100) NOT NULL,
+	[DisplayOrder] [int] NOT NULL,
+	[Status] [bit] NOT NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[UpdatedAt] [datetime2](7) NULL,
+ CONSTRAINT [PK_AdminMenuGroups] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AdminMenuItems]    Script Date: 14-10-2026 08:18:57 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AdminMenuItems](
+	[Id] [uniqueidentifier] NOT NULL,
+	[GroupId] [uniqueidentifier] NULL,
+	[ParentMenuItemId] [uniqueidentifier] NULL,
+	[Title] [nvarchar](100) NOT NULL,
+	[Icon] [nvarchar](100) NULL,
+	[Controller] [nvarchar](100) NULL,
+	[Action] [nvarchar](100) NULL,
+	[Url] [nvarchar](500) NULL,
+	[DisplayOrder] [int] NOT NULL,
+	[Status] [bit] NOT NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[UpdatedAt] [datetime2](7) NULL,
+ CONSTRAINT [PK_AdminMenuItems] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Blogs]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19,7 +61,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Buttons]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[Buttons]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -43,7 +85,7 @@ CREATE TABLE [dbo].[Buttons](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ContactUs]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[ContactUs]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -66,7 +108,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[ErrorLogs]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[ErrorLogs]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -91,7 +133,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Images]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[Images]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -114,7 +156,7 @@ CREATE TABLE [dbo].[Images](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[JobListing]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[JobListing]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -133,7 +175,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Key]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[Key]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -151,7 +193,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Pages]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[Pages]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -174,7 +216,7 @@ CREATE TABLE [dbo].[Pages](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[PageSections]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[PageSections]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -193,7 +235,7 @@ CREATE TABLE [dbo].[PageSections](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Role]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[Role]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -212,7 +254,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[RoleAssign]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[RoleAssign]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -232,7 +274,7 @@ PRIMARY KEY CLUSTERED
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SectionItems]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[SectionItems]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -258,7 +300,7 @@ CREATE TABLE [dbo].[SectionItems](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[Sections]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[Sections]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -283,7 +325,7 @@ CREATE TABLE [dbo].[Sections](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[SectionTypes]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[SectionTypes]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -301,7 +343,7 @@ CREATE TABLE [dbo].[SectionTypes](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[User]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Table [dbo].[User]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -324,6 +366,34 @@ PRIMARY KEY CLUSTERED
 	[Id] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY]
+GO
+INSERT [dbo].[AdminMenuGroups] ([Id], [Title], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'a1000000-0000-0000-0000-000000000001', N'Service', 1, 1, CAST(N'2026-10-13T18:15:45.1607002' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuGroups] ([Id], [Title], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'a1000000-0000-0000-0000-000000000002', N'Others', 2, 1, CAST(N'2026-10-13T18:15:45.1644932' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuGroups] ([Id], [Title], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'6b0a671a-aa97-411e-a1d2-244f09c33ea2', N'Content Management', 1, 1, CAST(N'2026-10-14T01:29:23.5918939' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'b1000000-0000-0000-0000-000000000001', NULL, NULL, N'Dashboard', N'ti ti-sailboat', N'Admin', N'Index', NULL, 1, 1, CAST(N'2026-10-13T18:15:45.1662426' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'b1000000-0000-0000-0000-000000000002', N'a1000000-0000-0000-0000-000000000001', NULL, N'Job Listing', N'ti ti-users', N'Admin', N'Directors', NULL, 1, 1, CAST(N'2026-10-13T18:15:45.1681589' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'b1000000-0000-0000-0000-000000000003', N'a1000000-0000-0000-0000-000000000002', NULL, N'Web Info', N'ti ti-world', N'Admin', N'WebInfos', NULL, 1, 1, CAST(N'2026-10-13T18:15:45.1787252' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'e377e264-4409-4a27-9402-07c2bb5694eb', N'a1000000-0000-0000-0000-000000000002', NULL, N'Menu Management', N'ti ti-menu-2', N'Admin', N'MenuManagement', NULL, 2, 1, CAST(N'2026-10-14T01:36:43.6867015' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'f97944f2-62ee-489a-a9c2-4a585ff5b5ce', N'6b0a671a-aa97-411e-a1d2-244f09c33ea2', NULL, N'Section Items', N'ti ti-list-details', N'Admin', N'SectionItems', NULL, 5, 1, CAST(N'2026-10-14T01:29:23.5918939' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'4b7684d9-8dca-40fd-8b23-5a2309717adc', N'6b0a671a-aa97-411e-a1d2-244f09c33ea2', NULL, N'Buttons', N'ti ti-click', N'Admin', N'Buttons', NULL, 7, 1, CAST(N'2026-10-14T01:29:23.5918939' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'19be42fe-889f-4a87-abae-77e41fdc6d35', N'6b0a671a-aa97-411e-a1d2-244f09c33ea2', NULL, N'Page Sections', N'ti ti-layout-grid', N'Admin', N'PageSections', NULL, 2, 1, CAST(N'2026-10-14T01:29:23.5918939' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'b3e7a01f-c1ac-406a-a966-996a3ed0ff50', N'6b0a671a-aa97-411e-a1d2-244f09c33ea2', NULL, N'Sections', N'ti ti-layers', N'Admin', N'Sections', NULL, 4, 1, CAST(N'2026-10-14T01:29:23.5918939' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'f4c3eb0d-8879-4b9a-b99f-bfdbeb3746e6', N'6b0a671a-aa97-411e-a1d2-244f09c33ea2', NULL, N'Images', N'ti ti-photo', N'Admin', N'Images', NULL, 6, 1, CAST(N'2026-10-14T01:29:23.5918939' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'2d0d0aaa-ac8f-4903-892e-e5813f1752b6', N'6b0a671a-aa97-411e-a1d2-244f09c33ea2', NULL, N'Pages', N'ti ti-file-text', N'Admin', N'Pages', NULL, 1, 1, CAST(N'2026-10-14T01:29:23.5918939' AS DateTime2), NULL)
+GO
+INSERT [dbo].[AdminMenuItems] ([Id], [GroupId], [ParentMenuItemId], [Title], [Icon], [Controller], [Action], [Url], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'5beaa267-95ed-4424-93ad-f82a4589e4f1', N'6b0a671a-aa97-411e-a1d2-244f09c33ea2', NULL, N'Section Types', N'ti ti-category', N'Admin', N'SectionTypes', NULL, 3, 1, CAST(N'2026-10-14T01:29:23.5918939' AS DateTime2), NULL)
 GO
 INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'2ad073d0-0dee-4a75-9255-084cea651e14', NULL, CAST(N'2026-10-11T10:55:36.3600000' AS DateTime2), CAST(N'2026-10-11T05:25:36.3610333' AS DateTime2), N'::1', N'SVG', N'System.Data', N'   at System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
    at System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
@@ -426,6 +496,28 @@ INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHost
 GO
 INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'85f2a006-8125-41fd-83a0-612e950f5659', NULL, CAST(N'2026-10-12T14:24:26.7233333' AS DateTime2), CAST(N'2026-10-12T08:54:26.7243650' AS DateTime2), N'::1', N'Object reference not set to an instance of an object.', N'Services', N'   at Services.SectionTypeService.<SaveSectionTypeAsync>d__5.MoveNext() in D:\HillView\HillView\Services\SectionTypeService.cs:line 135', N'System.NullReferenceException', N'Admin/SectionTypeAction', N'0', N'SaveSectionType', N'POST')
 GO
+INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'dbb350b7-fce8-4ecc-9721-6e23bd61e37f', NULL, CAST(N'2026-10-14T07:43:29.7366667' AS DateTime2), CAST(N'2026-10-14T02:13:29.7401639' AS DateTime2), N'Unknown', N'Must declare the scalar variable "@ExcludeId".', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at System.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, String endMethod, Boolean isInternal)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemFormDataAsync>d__11.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 397
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemByIdAsync>d__13.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 607', N'System.Data.SqlClient.SqlException', N'::1', NULL, NULL, NULL)
+GO
 INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'2d4515c7-97e9-49c8-b7a1-81f5fb1a21a2', NULL, CAST(N'2026-10-11T10:46:47.9500000' AS DateTime2), CAST(N'2026-10-11T05:16:47.9570310' AS DateTime2), N'::1', N'SVG', N'System.Data', N'   at System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
    at System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
    at System.Data.SqlClient.SqlDataReader.get_Item(String name)
@@ -514,6 +606,94 @@ INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHost
    at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
    at Services.WebInfoService.<GetWebInfoByIdAsync>d__4.MoveNext() in D:\HillView\HillView\Services\WebInfoService.cs:line 71', N'System.Data.SqlClient.SqlException', N'Admin/WebInfoAction', N'0', N'GetWebInfoById', N'GET')
 GO
+INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'ad348c55-20c9-46b7-a407-a819c2993719', NULL, CAST(N'2026-10-14T07:43:29.6833333' AS DateTime2), CAST(N'2026-10-14T02:13:29.6898116' AS DateTime2), N'Unknown', N'Must declare the scalar variable "@ExcludeId".', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at System.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, String endMethod, Boolean isInternal)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemFormDataAsync>d__11.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 375', N'System.Data.SqlClient.SqlException', N'::1', NULL, NULL, NULL)
+GO
+INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'6add5752-2b70-4612-b9b3-a85f47ed7bc9', NULL, CAST(N'2026-10-14T07:43:29.7933333' AS DateTime2), CAST(N'2026-10-14T02:13:29.7946430' AS DateTime2), N'Unknown', N'Must declare the scalar variable "@ExcludeId".', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at System.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, String endMethod, Boolean isInternal)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemFormDataAsync>d__11.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 397
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemByIdAsync>d__13.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 623
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at HillView.sln.Admin.AdminController.<EditMenuItem>d__18.MoveNext() in D:\HillView\HillView\HillView.sln\Admin\AdminController.cs:line 254', N'System.Data.SqlClient.SqlException', N'::1', NULL, NULL, NULL)
+GO
+INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'0a78702d-6030-4e87-bcf4-b66aa8ed7607', NULL, CAST(N'2026-10-14T07:46:51.9566667' AS DateTime2), CAST(N'2026-10-14T02:16:51.9594213' AS DateTime2), N'Unknown', N'Must declare the scalar variable "@ExcludeId".', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at System.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, String endMethod, Boolean isInternal)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemFormDataAsync>d__11.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 397
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at HillView.sln.Admin.AdminController.<AddMenuItem>d__16.MoveNext() in D:\HillView\HillView\HillView.sln\Admin\AdminController.cs:line 164', N'System.Data.SqlClient.SqlException', N'::1', NULL, NULL, NULL)
+GO
+INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'9c447ded-1eda-4ebb-85a9-bb1e79bdaf20', NULL, CAST(N'2026-10-14T07:43:56.4700000' AS DateTime2), CAST(N'2026-10-14T02:13:56.4720950' AS DateTime2), N'Unknown', N'Must declare the scalar variable "@ExcludeId".', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at System.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, String endMethod, Boolean isInternal)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemFormDataAsync>d__11.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 397
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at HillView.sln.Admin.AdminController.<AddMenuItem>d__16.MoveNext() in D:\HillView\HillView\HillView.sln\Admin\AdminController.cs:line 164', N'System.Data.SqlClient.SqlException', N'::1', NULL, NULL, NULL)
+GO
 INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'95f887e6-553a-45c4-9b73-bddd1d86d59e', NULL, CAST(N'2026-10-11T10:29:01.8300000' AS DateTime2), CAST(N'2026-10-11T04:59:01.8304360' AS DateTime2), N'::1', N'Could not find stored procedure ''sp_UpInsertWebInfo''.', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
    at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
@@ -530,6 +710,23 @@ INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHost
    at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
    at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
    at Services.WebInfoService.<UpInsertWebInfoAsync>d__5.MoveNext() in D:\HillView\HillView\Services\WebInfoService.cs:line 112', N'System.Data.SqlClient.SqlException', N'Admin/WebInfoAction', N'0', N'sp_UpInsertWebInfo', N'POST')
+GO
+INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'cee9df61-b6de-4713-afa1-c3e17b6686ad', NULL, CAST(N'2026-10-14T07:45:43.0666667' AS DateTime2), CAST(N'2026-10-14T02:15:43.0680993' AS DateTime2), N'Unknown', N'Must declare the scalar variable "@ExcludeId".', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at System.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, String endMethod, Boolean isInternal)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemFormDataAsync>d__11.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 375', N'System.Data.SqlClient.SqlException', N'::1', NULL, NULL, NULL)
 GO
 INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'd54c951c-9cac-44cc-92cf-ce54ae1e6efc', NULL, CAST(N'2026-10-11T10:35:27.1266667' AS DateTime2), CAST(N'2026-10-11T05:05:27.1295392' AS DateTime2), N'::1', N'Procedure or function InsertWebInfo has too many arguments specified.', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
@@ -589,6 +786,23 @@ INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHost
    at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
    at Services.WebInfoService.<UpInsertWebInfoAsync>d__5.MoveNext() in D:\HillView\HillView\Services\WebInfoService.cs:line 112', N'System.Data.SqlClient.SqlException', N'Admin/WebInfoAction', N'0', N'sp_UpInsertWebInfo', N'POST')
 GO
+INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'f0535a29-c0a9-4dd1-a276-edfbfc622237', NULL, CAST(N'2026-10-14T07:43:56.4233333' AS DateTime2), CAST(N'2026-10-14T02:13:56.4231286' AS DateTime2), N'Unknown', N'Must declare the scalar variable "@ExcludeId".', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   at System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   at System.Data.SqlClient.SqlCommand.CompleteAsyncExecuteReader(Boolean isInternal, Boolean forDescribeParameterEncryption)
+   at System.Data.SqlClient.SqlCommand.InternalEndExecuteReader(IAsyncResult asyncResult, String endMethod, Boolean isInternal)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderInternal(IAsyncResult asyncResult)
+   at System.Data.SqlClient.SqlCommand.EndExecuteReaderAsync(IAsyncResult asyncResult)
+   at System.Threading.Tasks.TaskFactory`1.FromAsyncCoreLogic(IAsyncResult iar, Func`2 endFunction, Action`1 endAction, Task`1 promise, Boolean requiresSynchronization)
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.ExceptionServices.ExceptionDispatchInfo.Throw()
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at Services.AdminMenuService.<GetMenuItemFormDataAsync>d__11.MoveNext() in D:\HillView\HillView\Services\AdminMenuService.cs:line 375', N'System.Data.SqlClient.SqlException', N'::1', NULL, NULL, NULL)
+GO
 INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHostAdd], [ErrorMessage], [ErrorSource], [StackTrace], [ErrorType], [Url], [UserId], [ProcedureName], [Method]) VALUES (N'e6cd394a-cf1d-46be-9565-f10683268725', NULL, CAST(N'2026-10-11T10:31:35.1800000' AS DateTime2), CAST(N'2026-10-11T05:01:35.1807357' AS DateTime2), N'::1', N'Could not find stored procedure ''sp_UpInsertWebInfo''.', N'.Net SqlClient Data Provider', N'   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
    at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
    at System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
@@ -635,6 +849,10 @@ INSERT [dbo].[ErrorLogs] ([Id], [CreatedBy], [CreatedAt], [UpdatedAt], [UserHost
    at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
    at Services.WebInfoService.<UpInsertWebInfoAsync>d__5.MoveNext() in D:\HillView\HillView\Services\WebInfoService.cs:line 112', N'System.Data.SqlClient.SqlException', N'Admin/WebInfoAction', N'0', N'sp_UpInsertWebInfo', N'POST')
 GO
+INSERT [dbo].[Images] ([Id], [SectionId], [SectionItemId], [ImageUrl], [AltText], [Caption], [ImageType], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'e0e5d6b9-28c7-f111-a449-ad81068a26af', N'8154911c-41c6-f111-a448-f908d11a51b8', NULL, N'40220e7af6b04eb7a4a9cac1e290974f.jpeg', N'about', N'', N'Section', 1, 1, CAST(N'2026-10-13T17:08:37.0000000' AS DateTime2), NULL)
+GO
+INSERT [dbo].[Images] ([Id], [SectionId], [SectionItemId], [ImageUrl], [AltText], [Caption], [ImageType], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'2951a0ed-28c7-f111-a449-ad81068a26af', NULL, N'94ca6a3a-41c6-f111-a448-f908d11a51b8', N'73735b429ea84e71adca3836588921d7.jpeg', N'about', N'', N'Card', 1, 1, CAST(N'2026-10-13T17:10:03.0000000' AS DateTime2), NULL)
+GO
 SET IDENTITY_INSERT [dbo].[Key] ON 
 GO
 INSERT [dbo].[Key] ([Id], [Name], [Type], [Description], [CreatedOn], [SVG_Value]) VALUES (2, N'Hill View', N'BrandName', N'', CAST(N'2026-10-11T05:16:41.480' AS DateTime), N'')
@@ -669,7 +887,7 @@ INSERT [dbo].[RoleAssign] ([Id], [UserId], [RoleId], [CreatedBy], [CreatedAt], [
 GO
 SET IDENTITY_INSERT [dbo].[RoleAssign] OFF
 GO
-INSERT [dbo].[SectionItems] ([Id], [SectionId], [Title], [Heading], [SubHeading], [Description], [Value], [Label], [LinkUrl], [AdditionalData], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'94ca6a3a-41c6-f111-a448-f908d11a51b8', N'8154911c-41c6-f111-a448-f908d11a51b8', N'High ROI Hiring', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 1, CAST(N'2026-10-12T13:31:29.0000000' AS DateTime2), NULL)
+INSERT [dbo].[SectionItems] ([Id], [SectionId], [Title], [Heading], [SubHeading], [Description], [Value], [Label], [LinkUrl], [AdditionalData], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'94ca6a3a-41c6-f111-a448-f908d11a51b8', N'8154911c-41c6-f111-a448-f908d11a51b8', N'High ROI Hiring', NULL, NULL, N'High ROI Hiring', NULL, NULL, NULL, NULL, 1, 1, CAST(N'2026-10-12T13:31:29.0000000' AS DateTime2), CAST(N'2026-10-13T14:12:19.0000000' AS DateTime2))
 GO
 INSERT [dbo].[SectionItems] ([Id], [SectionId], [Title], [Heading], [SubHeading], [Description], [Value], [Label], [LinkUrl], [AdditionalData], [DisplayOrder], [Status], [CreatedAt], [UpdatedAt]) VALUES (N'b419d641-41c6-f111-a448-f908d11a51b8', N'8154911c-41c6-f111-a448-f908d11a51b8', N'Committed to Your Success', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 1, CAST(N'2026-10-12T13:31:41.0000000' AS DateTime2), NULL)
 GO
@@ -707,13 +925,13 @@ SET IDENTITY_INSERT [dbo].[User] OFF
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ_Pages_Slug]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Index [UQ_Pages_Slug]    Script Date: 14-10-2026 08:18:57 ******/
 ALTER TABLE [dbo].[Pages] ADD  CONSTRAINT [UQ_Pages_Slug] UNIQUE NONCLUSTERED 
 (
 	[Slug] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
 GO
-/****** Object:  Index [UQ_PageSections_Page_Section]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Index [UQ_PageSections_Page_Section]    Script Date: 14-10-2026 08:18:57 ******/
 ALTER TABLE [dbo].[PageSections] ADD  CONSTRAINT [UQ_PageSections_Page_Section] UNIQUE NONCLUSTERED 
 (
 	[PageId] ASC,
@@ -722,11 +940,27 @@ ALTER TABLE [dbo].[PageSections] ADD  CONSTRAINT [UQ_PageSections_Page_Section] 
 GO
 SET ANSI_PADDING ON
 GO
-/****** Object:  Index [UQ_SectionTypes_Name]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  Index [UQ_SectionTypes_Name]    Script Date: 14-10-2026 08:18:57 ******/
 ALTER TABLE [dbo].[SectionTypes] ADD  CONSTRAINT [UQ_SectionTypes_Name] UNIQUE NONCLUSTERED 
 (
 	[Name] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[AdminMenuGroups] ADD  DEFAULT (newid()) FOR [Id]
+GO
+ALTER TABLE [dbo].[AdminMenuGroups] ADD  DEFAULT ((0)) FOR [DisplayOrder]
+GO
+ALTER TABLE [dbo].[AdminMenuGroups] ADD  DEFAULT ((1)) FOR [Status]
+GO
+ALTER TABLE [dbo].[AdminMenuGroups] ADD  DEFAULT (sysutcdatetime()) FOR [CreatedAt]
+GO
+ALTER TABLE [dbo].[AdminMenuItems] ADD  DEFAULT (newid()) FOR [Id]
+GO
+ALTER TABLE [dbo].[AdminMenuItems] ADD  DEFAULT ((0)) FOR [DisplayOrder]
+GO
+ALTER TABLE [dbo].[AdminMenuItems] ADD  DEFAULT ((1)) FOR [Status]
+GO
+ALTER TABLE [dbo].[AdminMenuItems] ADD  DEFAULT (sysutcdatetime()) FOR [CreatedAt]
 GO
 ALTER TABLE [dbo].[Blogs] ADD  DEFAULT (newid()) FOR [Id]
 GO
@@ -812,6 +1046,16 @@ ALTER TABLE [dbo].[SectionTypes] ADD  CONSTRAINT [DF_SectionTypes_DisplayOrder] 
 GO
 ALTER TABLE [dbo].[User] ADD  DEFAULT ((1)) FOR [IsFirstLogin]
 GO
+ALTER TABLE [dbo].[AdminMenuItems]  WITH CHECK ADD  CONSTRAINT [FK_AdminMenuItems_Groups] FOREIGN KEY([GroupId])
+REFERENCES [dbo].[AdminMenuGroups] ([Id])
+GO
+ALTER TABLE [dbo].[AdminMenuItems] CHECK CONSTRAINT [FK_AdminMenuItems_Groups]
+GO
+ALTER TABLE [dbo].[AdminMenuItems]  WITH CHECK ADD  CONSTRAINT [FK_AdminMenuItems_Parent] FOREIGN KEY([ParentMenuItemId])
+REFERENCES [dbo].[AdminMenuItems] ([Id])
+GO
+ALTER TABLE [dbo].[AdminMenuItems] CHECK CONSTRAINT [FK_AdminMenuItems_Parent]
+GO
 ALTER TABLE [dbo].[Buttons]  WITH CHECK ADD  CONSTRAINT [FK_Buttons_SectionItems] FOREIGN KEY([SectionItemId])
 REFERENCES [dbo].[SectionItems] ([Id])
 GO
@@ -852,6 +1096,10 @@ REFERENCES [dbo].[SectionTypes] ([Id])
 GO
 ALTER TABLE [dbo].[Sections] CHECK CONSTRAINT [FK_Sections_SectionTypes]
 GO
+ALTER TABLE [dbo].[AdminMenuItems]  WITH CHECK ADD  CONSTRAINT [CK_AdminMenuItems_Owner] CHECK  (([GroupId] IS NULL OR [ParentMenuItemId] IS NULL))
+GO
+ALTER TABLE [dbo].[AdminMenuItems] CHECK CONSTRAINT [CK_AdminMenuItems_Owner]
+GO
 ALTER TABLE [dbo].[Buttons]  WITH CHECK ADD  CONSTRAINT [CK_Buttons_Owner] CHECK  (([SectionId] IS NOT NULL AND [SectionItemId] IS NULL OR [SectionId] IS NULL AND [SectionItemId] IS NOT NULL))
 GO
 ALTER TABLE [dbo].[Buttons] CHECK CONSTRAINT [CK_Buttons_Owner]
@@ -872,7 +1120,7 @@ ALTER TABLE [dbo].[Sections]  WITH CHECK ADD  CONSTRAINT [CK_Sections_SettingsJs
 GO
 ALTER TABLE [dbo].[Sections] CHECK CONSTRAINT [CK_Sections_SettingsJson]
 GO
-/****** Object:  StoredProcedure [dbo].[AuthenticateUser]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  StoredProcedure [dbo].[AuthenticateUser]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -919,7 +1167,7 @@ as begin
     
 end
 GO
-/****** Object:  StoredProcedure [dbo].[GetKeys]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  StoredProcedure [dbo].[GetKeys]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -954,7 +1202,7 @@ BEGIN
     END CATCH        
 END;     
 GO
-/****** Object:  StoredProcedure [dbo].[GetWebInfoById]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  StoredProcedure [dbo].[GetWebInfoById]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -965,7 +1213,7 @@ as begin
 select * from [Key] where Id = @Id  
 end
 GO
-/****** Object:  StoredProcedure [dbo].[InsertErrorLog]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  StoredProcedure [dbo].[InsertErrorLog]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1010,7 +1258,7 @@ BEGIN
     );    
 END    
 GO
-/****** Object:  StoredProcedure [dbo].[InsertWebInfo]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  StoredProcedure [dbo].[InsertWebInfo]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -1030,7 +1278,7 @@ BEGIN
      END  
 END
 GO
-/****** Object:  StoredProcedure [dbo].[sp_UpInsertWebInfo]    Script Date: 13-10-2026 07:56:07 ******/
+/****** Object:  StoredProcedure [dbo].[sp_UpInsertWebInfo]    Script Date: 14-10-2026 08:18:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

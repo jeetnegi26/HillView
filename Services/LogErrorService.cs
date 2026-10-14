@@ -18,6 +18,10 @@ namespace Services
         }
         public void LogError(Exception ex, string url = null, string method = null, int? userId = null, string ipAddress = null, string procedureName = null)
         {
+            if (string.IsNullOrWhiteSpace(ipAddress))
+            {
+                ipAddress = "Unknown";
+            }
             try
             {
                 using (SqlConnection con = new SqlConnection(_connectionString))
@@ -49,6 +53,10 @@ namespace Services
 
         public void LogErrorInTryBlock(string error, string url = null, string method = null, int? userId = null, string ipAddress = null, string procedureName = null)
         {
+            if (string.IsNullOrWhiteSpace(ipAddress))
+            {
+                ipAddress = "Unknown";
+            }
             try
             {
                 using (SqlConnection con = new SqlConnection(_connectionString))

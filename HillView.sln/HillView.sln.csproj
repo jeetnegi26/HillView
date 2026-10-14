@@ -828,6 +828,8 @@
     <Content Include="Views\Admin\PageSections.cshtml" />
     <Content Include="Views\Admin\PageSectionAction.cshtml" />
     <Content Include="Views\Admin\PageContent.cshtml" />
+    <Content Include="Views\Admin\MenuManagement.cshtml" />
+    <Content Include="Views\Admin\AddMenuItem.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">

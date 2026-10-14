@@ -7,6 +7,12 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Data.SqlClient;
+using System.Web.Mvc;
+
 namespace Services
 {
     public class AdminMenuService
@@ -324,5 +330,588 @@ namespace Services
                 ? null
                 : reader.GetString(ordinal);
         }
+
+        public async Task<DTOs.AdminMenuItemEditVM> GetMenuItemFormDataAsync(
+         string ip, Guid? excludeMenuItemId = null)
+        {
+            var model = new DTOs.AdminMenuItemEditVM();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    const string groupQuery = @"
+                SELECT Id, Title
+                FROM dbo.AdminMenuGroups
+                WHERE Status = 1
+                ORDER BY DisplayOrder, Title;";
+
+                    using (var command = new SqlCommand(groupQuery, connection))
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            model.Groups = model.Groups.Concat(new[]
+                            {
+                        new SelectListItem
+                        {
+                            Value = reader["Id"].ToString(),
+                            Text = reader["Title"].ToString()
+                        }
+                    });
+                        }
+                    }
+
+
+                    const string itemQuery = @"
+    SELECT Id, Title
+    FROM dbo.AdminMenuItems
+    WHERE Status = 1
+      AND (@ExcludeId IS NULL OR Id <> @ExcludeId)
+    ORDER BY DisplayOrder, Title;";
+
+                    using (var command = new SqlCommand(itemQuery, connection))
+                    {
+                        // Add the parameter BEFORE executing the query.
+                        command.Parameters.Add("@ExcludeId", SqlDbType.UniqueIdentifier)
+                            .Value = (object)excludeMenuItemId ?? DBNull.Value;
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var parentItems = new List<SelectListItem>();
+
+                            while (await reader.ReadAsync())
+                            {
+                                parentItems.Add(new SelectListItem
+                                {
+                                    Value = reader["Id"].ToString(),
+                                    Text = reader["Title"].ToString()
+                                });
+                            }
+
+                            model.ParentItems = parentItems;
+                        }
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, ip);
+                throw;
+            }
+
+            return model;
+        }
+
+
+        public async Task<Guid> SaveMenuItemAsync(
+            DTOs.AdminMenuItemEditVM model, string ip)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (string.IsNullOrWhiteSpace(model.Title))
+                throw new ArgumentException("Menu title is required.");
+
+            if (model.GroupId.HasValue && model.ParentMenuItemId.HasValue)
+            {
+                throw new ArgumentException(
+                    "Select either a menu group or a parent item, not both.");
+            }
+
+            await ValidateMenuParentAsync(
+                null,
+                model.ParentMenuItemId,
+                model.GroupId,
+                ip);
+
+            var id = Guid.NewGuid();
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            if (model.GroupId.HasValue)
+                            {
+                                const string groupSql = @"
+                            SELECT COUNT(1)
+                            FROM dbo.AdminMenuGroups
+                            WHERE Id = @GroupId AND Status = 1;";
+
+                                using (var command = new SqlCommand(
+                                    groupSql, connection, transaction))
+                                {
+                                    command.Parameters.Add(
+                                        "@GroupId", SqlDbType.UniqueIdentifier)
+                                        .Value = model.GroupId.Value;
+
+                                    if (Convert.ToInt32(
+                                        await command.ExecuteScalarAsync()) == 0)
+                                        throw new ArgumentException(
+                                            "The selected menu group is invalid.");
+                                }
+                            }
+
+                            if (model.ParentMenuItemId.HasValue)
+                            {
+                                const string parentSql = @"
+                            SELECT COUNT(1)
+                            FROM dbo.AdminMenuItems
+                            WHERE Id = @ParentId AND Status = 1;";
+
+                                using (var command = new SqlCommand(
+                                    parentSql, connection, transaction))
+                                {
+                                    command.Parameters.Add(
+                                        "@ParentId", SqlDbType.UniqueIdentifier)
+                                        .Value = model.ParentMenuItemId.Value;
+
+                                    if (Convert.ToInt32(
+                                        await command.ExecuteScalarAsync()) == 0)
+                                        throw new ArgumentException(
+                                            "The selected parent menu item is invalid.");
+                                }
+                            }
+
+                            const string insertSql = @"
+                        INSERT INTO dbo.AdminMenuItems
+                        (
+                            Id, GroupId, ParentMenuItemId, Title, Icon,
+                            Controller, Action, Url, DisplayOrder, Status,
+                            CreatedAt, UpdatedAt
+                        )
+                        VALUES
+                        (
+                            @Id, @GroupId, @ParentId, @Title, @Icon,
+                            @Controller, @Action, @Url, @DisplayOrder, @Status,
+                            SYSUTCDATETIME(), NULL
+                        );";
+
+                            using (var command = new SqlCommand(
+                                insertSql, connection, transaction))
+                            {
+                                command.Parameters.Add(
+                                    "@Id", SqlDbType.UniqueIdentifier).Value = id;
+
+                                command.Parameters.Add(
+                                    "@GroupId", SqlDbType.UniqueIdentifier).Value =
+                                    (object)model.GroupId ?? DBNull.Value;
+
+                                command.Parameters.Add(
+                                    "@ParentId", SqlDbType.UniqueIdentifier).Value =
+                                    (object)model.ParentMenuItemId ?? DBNull.Value;
+
+                                command.Parameters.Add(
+                                    "@Title", SqlDbType.NVarChar, 100).Value =
+                                    model.Title.Trim();
+
+                                command.Parameters.Add(
+                                    "@Icon", SqlDbType.NVarChar, 100).Value =
+                                    (object)model.Icon ?? DBNull.Value;
+
+                                command.Parameters.Add(
+                                    "@Controller", SqlDbType.NVarChar, 100).Value =
+                                    (object)model.Controller ?? DBNull.Value;
+
+                                command.Parameters.Add(
+                                    "@Action", SqlDbType.NVarChar, 100).Value =
+                                    (object)model.Action ?? DBNull.Value;
+
+                                command.Parameters.Add(
+                                    "@Url", SqlDbType.NVarChar, -1).Value =
+                                    (object)model.Url ?? DBNull.Value;
+
+                                command.Parameters.Add(
+                                    "@DisplayOrder", SqlDbType.Int).Value =
+                                    model.DisplayOrder;
+
+                                command.Parameters.Add(
+                                    "@Status", SqlDbType.Bit).Value = model.Status;
+
+                                await command.ExecuteNonQueryAsync();
+                            }
+
+                            transaction.Commit();
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }
+                }
+
+                return id;
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, ip);
+                throw;
+            }
+        }
+
+        public async Task<DTOs.AdminMenuItemEditVM> GetMenuItemByIdAsync(Guid id, string ip)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    const string query = @"
+                SELECT Id, GroupId, ParentMenuItemId, Title, Icon,
+                       Controller, Action, Url, DisplayOrder, Status
+                FROM dbo.AdminMenuItems
+                WHERE Id = @Id;";
+
+                    DTOs.AdminMenuItemEditVM model = null;
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add("@Id", SqlDbType.UniqueIdentifier)
+                            .Value = id;
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            if (await reader.ReadAsync())
+                            {
+                                model = new DTOs.AdminMenuItemEditVM
+                                {
+                                    Id = (Guid)reader["Id"],
+                                    GroupId = reader["GroupId"] == DBNull.Value
+                                        ? (Guid?)null : (Guid)reader["GroupId"],
+                                    ParentMenuItemId = reader["ParentMenuItemId"] == DBNull.Value
+                                        ? (Guid?)null : (Guid)reader["ParentMenuItemId"],
+                                    Title = reader["Title"].ToString(),
+                                    Icon = reader["Icon"] == DBNull.Value
+                                        ? null : reader["Icon"].ToString(),
+                                    Controller = reader["Controller"] == DBNull.Value
+                                        ? null : reader["Controller"].ToString(),
+                                    Action = reader["Action"] == DBNull.Value
+                                        ? null : reader["Action"].ToString(),
+                                    Url = reader["Url"] == DBNull.Value
+                                        ? null : reader["Url"].ToString(),
+                                    DisplayOrder = Convert.ToInt32(reader["DisplayOrder"]),
+                                    Status = Convert.ToBoolean(reader["Status"])
+                                };
+                            }
+                        }
+                    }
+
+                    if (model == null)
+                        return null;
+
+                    var formData = await GetMenuItemFormDataAsync(ip, id);
+                    var descendantIds = await GetDescendantMenuItemIdsAsync(id, ip);
+
+                    formData.ParentItems = formData.ParentItems
+                        .Where(item => !descendantIds.Contains(Guid.Parse(item.Value)))
+                        .ToList();
+
+                    model.Groups = formData.Groups;
+                    model.ParentItems = formData.ParentItems;
+
+                    return model;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, ip);
+                throw;
+            }
+        }
+
+        public async Task UpdateMenuItemAsync(
+    DTOs.AdminMenuItemEditVM model, string ip)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            if (!model.Id.HasValue)
+                throw new ArgumentException("Menu item ID is required.");
+
+            if (string.IsNullOrWhiteSpace(model.Title))
+                throw new ArgumentException("Menu title is required.");
+
+            if (model.GroupId.HasValue && model.ParentMenuItemId.HasValue)
+            {
+                throw new ArgumentException(
+                    "Select either a menu group or a parent item, not both.");
+            }
+
+            await ValidateMenuParentAsync(
+                model.Id,
+                model.ParentMenuItemId,
+                model.GroupId,
+                ip);
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    const string query = @"
+                UPDATE dbo.AdminMenuItems
+                SET
+                    GroupId = @GroupId,
+                    ParentMenuItemId = @ParentId,
+                    Title = @Title,
+                    Icon = @Icon,
+                    Controller = @Controller,
+                    Action = @Action,
+                    Url = @Url,
+                    DisplayOrder = @DisplayOrder,
+                    Status = @Status,
+                    UpdatedAt = SYSUTCDATETIME()
+                WHERE Id = @Id;";
+
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.Add("@Id", SqlDbType.UniqueIdentifier)
+                            .Value = model.Id.Value;
+
+                        command.Parameters.Add("@GroupId", SqlDbType.UniqueIdentifier)
+                            .Value = (object)model.GroupId ?? DBNull.Value;
+
+                        command.Parameters.Add("@ParentId", SqlDbType.UniqueIdentifier)
+                            .Value = (object)model.ParentMenuItemId ?? DBNull.Value;
+
+                        command.Parameters.Add("@Title", SqlDbType.NVarChar, 100)
+                            .Value = model.Title.Trim();
+
+                        command.Parameters.Add("@Icon", SqlDbType.NVarChar, 100)
+                            .Value = (object)model.Icon ?? DBNull.Value;
+
+                        command.Parameters.Add("@Controller", SqlDbType.NVarChar, 100)
+                            .Value = (object)model.Controller ?? DBNull.Value;
+
+                        command.Parameters.Add("@Action", SqlDbType.NVarChar, 100)
+                            .Value = (object)model.Action ?? DBNull.Value;
+
+                        command.Parameters.Add("@Url", SqlDbType.NVarChar, -1)
+                            .Value = (object)model.Url ?? DBNull.Value;
+
+                        command.Parameters.Add("@DisplayOrder", SqlDbType.Int)
+                            .Value = model.DisplayOrder;
+
+                        command.Parameters.Add("@Status", SqlDbType.Bit)
+                            .Value = model.Status;
+
+                        var affectedRows = await command.ExecuteNonQueryAsync();
+
+                        if (affectedRows == 0)
+                            throw new ArgumentException("Menu item was not found.");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, ip);
+                throw;
+            }
+        }
+        private async Task<HashSet<Guid>> GetDescendantMenuItemIdsAsync(
+    Guid menuItemId, string ip)
+        {
+            var descendants = new HashSet<Guid>();
+            var pending = new Stack<Guid>();
+            pending.Push(menuItemId);
+
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    const string query = @"
+                SELECT Id
+                FROM dbo.AdminMenuItems
+                WHERE ParentMenuItemId = @ParentId;";
+
+                    while (pending.Count > 0)
+                    {
+                        var parentId = pending.Pop();
+
+                        using (var command = new SqlCommand(query, connection))
+                        {
+                            command.Parameters.Add("@ParentId",
+                                SqlDbType.UniqueIdentifier).Value = parentId;
+
+                            using (var reader = await command.ExecuteReaderAsync())
+                            {
+                                while (await reader.ReadAsync())
+                                {
+                                    var childId = reader.GetGuid(0);
+
+                                    if (descendants.Add(childId))
+                                        pending.Push(childId);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return descendants;
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, ip);
+                throw;
+            }
+        }
+
+
+        private async Task ValidateMenuParentAsync(
+    Guid? menuItemId,
+    Guid? parentMenuItemId,
+    Guid? groupId,
+    string ip)
+        {
+            if (!parentMenuItemId.HasValue)
+                return;
+
+            if (menuItemId.HasValue &&
+                menuItemId.Value == parentMenuItemId.Value)
+            {
+                throw new ArgumentException(
+                    "A menu item cannot be its own parent.");
+            }
+
+            if (menuItemId.HasValue)
+            {
+                var descendantIds = await GetDescendantMenuItemIdsAsync(
+                    menuItemId.Value, ip);
+
+                if (descendantIds.Contains(parentMenuItemId.Value))
+                {
+                    throw new ArgumentException(
+                        "A menu item cannot be placed under one of its descendants.");
+                }
+            }
+
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                const string query = @"
+            SELECT GroupId, Status
+            FROM dbo.AdminMenuItems
+            WHERE Id = @ParentId;";
+
+                using (var command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.Add("@ParentId", SqlDbType.UniqueIdentifier)
+                        .Value = parentMenuItemId.Value;
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (!await reader.ReadAsync())
+                        {
+                            throw new ArgumentException(
+                                "The selected parent menu item does not exist.");
+                        }
+
+                        if (!Convert.ToBoolean(reader["Status"]))
+                        {
+                            throw new ArgumentException(
+                                "The selected parent menu item is inactive.");
+                        }
+
+                        // A child inherits its parent's location in the sidebar.
+                        // Do not allow a child to also select a separate group.
+                        if (groupId.HasValue)
+                        {
+                            throw new ArgumentException(
+                                "Select either a menu group or a parent item, not both.");
+                        }
+                    }
+                }
+            }
+        }
+
+
+        public async Task DeleteMenuItemAsync(Guid id, string ip)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                {
+                    await connection.OpenAsync();
+
+                    using (var transaction = connection.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Check whether the item has child menu items.
+                            const string childQuery = @"
+                        SELECT COUNT(1)
+                        FROM dbo.AdminMenuItems
+                        WHERE ParentMenuItemId = @Id;";
+
+                            using (var command = new SqlCommand(
+                                childQuery, connection, transaction))
+                            {
+                                command.Parameters.Add("@Id",
+                                    SqlDbType.UniqueIdentifier).Value = id;
+
+                                int childCount = Convert.ToInt32(
+                                    await command.ExecuteScalarAsync());
+
+                                if (childCount > 0)
+                                {
+                                    throw new InvalidOperationException(
+                                        "This menu item cannot be deleted because it has child items. " +
+                                        "Move or delete its child items first.");
+                                }
+                            }
+
+                            // Delete the selected item.
+                            const string deleteQuery = @"
+                        DELETE FROM dbo.AdminMenuItems
+                        WHERE Id = @Id;";
+
+                            using (var command = new SqlCommand(
+                                deleteQuery, connection, transaction))
+                            {
+                                command.Parameters.Add("@Id",
+                                    SqlDbType.UniqueIdentifier).Value = id;
+
+                                int affectedRows = await command.ExecuteNonQueryAsync();
+
+                                if (affectedRows == 0)
+                                {
+                                    throw new ArgumentException(
+                                        "The menu item was not found.");
+                                }
+                            }
+
+                            transaction.Commit();
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, ipAddress: ip);
+                throw;
+            }
+        }
+
+
     }
 }

@@ -101,6 +101,205 @@ namespace HillView.sln.Admin
         }
 
 
+        public async Task<ActionResult> MenuManagement()
+        {
+            try
+            {
+                var ip = Request.UserHostAddress;
+
+                var menu = await _adminMenuService.GetMenuTreeAsync(ip);
+
+                var sidebar = new DTOs.AdminSidebarVM();
+
+                // Organize the returned menu items into the sidebar model.
+                // The service already builds the hierarchy, so preserve
+                // its existing item structure.
+                foreach (var item in menu)
+                {
+                    if (item.GroupId == null)
+                    {
+                        sidebar.StandaloneItems.Add(item);
+                    }
+                    else
+                    {
+                        var group = sidebar.Groups.FirstOrDefault(
+                            g => g.Id == item.GroupId.Value);
+
+                        if (group == null)
+                        {
+                            group = new DTOs.AdminMenuGroupVM
+                            {
+                                Id = item.GroupId.Value,
+                                Title = "Menu Group",
+                                Items = new List<DTOs.AdminMenuItemVM>()
+                            };
+
+                            sidebar.Groups.Add(group);
+                        }
+
+                        group.Items.Add(item);
+                    }
+                }
+
+                return View(sidebar);
+            }
+            catch (Exception ex)
+            {
+                var ip = Request.UserHostAddress;
+
+                // Keep the same error-logging call used by your project.
+                _logErrorService.LogError(ex, ip);
+
+                return View("Error",
+                    new HandleErrorInfo(ex, "Admin", "MenuManagement"));
+            }
+        }
+        [HttpGet]
+        public async Task<ActionResult> AddMenuItem()
+        {
+            try
+            {
+                var ip = Request.UserHostAddress;
+
+                var model = await _adminMenuService.GetMenuItemFormDataAsync(ip);
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                var ip = Request.UserHostAddress;
+                _logErrorService.LogError(ex, ip);
+
+                return View("Error",
+                    new HandleErrorInfo(ex, "Admin", "AddMenuItem"));
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> SaveMenuItem(DTOs.AdminMenuItemEditVM model)
+        {
+            var ip = Request.UserHostAddress;
+
+            if (!ModelState.IsValid)
+            {
+                model = await _adminMenuService.GetMenuItemFormDataAsync(ip);
+                return View("AddMenuItem", model);
+            }
+
+            try
+            {
+                if (model.Id.HasValue)
+                {
+                    await _adminMenuService.UpdateMenuItemAsync(model, ip);
+                    TempData["SuccessMessage"] = "Menu item updated successfully.";
+                }
+                else
+                {
+                    await _adminMenuService.SaveMenuItemAsync(model, ip);
+                    TempData["SuccessMessage"] = "Menu item added successfully.";
+                }
+
+                TempData["SuccessMessage"] = "Menu item added successfully.";
+
+                return RedirectToAction("MenuManagement");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+
+                var formData = await _adminMenuService.GetMenuItemFormDataAsync(ip);
+
+                formData.Title = model.Title;
+                formData.Icon = model.Icon;
+                formData.Controller = model.Controller;
+                formData.Action = model.Action;
+                formData.Url = model.Url;
+                formData.GroupId = model.GroupId;
+                formData.ParentMenuItemId = model.ParentMenuItemId;
+                formData.DisplayOrder = model.DisplayOrder;
+                formData.Status = model.Status;
+
+                return View("AddMenuItem", formData);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, ip);
+
+                ModelState.AddModelError("", "Unable to save the menu item.");
+
+                var formData = await _adminMenuService.GetMenuItemFormDataAsync(ip);
+
+                formData.Title = model.Title;
+                formData.Icon = model.Icon;
+                formData.Controller = model.Controller;
+                formData.Action = model.Action;
+                formData.Url = model.Url;
+                formData.GroupId = model.GroupId;
+                formData.ParentMenuItemId = model.ParentMenuItemId;
+                formData.DisplayOrder = model.DisplayOrder;
+                formData.Status = model.Status;
+
+                return View("AddMenuItem", formData);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EditMenuItem(Guid id)
+        {
+            try
+            {
+                var ip = Request.UserHostAddress;
+
+                var model = await _adminMenuService.GetMenuItemByIdAsync(id, ip);
+
+                if (model == null)
+                {
+                    return HttpNotFound();
+                }
+
+                return View("AddMenuItem", model);
+            }
+            catch (Exception ex)
+            {
+                var ip = Request.UserHostAddress;
+                _logErrorService.LogError(ex, ip);
+
+                return View("Error",
+                    new HandleErrorInfo(ex, "Admin", "EditMenuItem"));
+            }
+        }
+
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteMenuItem(Guid id)
+        {
+            var ip = Request.UserHostAddress;
+
+            try
+            {
+                await _adminMenuService.DeleteMenuItemAsync(id, ip);
+
+                TempData["SuccessMessage"] = "Menu item deleted successfully.";
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, ipAddress: ip);
+                TempData["ErrorMessage"] = "Unable to delete the menu item.";
+            }
+
+            return RedirectToAction("MenuManagement");
+        }
+
 
         #endregion
 

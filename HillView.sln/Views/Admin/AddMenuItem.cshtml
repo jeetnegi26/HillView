@@ -1,0 +1,108 @@
+﻿@model DTOs.AdminMenuItemEditVM
+
+@{
+    ViewBag.Title = Model.Id.HasValue
+        ? "Edit Menu Item"
+        : "Add Menu Item";
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">@ViewBag.Title</h4>
+                    @Html.ValidationSummary(false, "", new { @class = "text-danger mb-3" })
+                    @using (Html.BeginForm("SaveMenuItem", "Admin",
+                        FormMethod.Post, new { @class = "row g-3" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Title, "Menu Title",
+                                new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Title,
+                                new { @class = "form-control", placeholder = "e.g. Pages" })
+                            @Html.ValidationMessageFor(m => m.Title, "",
+                                new { @class = "text-danger" })
+                        </div>
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.Icon, "Icon CSS Class",
+                                new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Icon,
+                                new { @class = "form-control", placeholder = "e.g. ti ti-file-text" })
+                        </div>
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.GroupId, "Menu Group",
+                                new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.GroupId,
+                                new SelectList(Model.Groups, "Value", "Text"),
+                                "-- Standalone Menu Item --",
+                                new { @class = "form-select" })
+                        </div>
+
+                        <div class="col-md-6">
+                            @Html.LabelFor(m => m.ParentMenuItemId, "Parent Menu Item",
+                                new { @class = "form-label" })
+                            @Html.DropDownListFor(m => m.ParentMenuItemId,
+                                new SelectList(Model.ParentItems, "Value", "Text"),
+                                "-- No Parent --",
+                                new { @class = "form-select" })
+                        </div>
+
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.Controller, "Controller",
+                                new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Controller,
+                                new { @class = "form-control", placeholder = "Admin" })
+                        </div>
+
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.Action, "Action",
+                                new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.Action,
+                                new { @class = "form-control", placeholder = "Pages" })
+                        </div>
+
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.Url, "Custom URL",
+                                new { @class = "form-label", })
+                            @Html.TextBoxFor(m => m.Url,
+                                new { @class = "form-control", placeholder = "/Admin/Pages" })
+                        </div>
+
+                        <div class="col-md-4">
+                            @Html.LabelFor(m => m.DisplayOrder, "Display Order",
+                                new { @class = "form-label" })
+                            @Html.TextBoxFor(m => m.DisplayOrder,
+                                new { @class = "form-control", type = "number", min = "1" })
+                        </div>
+
+                        <div class="col-md-4 d-flex align-items-center">
+                            <div class="form-check mt-4">
+                                @Html.CheckBoxFor(m => m.Status,
+                                    new { @class = "form-check-input" })
+                                @Html.LabelFor(m => m.Status, "Active",
+                                    new { @class = "form-check-label" })
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                Save Menu Item
+                            </button>
+
+                            <a href="@Url.Action("MenuManagement", "Admin")"
+                               class="btn btn-secondary ms-2">
+                                Cancel
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
