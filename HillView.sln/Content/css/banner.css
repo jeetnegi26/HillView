@@ -1,0 +1,789 @@
+﻿.orb-scene {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.orb {
+    position: absolute;
+    object-fit: contain;
+    animation-duration: 3.5s;
+    animation-fill-mode: forwards;
+    /* IMPORTANT */
+    animation-timing-function: linear;
+    will-change: top, left, width, height, transform;
+}
+
+/* ========================================
+   Default / Large Desktop
+   < 1440px
+   ======================================== */
+
+.orb-1 {
+    animation-name: orb1;
+}
+
+@keyframes orb1 {
+
+    0% {
+        left: 76%;
+        top: -30%;
+        width: 30vw;
+        height: 65vh;
+        transform: rotate(162deg);
+    }
+
+    10% {
+        left: 68%;
+        top: -25.4%;
+        width: 34.3vw;
+        height: 75.8vh;
+        transform: rotate(181.8deg);
+    }
+
+    20% {
+        left: 60%;
+        top: -20.8%;
+        width: 38.6vw;
+        height: 86.6vh;
+        transform: rotate(201.6deg);
+    }
+
+    30% {
+        left: 52%;
+        top: -16.2%;
+        width: 42.9vw;
+        height: 97.4vh;
+        transform: rotate(221.4deg);
+    }
+
+    40% {
+        left: 44%;
+        top: -11.6%;
+        width: 47.2vw;
+        height: 108.2vh;
+        transform: rotate(241.2deg);
+    }
+
+    50% {
+        left: 36%;
+        top: -7%;
+        width: 51.5vw;
+        height: 119vh;
+        transform: rotate(261deg);
+    }
+
+    60% {
+        left: 28%;
+        top: -2.4%;
+        width: 55.8vw;
+        height: 129.8vh;
+        transform: rotate(280.8deg);
+    }
+
+    70% {
+        left: 20%;
+        top: 2.2%;
+        width: 60.1vw;
+        height: 140.6vh;
+        transform: rotate(300.6deg);
+    }
+
+    80% {
+        left: 12%;
+        top: 6.8%;
+        width: 64.4vw;
+        height: 151.4vh;
+        transform: rotate(320.4deg);
+    }
+
+    90% {
+        left: 4%;
+        top: 11.4%;
+        width: 68.7vw;
+        height: 162.2vh;
+        transform: rotate(340.2deg);
+    }
+
+    100% {
+        left: -4%;
+        top: 16%;
+        width: 73vw;
+        height: 173vh;
+        transform: rotate(360deg);
+    }
+}
+
+
+/* ========================================
+   Large Desktop
+   1440px and above
+   ======================================== */
+
+@media screen and (min-width: 1440px) {
+
+    @keyframes orb1 {
+
+        0% {
+            left: 76%;
+            top: -30%;
+            width: 30vw;
+            height: 65vh;
+            transform: rotate(162deg);
+        }
+
+        10% {
+            left: 68%;
+            top: -24%;
+            width: 34.3vw;
+            height: 75.8vh;
+            transform: rotate(181.8deg);
+        }
+
+        20% {
+            left: 60%;
+            top: -18%;
+            width: 38.6vw;
+            height: 86.6vh;
+            transform: rotate(201.6deg);
+        }
+
+        30% {
+            left: 52%;
+            top: -12%;
+            width: 42.9vw;
+            height: 97.4vh;
+            transform: rotate(221.4deg);
+        }
+
+        40% {
+            left: 44%;
+            top: -6%;
+            width: 47.2vw;
+            height: 108.2vh;
+            transform: rotate(241.2deg);
+        }
+
+        50% {
+            left: 36%;
+            top: 0%;
+            width: 51.5vw;
+            height: 119vh;
+            transform: rotate(261deg);
+        }
+
+        60% {
+            left: 28%;
+            top: 6%;
+            width: 55.8vw;
+            height: 129.8vh;
+            transform: rotate(280.8deg);
+        }
+
+        70% {
+            left: 20%;
+            top: 12%;
+            width: 60.1vw;
+            height: 140.6vh;
+            transform: rotate(300.6deg);
+        }
+
+        80% {
+            left: 12%;
+            top: 18%;
+            width: 64.4vw;
+            height: 151.4vh;
+            transform: rotate(320.4deg);
+        }
+
+        90% {
+            left: 4%;
+            top: 24%;
+            width: 68.7vw;
+            height: 162.2vh;
+            transform: rotate(340.2deg);
+        }
+
+        100% {
+            left: -4%;
+            top: 30%;
+            width: 73vw;
+            height: 173vh;
+            transform: rotate(360deg);
+        }
+    }
+}
+
+
+/* ========================================
+   Tablet / Medium
+   992px - 1439px
+   ======================================== */
+
+@media screen and (min-width: 992px) and (max-width: 1439px) {
+
+    @keyframes orb1 {
+
+        0% {
+            left: 72%;
+            top: -28%;
+            width: 30vw;
+            height: 62vh;
+            transform: rotate(162deg);
+        }
+
+        10% {
+            left: 64%;
+            top: -23%;
+            width: 34vw;
+            height: 72vh;
+            transform: rotate(181.8deg);
+        }
+
+        20% {
+            left: 56%;
+            top: -18%;
+            width: 38vw;
+            height: 82vh;
+            transform: rotate(201.6deg);
+        }
+
+        30% {
+            left: 48%;
+            top: -13%;
+            width: 42vw;
+            height: 92vh;
+            transform: rotate(221.4deg);
+        }
+
+        40% {
+            left: 40%;
+            top: -8%;
+            width: 46vw;
+            height: 102vh;
+            transform: rotate(241.2deg);
+        }
+
+        50% {
+            left: 32%;
+            top: -3%;
+            width: 50vw;
+            height: 112vh;
+            transform: rotate(261deg);
+        }
+
+        60% {
+            left: 24%;
+            top: 2%;
+            width: 54vw;
+            height: 122vh;
+            transform: rotate(280.8deg);
+        }
+
+        70% {
+            left: 16%;
+            top: 7%;
+            width: 58vw;
+            height: 132vh;
+            transform: rotate(300.6deg);
+        }
+
+        80% {
+            left: 8%;
+            top: 12%;
+            width: 62vw;
+            height: 142vh;
+            transform: rotate(320.4deg);
+        }
+
+        90% {
+            left: 0%;
+            top: 17%;
+            width: 66vw;
+            height: 152vh;
+            transform: rotate(340.2deg);
+        }
+
+        100% {
+            left: -8%;
+            top: 22%;
+            width: 70vw;
+            height: 162vh;
+            transform: rotate(360deg);
+        }
+    }
+}
+
+
+/* ========================================
+   Small Tablet
+   768px - 991px
+   ======================================== */
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+
+    @keyframes orb1 {
+
+        0% {
+            left: 68%;
+            top: -25%;
+            width: 34vw;
+            height: 55vh;
+            transform: rotate(162deg);
+        }
+
+        10% {
+            left: 60%;
+            top: -21%;
+            width: 38vw;
+            height: 64vh;
+            transform: rotate(181.8deg);
+        }
+
+        20% {
+            left: 52%;
+            top: -17%;
+            width: 42vw;
+            height: 73vh;
+            transform: rotate(201.6deg);
+        }
+
+        30% {
+            left: 44%;
+            top: -13%;
+            width: 46vw;
+            height: 82vh;
+            transform: rotate(221.4deg);
+        }
+
+        40% {
+            left: 36%;
+            top: -9%;
+            width: 50vw;
+            height: 91vh;
+            transform: rotate(241.2deg);
+        }
+
+        50% {
+            left: 28%;
+            top: -5%;
+            width: 54vw;
+            height: 100vh;
+            transform: rotate(261deg);
+        }
+
+        60% {
+            left: 20%;
+            top: -1%;
+            width: 58vw;
+            height: 109vh;
+            transform: rotate(280.8deg);
+        }
+
+        70% {
+            left: 12%;
+            top: 3%;
+            width: 62vw;
+            height: 118vh;
+            transform: rotate(300.6deg);
+        }
+
+        80% {
+            left: 4%;
+            top: 7%;
+            width: 66vw;
+            height: 127vh;
+            transform: rotate(320.4deg);
+        }
+
+        90% {
+            left: -4%;
+            top: 11%;
+            width: 70vw;
+            height: 136vh;
+            transform: rotate(340.2deg);
+        }
+
+        100% {
+            left: -12%;
+            top: 15%;
+            width: 74vw;
+            height: 145vh;
+            transform: rotate(360deg);
+        }
+    }
+}
+
+
+/* ========================================
+   Mobile / Small
+   576px - 767px
+   ======================================== */
+
+@media screen and (min-width: 576px) and (max-width: 767px) {
+
+    @keyframes orb1 {
+
+        0% {
+            left: 58%;
+            top: -20%;
+            width: 42vw;
+            height: 48vh;
+            transform: rotate(162deg);
+        }
+
+        10% {
+            left: 50%;
+            top: -17%;
+            width: 46vw;
+            height: 56vh;
+            transform: rotate(181.8deg);
+        }
+
+        20% {
+            left: 42%;
+            top: -14%;
+            width: 50vw;
+            height: 64vh;
+            transform: rotate(201.6deg);
+        }
+
+        30% {
+            left: 34%;
+            top: -11%;
+            width: 54vw;
+            height: 72vh;
+            transform: rotate(221.4deg);
+        }
+
+        40% {
+            left: 26%;
+            top: -8%;
+            width: 58vw;
+            height: 80vh;
+            transform: rotate(241.2deg);
+        }
+
+        50% {
+            left: 18%;
+            top: -5%;
+            width: 62vw;
+            height: 88vh;
+            transform: rotate(261deg);
+        }
+
+        60% {
+            left: 10%;
+            top: -2%;
+            width: 66vw;
+            height: 96vh;
+            transform: rotate(280.8deg);
+        }
+
+        70% {
+            left: 2%;
+            top: 1%;
+            width: 70vw;
+            height: 104vh;
+            transform: rotate(300.6deg);
+        }
+
+        80% {
+            left: -6%;
+            top: 4%;
+            width: 74vw;
+            height: 112vh;
+            transform: rotate(320.4deg);
+        }
+
+        90% {
+            left: -14%;
+            top: 7%;
+            width: 78vw;
+            height: 120vh;
+            transform: rotate(340.2deg);
+        }
+
+        100% {
+            left: -22%;
+            top: 10%;
+            width: 82vw;
+            height: 128vh;
+            transform: rotate(360deg);
+        }
+    }
+}
+
+
+/* ========================================
+   Mobile
+   Below 576px
+   ======================================== */
+
+@media screen and (max-width: 575px) {
+
+    @keyframes orb1 {
+
+        0% {
+            left: 45%;
+            top: -15%;
+            width: 55vw;
+            height: 40vh;
+            transform: rotate(162deg);
+        }
+
+        10% {
+            left: 37%;
+            top: -13%;
+            width: 59vw;
+            height: 47vh;
+            transform: rotate(181.8deg);
+        }
+
+        20% {
+            left: 29%;
+            top: -11%;
+            width: 63vw;
+            height: 54vh;
+            transform: rotate(201.6deg);
+        }
+
+        30% {
+            left: 21%;
+            top: -9%;
+            width: 67vw;
+            height: 61vh;
+            transform: rotate(221.4deg);
+        }
+
+        40% {
+            left: 13%;
+            top: -7%;
+            width: 71vw;
+            height: 68vh;
+            transform: rotate(241.2deg);
+        }
+
+        50% {
+            left: 5%;
+            top: -5%;
+            width: 75vw;
+            height: 75vh;
+            transform: rotate(261deg);
+        }
+
+        60% {
+            left: -3%;
+            top: -3%;
+            width: 79vw;
+            height: 82vh;
+            transform: rotate(280.8deg);
+        }
+
+        70% {
+            left: -11%;
+            top: -1%;
+            width: 83vw;
+            height: 89vh;
+            transform: rotate(300.6deg);
+        }
+
+        80% {
+            left: -19%;
+            top: 1%;
+            width: 87vw;
+            height: 96vh;
+            transform: rotate(320.4deg);
+        }
+
+        90% {
+            left: -27%;
+            top: 3%;
+            width: 91vw;
+            height: 103vh;
+            transform: rotate(340.2deg);
+        }
+
+        100% {
+            left: -35%;
+            top: 5%;
+            width: 95vw;
+            height: 110vh;
+            transform: rotate(360deg);
+        }
+    }
+}
+
+.orb-2 {
+    animation-name: orb2;
+}
+
+.orb-2 {
+    animation-name: orb2;
+}
+
+
+/* ========================================
+   Default / Large Desktop
+   < 1440px
+   ======================================== */
+
+@keyframes orb2 {
+
+    0% {
+        left: -15%;
+        top: 49%;
+        height: 73vh;
+        width: 73vh;
+        transform: rotate(308deg);
+    }
+
+    100% {
+        left: 22%;
+        top: -50%;
+        width: 109vw;
+        height: 109vh;
+        transform: rotate(-8deg);
+    }
+}
+
+
+/* ========================================
+   Large Desktop
+   1440px and above
+   ======================================== */
+
+@media screen and (min-width: 1440px) {
+
+    @keyframes orb2 {
+
+        0% {
+            left: -15%;
+            top: 49%;
+            height: 73vh;
+            width: 73vh;
+            transform: rotate(308deg);
+        }
+
+        100% {
+            left: 26.5%;
+            top: -50%;
+            width: 109vw;
+            height: 109vh;
+            transform: rotate(-8deg);
+        }
+    }
+}
+
+
+/* ========================================
+   Desktop / Laptop
+   992px - 1439px
+   ======================================== */
+
+@media screen and (min-width: 992px) and (max-width: 1439px) {
+
+    @keyframes orb2 {
+
+        0% {
+            left: -15%;
+            top: 48%;
+            height: 70vh;
+            width: 70vh;
+            transform: rotate(308deg);
+        }
+
+        100% {
+            left: 18%;
+            top: -48%;
+            width: 105vw;
+            height: 105vh;
+            transform: rotate(-8deg);
+        }
+    }
+}
+
+
+/* ========================================
+   Medium / Tablet
+   768px - 991px
+   ======================================== */
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+
+    @keyframes orb2 {
+
+        0% {
+            left: -20%;
+            top: 45%;
+            height: 65vh;
+            width: 65vh;
+            transform: rotate(308deg);
+        }
+
+        100% {
+            left: 10%;
+            top: -42%;
+            width: 100vw;
+            height: 100vh;
+            transform: rotate(-8deg);
+        }
+    }
+}
+
+
+/* ========================================
+   Small / sm
+   576px - 767px
+   ======================================== */
+
+@media screen and (min-width: 576px) and (max-width: 767px) {
+
+    @keyframes orb2 {
+
+        0% {
+            left: -25%;
+            top: 42%;
+            height: 58vh;
+            width: 58vh;
+            transform: rotate(308deg);
+        }
+
+        100% {
+            left: 0%;
+            top: -35%;
+            width: 105vw;
+            height: 95vh;
+            transform: rotate(-8deg);
+        }
+    }
+}
+
+
+/* ========================================
+   Mobile
+   Below 576px
+   ======================================== */
+
+@media screen and (max-width: 575px) {
+
+    @keyframes orb2 {
+
+        0% {
+            left: -35%;
+            top: 40%;
+            height: 50vh;
+            width: 50vh;
+            transform: rotate(308deg);
+        }
+
+        100% {
+            left: -8%;
+            top: -28%;
+            width: 115vw;
+            height: 85vh;
+            transform: rotate(-8deg);
+        }
+    }
+}

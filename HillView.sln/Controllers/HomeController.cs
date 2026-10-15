@@ -13,6 +13,20 @@ namespace HillView.sln.Controllers
             return View();
         }
 
+        public ActionResult advantages()
+        {
+            return PartialView("~/Views/Home/partial/_advantages.cshtml");
+        }
+        public ActionResult milestones()
+        {
+            return PartialView("~/Views/Home/partial/_milestones.cshtml");
+        }
+        public ActionResult aitalent()
+        {
+            return PartialView("~/Views/Home/partial/_aitalent.cshtml");
+        }
+
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

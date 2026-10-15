@@ -1,0 +1,194 @@
+﻿
+<style>
+    .milestones-section {
+        padding: 55px 20px 60px;
+        color: #fff;
+    }
+
+    .milestones-box {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .milestonesitems {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        text-align: center;
+    }
+
+    .milestone-item .milestone-number {
+        font-size: 44px;
+        font-weight: 700;
+        color: #94e1df;
+        margin: 0 0 10px;
+        line-height: 1.2;
+    }
+
+    .milestone-item h3 {
+        font-size: 14px;
+        font-weight: 500;
+        color: #fff;
+        margin: 0 0 7px;
+    }
+
+    .milestone-item p {
+        font-size: 13px;
+        color: #e4eaf1;
+        margin: 0;
+    }
+
+    .milestones-divider {
+        height: 1px;
+        background: var(--primary);
+        margin: 36px 0 42px;
+    }
+
+    .milestones-button {
+        text-align: center;
+    }
+
+
+    .milestones-btn:hover {
+        background: #006ed6;
+        color: #fff;
+    }
+
+    @@media (max-width: 600px) {
+        .milestones-section {
+            padding: 40px 16px;
+        }
+
+        .milestonesitems {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .milestone-item .milestone-number {
+            font-size: 38px;
+        }
+
+        .milestones-divider {
+            margin: 30px 0;
+        }
+    }
+
+</style>
+
+
+
+<section class="milestones-section">
+    <div class="milestones-box">
+        <div class="milestomes-head">
+            <div class="home-head">
+                <h3>Our Journey In Numbers</h3>
+                <h2>To delivering exceptional talent, building lasting partnerships</h2>
+            </div>
+        </div>
+        <div class="milestonesitems">
+
+            <div class="milestone-item">
+                <h2 class="milestone-number"
+                    data-target="1.67"
+                    data-decimals="2"
+                    data-suffix="x">
+                    0
+                </h2>
+                <h3>Successful Placements</h3>
+                <p>Another way to grow fast</p>
+            </div>
+
+            <div class="milestone-item">
+                <h2 class="milestone-number"
+                    data-target="150"
+                    data-decimals="0"
+                    data-suffix="+">
+                    0
+                </h2>
+                <h3>Happy Clients</h3>
+                <p>On your website</p>
+            </div>
+
+            <div class="milestone-item">
+                <h2 class="milestone-number"
+                    data-target="19"
+                    data-decimals="0"
+                    data-suffix="%">
+                    0
+                </h2>
+                <h3>Years of Industry Experience</h3>
+                <p>From your sales</p>
+            </div>
+
+        </div>
+
+        <div class="milestones-divider"></div>
+
+        <div class="milestones-button">
+            <a href="/About" class="btn btn-secondary">
+                Know more about us
+            </a>
+        </div>
+
+    </div>
+</section>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const section = document.querySelector(".milestones-section");
+        const counters = document.querySelectorAll(
+            ".milestones-section .milestone-number"
+        );
+
+        if (!section || !counters.length) return;
+
+        let hasAnimated = false;
+
+        function animateCounter(counter) {
+            const target = parseFloat(counter.dataset.target);
+            const decimals = parseInt(counter.dataset.decimals || "0", 10);
+            const suffix = counter.dataset.suffix || "";
+            const duration = 2000;
+            const startTime = performance.now();
+
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+
+                // Smooth ease-out animation
+                const easedProgress = 1 - Math.pow(1 - progress, 3);
+                const currentValue = target * easedProgress;
+
+                counter.textContent =
+                    currentValue.toFixed(decimals) + suffix;
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    counter.textContent = target.toFixed(decimals) + suffix;
+                }
+            }
+
+            requestAnimationFrame(updateCounter);
+        }
+
+        const observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting && !hasAnimated) {
+                    hasAnimated = true;
+
+                    counters.forEach(function (counter) {
+                        animateCounter(counter);
+                    });
+
+                    observer.disconnect();
+                }
+            });
+        }, {
+            threshold: 0.3
+        });
+
+        observer.observe(section);
+    });
+</script>

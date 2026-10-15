@@ -1,39 +1,445 @@
-﻿<!DOCTYPE html>
+﻿﻿@{
+    string webname = "gsclogistics.com.sa";
+    string webImg = webname + (ViewBag.Image == "" ? "/content/images/logo.png" : ViewBag.Image);
+}
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <title>@ViewBag.Title</title>
+    <meta name="keywords" content="Auto parts Dubai,Car spare parts Dubai,Dubai auto parts store,Dubai auto parts store,Car accessories Dubai,
+          Genuine car parts Dubai,Online auto parts UAE,OEM auto parts Dubai,Aftermarket car parts Dubai,Cheap car parts Dubai,Best auto parts
+          Dubai,Brake pads Dubai,Brake pads Dubai,Auto parts delivery Dubai,Auto parts delivery Dubai,Auto parts delivery Dubai,Luxury car parts Dubai,
+          4x4 auto parts Dubai,Car batteries DubaiTyres and rims Dubai" />
+    <meta name="description" content="@ViewBag.Description" />
+    <meta property="og:title" content="@ViewBag.Title" />
+    <meta property="og:url" content="@webname" />
+    <meta property="og:image" content="@webImg" />
+
+    <link href="~/Content/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/Content/css/jquery-ui.min.css" rel="stylesheet" />*@
+    <link href="~/Content/css/all.css" rel="stylesheet" />
+    @*<link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />*@
+    @*<link href="~/Content/css/animate.css" rel="stylesheet" />*@
+    <link href="~/Content/css/fonts.css" rel="stylesheet" />
+    <link href="~/Content/css/style.css" rel="stylesheet" />
+    @*<link href="~/Content/bootstrap-icons.min.css" rel="stylesheet" />*@
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" rel="stylesheet" />
+
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.bundle.min.js"></script>
+    @*<script src="~/Scripts/jquery-ui.min.js"></script>*@
+    @*<script src="~/Scripts/owl.carousel.min.js"></script>*@
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/TypewriterJS/2.21.0/core.js"></script>*@
+    <style>
+        #dropdownMenuButton {
+            text-transform: uppercase;
+        }
+        /* Loader*/
+        .animation_text h2 {
+            text-align: center;
+            font-weight: 800;
+            font-size: 51px;
+            margin: 0;
+            line-height: 60px;
+        }
+
+            .animation_text h2 span {
+                display: block;
+                margin-bottom: 40px;
+            }
+
+            .animation_text h2 p {
+                margin: 0;
+                transform: scale(0.8);
+                animation-iteration-count: 1;
+                -webkit-animation-name: scale;
+                -webkit-animation-duration: 5s;
+            }
+
+            .animation_text h2 span img {
+                width: 250px;
+            }
+
+        .animation_text {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            opacity: 0;
+            animation-iteration-count: 1;
+            -webkit-animation-name: fade;
+            -webkit-animation-duration: 5s;
+        }
+
+        .shatter_wrap {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .running-image {
+            position: absolute;
+            top: 50%;
+            left: -150px; /* Start off-screen */
+            height: auto;
+            transform: translateY(-50%);
+            animation: runAnimation 2s linear forwards; /* Runs once */
+        }
+
+        @@keyframes runAnimation {
+            0% {
+                left: -100px; /* Start position */
+            }
+
+            100% {
+                left: 100%; /* End position */
+            }
+        }
+
+        @@-webkit-keyframes run {
+            0% {
+                left: -70%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        @@-webkit-keyframes fade {
+            0% {
+                opacity: 0%;
+            }
+
+            30% {
+                opacity: 0;
+            }
+
+            35% {
+                opacity: 0.9;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        @@-webkit-keyframes scale {
+            0% {
+                transform: scale(0.8);
+            }
+
+            30% {
+                transform: scale(0.8);
+            }
+
+            35% {
+                transform: scale(1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+        /*        .transform {
+             transform: translateY(-100%);
+        }*/
+        .shatter_wrap {
+            position: fixed;
+            left: 0;
+            right: 0;
+            margin: 0 auto;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            background: #eee;
+            transition: 1s ease;
+        }
+
+        @@media(max-width:550px) {
+            .animation_text h2 p {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <style>
+        .navbar a {
+            color: var(--textnav);
+            font-size: 16px;
+        }
+
+        .nav-active {
+            color: var(--primary) !important;
+            font-weight: 500;
+        }
+
+        .social-links {
+            border-bottom: 1px solid var(--primary);
+            color: var(--bg);
+            background: var(--primary);
+        }
+
+        .social-icons {
+        }
+
+            .social-icons a {
+                padding: 0 5px;
+                color: var(--bg);
+                font-size: 1.1rem;
+            }
+
+        .social-icon {
+            font-size: 1.3rem !important;
+        }
+
+        .quote-a {
+            padding: 0.375rem 15px;
+            background-color: var(--primary);
+            color: var(--bg) !important;
+            border-radius: 10px;
+        }
+
+        .social-icons .dropdown-menu {
+            width: 100%; /* Match the width of the dropdown button */
+            min-width: unset; /* Prevent default minimum width */
+            background-color: var(--primary)
+        }
+
+        .arb-nav a {
+            font-size: 1.5rem;
+        }
+    </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark">
-        <div class="container">
-            @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" title="Toggle navigation" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
-                    <li>@Html.ActionLink("Home", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("About", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-                </ul>
+    @*<div class="shatter_wrap transform">
+        <div class="truck">
+            <img src="~/Content/Images/LoaderTruck.png" alt="Running Image" class="running-image" />
+        </div>
+        <div class="animation_text">
+            <h2>
+                <span><img src="~/Content/Images/logo.svg"></span>
+                <p style="text-transform: uppercase;">Moving shipments </p>
+                    <p>across GCC &amp; Dubai</p>
+            </h2>
+        </div>
+    </div>*@
+    
+    
+    <div style="z-index: 10;" class="navbar">
+        <div class="container nav-boxx">
+            <div class="row">
+
+                <div class="col-lg-12 col-md-4 col-4 navbar-menu nav justify-content-between">
+
+                    <div class="navbar-logo"><a href="/Home/Index"><img src="~/Content/Images/logo.svg" alt="logo" /></a></div>
+
+                    <nav class="nav-items">
+                        <ul class="mbl-ul">
+                            <li class="eng"><a class="nav-link" href="/">Home</a></li>
+                            <li class="eng"><a class="nav-link" href="@Url.Action("About","Home")">About</a></li>
+                            <li class="eng"><a class="nav-link" href="@Url.Action("Index", "Brands", new{id="#top" })">Brands</a></li>
+                            <li class="eng"><a class="nav-link" href="@Url.Action("Contact","Home")">Contact</a></li>
+                            <li class="eng"><a class="nav-link" href="/Projects">Projects</a></li>
+                            
+                            <li class="quote-btn d-lg-none d-md-block d-block">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle quote-a" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <span class="eng">Get A Quote</span>
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li>
+                                            <a class="dropdown-item" href="/Logistics">
+                                                <span class="eng">Logistics</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="/Warehouse">
+                                                <span class="eng">Warehouse</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a class="dropdown-item" href="/Home/ServiceForm">
+                                                <span class="eng">Connect</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @*<a class="quote-a" href="@Url.Action("ServiceForm","Home")">Get A Quote</a>*@
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <div class="quote-btn  d-lg-flex d-md-none d-none align-items-center">
+                        <div class="dropdown lang-dropdown-box ms-auto px-2">
+                            <button class="btn btn-secondary dropdown-toggle lang-dropdown" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                En
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="#" id="" data-value="En" onclick="setLanguage(this)">English</a></li>
+                                <li><a class="dropdown-item" href="#" id="" data-value="Ar" onclick="setLanguage(this)">Arabic</a></li>
+                            </ul>
+                        </div>
+                        @*<a class="quote-a" href="@Url.Action("ServiceForm","Home")">
+                                Get A Quote
+                            </a>*@
+                        @*<div class="btn-group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle quote-a" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Get A Quote
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="/Home/ServiceForm">Connect</a></li>
+                                    <li><a class="dropdown-item" href="/Warehouse">Warehouse</a></li>
+                                    <li><a class="dropdown-item" href="/Logistics">Logistics</a></li>
+                                </ul>
+                            </div>*@
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle quote-a" data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="eng">Get A Quote</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li>
+                                    <a class="dropdown-item" href="/Logistics">
+                                        <span class="eng">Logistics</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/Warehouse">
+                                        <span class="eng">Warehouse</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="/Home/ServiceForm">
+                                        <span class="eng">Connect</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="d-lg-none d-md-flex d-flex">
+                        <div class="d-lg-none d-md-flex d-flex px-2 pt-1 mobile-nav-right">
+                            <div class="dropdown ms-auto px-1">
+                                <button class="btn btn-secondary dropdown-toggle lang-dropdown" type="button" id="dropdownMenuButtonMbl" data-bs-toggle="dropdown" aria-expanded="false">
+                                    En
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonMbl">
+                                    <li><a class="dropdown-item" href="#" id="" data-value="En" onclick="setLanguage(this)">English</a></li>
+                                    <li><a class="dropdown-item" href="#" id="" data-value="Ar" onclick="setLanguage(this)">Arabic</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="navbar-icon">
+                            <span></span>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-    </nav>
-    <div class="container body-content">
-        @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
+    <div class="body">
+        @RenderBody()
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row footer-box justify-content-around">
+                <div class="col-xl-3 col-lg-5 col-md-12 col-12 footer-info">
+                    <img src="~/Content/Images/logo.svg" />
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+                    <div class="d-flex footer-tel">
+                        <a href="" id="telephoneFooter"><i class="bi bi-telephone"></i> </a>
+                        <a href="tel:+966559199073"><i class="bi bi-telephone"></i> +966 55 919 9073</a>
+                        <a href="tel:9200 12913"> / Toll Free - 9200 12913</a>
+                        <a href="" id="tollFreeFooter"> </a>
+                    </div>
+                    <div id="emailBrandInfo" class="emailFooter">
+                        <a href="mailto:info@gsclogistics.com.sa"><i class="bi bi-envelope"></i> </a>
+                    </div>
+                    <a href="#" class="eng" id="footerAddress"></a>
+                    <div class="address2-footer my-3">
+                        <a href="#" class="eng" id="footerAddress2"></a>
+                    </div>
+                    <a href="" id="footerAddress"><i class="bi bi-geo-alt"></i> Narjis Building, Abubacker Siddiq Road, Thummamah, Riyadh, Saudi Arabia.</a>
+                    <div class="social-icons" id="footerSocialMedia">
+
+                        </div>
+                </div>
+                <div class="col-xl-2 col-lg-2 col-md-6 col-12 footer-links">
+                    <h5 class="eng">COMPANY</h5>
+
+                    <ul class="eng">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="@Url.Action("About","Home")">About</a></li>
+                        @*<li><a href="@Url.Action("Services","Home")">Services</a></li>*@
+                        <li><a href="@Url.Action("Contact","Home")">Contact</a></li>
+                        <li><a href="/Projects">Projects</a></li>
+                    </ul>
+
+                </div>
+                <div class="col-xl-2 col-lg-3 col-md-6 col-12 footer-links">
+                    <h5 class="eng">BRANDS</h5>
+                    <h5 class="arb">العلامات التجارية</h5>
+                    <ul class="eng" id="serviceTitleEng">
+                        @*<li><a href="/Home/Services?Id=1">Logistics</a></li>
+                            <li><a href="/Home/Services?Id=4">Connect</a></li>
+                            <li><a href="/Home/Services?Id=2">Warehouse - Thakzeen</a></li>
+                            <li><a href="/Home/Services?Id=3">Furnifix</a></li>*@
+                    </ul>
+                </div>
+
+                <div class="col-xl-2 col-lg-4 col-md-6 col-12 footer-help">
+                    <h5 class="eng">HELP</h5>
+
+                    <ul class="eng">
+                        <li><a class="layoutWhatsapp" href="">Customer Support</a></li>
+                        <li><a href="/Home/PrivacyPolicy">Terms & Conditions</a></li>
+                        <li><a href="/Home/PrivacyPolicy">Privacy Policy</a></li>
+                        <li><a href="" target="_blank" class="companyProfile_File" download="CompanyProfile.pdf">Company Profile</a></li>
+                    </ul>
+
+                </div>
+                <div class="col-xl-3 col-lg-6 col-md-6 col-12 footer-news">
+                    <h5 class="eng">NEWSLETTER</h5>
+                    <form>
+                        <div class="mb-3">
+                            <div class="mb-2">
+                                <input type="email" class="form-control newsletter-input mb-1" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email address">
+                                <label class="error d-none text-danger" id="errorEmail">*Enter email address</label>
+                            </div>
+                            <button type="button" class="btn newsletter-submit" id="newsletterSubmit">
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <label class="eng">Subscribe Now</label>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright-box">
+                <div class="social-icons" id="footerSocialMedia">
+
+                </div>
+                <p class="eng">© Copyright 2024, All Rights Reserved by GSC</p>
+            </div>
+        </div>
+    </footer>
+    <div class="sticky-button">
+        <a class="layoutWhatsapp fixed-button" href="">
+            <img class="whatsapp-svg" src="~/Content/Images/whatsapp.svg" />
+        </a>
+    </div>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.8/sweetalert2.all.min.js"></script>
+    @*<script src="~/Scripts/userapp.js"></script>*@
+    <script>
+        $("document").ready(function () {
+            const preloader = document.querySelector(".transform");
+            setTimeout(() => {
+                preloader.style.transform = "translateY(-100%)";
+            }, 3000);
+        });
+        
+    </script>
 </body>
 </html>

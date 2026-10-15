@@ -1,33 +1,806 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "CSHTHL | Technology & Business Solutions";
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
+<link href="~/Content/css/banner.css" rel="stylesheet" />
+<link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />
+<style>
+    .ai-icon {
+        width: 27%;
+        padding-right: 4px;
+    }
+
+    .banner-text-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .banner-text {
+        max-width: 800px;
+        text-align: center;
+        position: absolute;
+    }
+
+        .banner-text > * {
+            margin: 5px 0;
+        }
+
+    .home-services-container {
+        padding: 5rem 0;
+    }
+
+    .ser-desc-box {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+        .ser-desc-box .home-head {
+            padding: 0 0 3rem 0;
+            text-align: left;
+        }
+
+    .ser-icon img {
+        width: 4rem;
+        padding-right: 1rem;
+    }
+
+    .service-item {
+        padding-bottom: 2rem;
+    }
+
+    .ser-img-box {
+        padding-left: 5rem;
+    }
+
+    .candidate-section {
+        position: relative;
+        overflow: hidden;
+    }
+
+        /* Faded circular glow */
+        .candidate-section::before {
+            content: "";
+            position: absolute;
+            width: 700px;
+            height: 700px;
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient( circle, rgba(0, 150, 150, 0.45) 0%, rgba(0, 120, 120, 0.25) 25%, rgba(0, 100, 100, 0.10) 45%, rgba(0, 100, 100, 0) 72% );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+    /* Keep your actual content above the glow */
+    .candidate-box {
+        position: relative;
+        z-index: 1;
+    }
+
+    .candidate-icon-bold {
+        font-weight: bold;
+    }
+
+    .candidate-list-box {
+        padding: 0 5rem 3rem;
+    }
+
+    .candidate-col-box {
+        padding: 1rem;
+    }
+
+    .candidate-item {
+        padding: 2rem;
+        border: 1px solid var(--text);
+        border-radius: 20px;
+        background: var(--gradient1);
+    }
+
+    .candidate-icon .bi {
+        font-size: 1.5rem;
+        color: var(--primary);
+        padding-right: 1rem;
+    }
+
+    .candidate-desc p {
+        margin-bottom: 0;
+    }
+
+    .candidate-knowmore {
+        padding-bottom: 5rem;
+    }
+
+    .home-jobs-box, .reviews-box, .ai-talent-section {
+        background: var(--lightbg)
+    }
+
+    .home-jobs-item-box {
+        padding-bottom: 5rem;
+    }
+
+    .job-item {
+        padding: 1.3rem 2rem;
+        border: 1px solid var(--secondary);
+        border-radius: 25px;
+        background: var(--gradient1);
+    }
+
+    .time {
+        color: var(--text);
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    .designation {
+        padding-top: 1rem;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .job-location {
+        color: var(--primary);
+        font-size: 14px;
+    }
+
+    .job-desc {
+        font-size: 14px;
+    }
+
+    .job-carousel .owl-dots {
+        margin-top: 25px;
+        text-align: center;
+    }
+
+    .job-carousel .owl-dot {
+        border: none;
+        background: transparent;
+        padding: 0;
+    }
+
+        .job-carousel .owl-dot span {
+            width: 10px;
+            height: 10px;
+            margin: 5px;
+            display: block;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .job-carousel .owl-dot.active span {
+            width: 25px;
+            border-radius: 10px;
+            background: var(--primary);
+        }
+
+    .case-item {
+        padding: 5rem 0;
+    }
+
+    .case-desc {
+        padding-left: 5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .case-item-desc {
+        display: flex;
+    }
+
+    .case-desc h3 {
+        color: var(--primary);
+    }
+
+    .case-desc h1 {
+        font-weight: 600;
+    }
+
+    .case-desc p {
+        margin-bottom: 2rem;
+        padding-bottom: 2rem;
+        border-bottom: 1px solid var(--primary)
+    }
+
+    .case-item-btns .btn-secondary {
+        margin-right: 1rem;
+    }
+
+    .review-stars {
+        padding-bottom: 10px;
+    }
+
+    .review-item .bi-star-fill, .review-item .bi-star, .review-name {
+        color: var(--primary);
+    }
+
+    .reviews-carousel-box {
+        padding-bottom: 5rem;
+    }
+
+    .mile-faq-bg {
+        position: relative;
+        z-index: 1;
+    }
+
+        .mile-faq-bg::before {
+            content: "";
+            position: absolute;
+            width: 1000px;
+            height: 1000px;
+            left: 50%;
+            top: 45%;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(0, 150, 150, 0.45) 0%, rgba(0, 120, 120, 0.25) 25%, rgba(0, 100, 100, 0.10) 45%, rgba(0, 100, 100, 0) 72%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+
+    .faq-section {
+        width: 100%;
+        padding: 5rem 2rem;
+        ;
+        color: #fff;
+        /* No background: inherits the body's background */
+        box-sizing: border-box;
+    }
+
+    .faq-title {
+        margin: 0 0 60px;
+        text-align: center;
+        font-size: 36px;
+        line-height: 1.4;
+        font-weight: 500;
+        letter-spacing: -0.7px;
+    }
+
+    .faq-list {
+        width: 100%;
+        border-top: 1px solid rgba(255, 255, 255, 0.22);
+    }
+
+    .faq-item {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+        transition: border-color 0.25s ease;
+    }
+
+        .faq-item.active {
+            border-bottom-color: var(--primary);
+        }
+
+    .faq-question {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        width: 100%;
+        padding: 2rem 0;
+        border: 0;
+        background: transparent;
+        color: var(--text);
+        font: inherit;
+        font-size: 20px;
+        line-height: 1.4;
+        text-align: left;
+        cursor: pointer;
+    }
+
+    .faq-icon {
+        flex-shrink: 0;
+        font-size: 28px;
+        line-height: 1;
+        font-weight: 300;
+        transition: transform 0.25s ease;
+    }
+
+    .faq-item {
+        border-top: 1px solid var(--text);
+    }
+
+    .faq-answer {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.3s ease;
+        border-top: 1px solid var(--text);
+    }
+
+    .faq-item.active .faq-answer {
+        border-top: 1px solid var(--primary);
+    }
+
+    .faq-answer p {
+        overflow: hidden;
+        min-height: 0;
+        margin: 0;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 20px;
+        line-height: 1.3;
+    }
+
+    .faq-item.active .faq-answer {
+        grid-template-rows: 1fr;
+    }
+
+        .faq-item.active .faq-answer p {
+            padding: 2rem 0;
+        }
+
+    .faq-question:focus-visible {
+        outline: 2px solid var(--primary);
+        outline-offset: 4px;
+    }
+
+    @@media (max-width: 600px) {
+        .faq-section {
+            padding: 32px 20px;
+        }
+
+        .faq-title {
+            margin-bottom: 36px;
+            font-size: 28px;
+        }
+
+        .faq-question {
+            padding: 20px 0;
+            font-size: 17px;
+        }
+
+        .faq-answer p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .faq-item.active .faq-answer p {
+            padding: 4px 0 22px;
+        }
+    }
+</style>
+
+<section class="banner-section">
+    <div class="orb-scene">
+        <img class="orb orb-1" src="~/Content/Images/orb-2.png" alt="">
+        <img class="orb orb-2" src="~/Content/images/orb-1.png" alt="">
+
+
+        <div class="banner-text-box">
+            <div class="banner-text">
+                <a class="btn btn-primary">
+                    <img class="ai-icon" src="~/Content/Images/ai-icon.svg" />  HillView.AI
+                </a>
+
+                <h1>Building High-Performing Technology Teams accessible to you! </h1>
+                <p>
+                    With deep expertise across diverse technology stacks, we help businesses
+                    build and scale high-performing IT and engineering teams with confidence.
+                    Our strong talent network and collaborative approach ensure access to top
+                    professionals at competitive costs, enabling flexible, efficient hiring
+                    that adapts to your evolving business needs.
+                </p>
+                <div class="banner-btn pt-3">
+                    <a class="btn btn-secondary">Talk to us</a>
+                    <a class="btn btn-primary">For Candidates</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@Html.Action("advantages", "Home")
+
+<section class="home-services-section">
+    <div class="home-services-box">
+        <div class="home-services-container container">
+            <div class="home-services-row row">
+                <div class="col-lg-6 col-md-6 col-12 ser-desc-box">
+                    <div class="home-head">
+                        <h3>Our Services</h3>
+                        <h2>Solutions Built Around Your Hiring Needs</h2>
+                    </div>
+
+                    <div class="ser-items">
+                        <div class="service-item">
+                            <div class="d-flex">
+                                <div class="ser-icon">
+                                    <img src="~/Content/Images/Services/hire.svg" />
+                                </div>
+                                <div class="ser-desc">
+                                    <h3>Direct Hire Services</h3>
+                                    <p>Direct Hire Services provide end-to-end IT recruitment to identify, assess, and place top talent aligned with your technical needs</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="d-flex">
+                                <div class="ser-icon">
+                                    <img src="~/Content/Images/Services/staff.svg" />
+                                </div>
+                                <div class="ser-desc">
+                                    <h3>Contract Staffing Solutions</h3>
+                                    <p>Provide flexible access to skilled IT professionals for short-term projects or changing workloads, enabling quick onboarding, timely delivery, and scalable staffing without permanent hiring.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="d-flex">
+                                <div class="ser-icon">
+                                    <img src="~/Content/Images/Services/consult.svg" />
+                                </div>
+                                <div class="ser-desc">
+                                    <h3>IT Consulting Services</h3>
+                                    <p>Help organizations optimize their technology through expert guidance and strategic planning. Our consultants deliver tailored solutions that align technology with business goals and support growth.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="d-flex">
+                                <div class="ser-icon">
+                                    <img src="~/Content/Images/Services/augument.svg" />
+                                </div>
+                                <div class="ser-desc">
+                                    <h3>Staff Augmentation</h3>
+                                    <p>Helps you quickly scale your workforce with skilled IT professionals who integrate seamlessly into your teams, providing flexible on-demand expertise to accelerate delivery, bridge skill gaps, and adapt to changing business needs.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-12 ser-img-box">
+                    <img src="~/Content/Images/Services/ser-right.png" />
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="candidate-section">
+    <div class="candidate-box">
+        <div class="container candidate-container">
+            <div class="home-head">
+                <h3>Candidate First</h3>
+                <h2>Candidates at the Heart of What We Do</h2>
+            </div>
+
+            <div class="candidate-list-box">
+                <div class="row candidate-row">
+                    <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
+                        <div class="candidate-item d-flex">
+                            <div class="candidate-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div class="candidate-desc">
+                                <p><span class="candidate-icon-bold">Your Success Is Our Priority:</span> At Hillview Consulting Solutions, our relationship with you doesn’t end when you accept an assignment. </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
+                        <div class="candidate-item d-flex">
+                            <div class="candidate-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div class="candidate-desc">
+                                <p><span class="candidate-icon-bold">Support Beyond Placement:</span> Starting a new assignment can come with questions, new processes, and new expectations. </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
+                        <div class="candidate-item d-flex">
+                            <div class="candidate-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div class="candidate-desc">
+                                <p><span class="candidate-icon-bold">Your Journey With Us:</span> From seamless onboarding to ongoing support and smooth offboarding, we ensure success at every stage. </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
+                        <div class="candidate-item d-flex">
+                            <div class="candidate-icon">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                            <div class="candidate-desc">
+                                <p><span class="candidate-icon-bold">More Than an Opportunity. A Partnership :</span> We believe great staffing relationships are built on more than matching skills with opportunities.  </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="candidate-knowmore text-center">
+                <a class="btn btn-secondary">Know more</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="home-jobs-section">
+    <div class="home-jobs-box">
+        <div class="container home-jobs-container">
+            <div class="home-head">
+                <h3>Jobs we are offering  </h3>
+                <h2>Browse the latest openings across top companies</h2>
+                <p>Explore exciting IT roles with leading organizations and take the next step in your career with confidence.</p>
+            </div>
+
+            <div class="home-jobs-item-box">
+                <iframe src="https://widgets.sociablekit.com/linkedin-page-jobs/iframe/25721969" frameborder="0" style="width:100%;height:1000px"></iframe>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="case-section">
+    <div class="case-div-box">
+        <div class="case-cointainer container">
+            <div class="case-items">
+                <div class="owl-carousel owl-theme case-carousel">
+                    <div class="item">
+                        <div class="case-item">
+                            <div class="case-row row">
+                                <div class="col-lg-6 col-12 case-item-img">
+                                    <div class="case-img">
+                                        <img src="~/Content/Images/case-study/casestudy1.png" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12 case-item-desc">
+                                    <div class="case-desc">
+                                        <h3>Real-time Analytics</h3>
+                                        <h1>Common Hiring Mistakes That Cost Businesses Top Talent</h1>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                            Ornare non sed est cursus. Vel hac convallis ipsum,
+                                            facilisi odio pellentesque bibendum viverra tempus.
+                                        </p>
+                                        <div class="case-item-btns">
+                                            <a class="btn btn-secondary mr-2">Read full case study</a>
+                                            <a class="btn btn-primary">View More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="item">
+                        <div class="case-item">
+                            <div class="case-row row">
+                                <div class="col-lg-6 col-12 case-item-img">
+                                    <div class="case-img">
+                                        <img src="~/Content/Images/case-study/casestudy1.png" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-12 case-item-desc">
+                                    <div class="case-desc">
+                                        <h3>Real-time Analytics</h3>
+                                        <h1>Common Hiring Mistakes That Cost Businesses Top Talent</h1>
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                            Ornare non sed est cursus. Vel hac convallis ipsum,
+                                            facilisi odio pellentesque bibendum viverra tempus.
+                                        </p>
+                                        <div class="case-item-btns">
+                                            <a class="btn btn-secondary mr-2">Read full case study</a>
+                                            <a class="btn btn-primary">View More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="reviews-section">
+    <div class="reviews-box">
+        <div class="reviews-container container">
+            <div class="reviews-head">
+                <div class="home-head">
+                    <h3>150+ Happy Clients</h3>
+                    <h2>Don’t just take our words</h2>
+                </div>
+            </div>
+            <div class="reviews-carousel-box">
+                <div class="reviews-items">
+                    <div class="owl-carousel owl-theme review-carousel">
+                        <div class="item">
+                            <div class="review-item">
+                                <div class="review-stars">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star"></i>
+                                    <i class="bi bi-star"></i>
+                                </div>
+                                <div class="item-review">
+                                    <p>
+                                        "We love Landingfolio! Our designers were using it for their projects, so we already knew what kind of design they want."
+                                    </p>
+                                </div>
+                                <div class="review-name">
+                                    Jenny Wilson
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="mile-faq-bg">
+
+    @Html.Action("milestones", "Home")
+
+    <section class="faq-section">
+        <div class="faq-container container">
+            <h2 class="faq-title">
+                Answers to our frequently<br />
+                asked questions
+            </h2>
+
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Is this product for me?</span>
+                        <span class="faq-icon" aria-hidden="true">→</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            This product is designed to help you simplify your workflow
+                            and get things done faster. Discover how it can work for you.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item active">
+                    <button class="faq-question" aria-expanded="true">
+                        <span>What is Tailwind CSS?</span>
+                        <span class="faq-icon" aria-hidden="true">↑</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            Tailwind CSS is a CSS framework like Bootstrap, that speeds up
+                            development time for developers. Tailwind CSS uses classes to
+                            style elements, meaning you do not have to write any CSS.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Is this product for me?</span>
+                        <span class="faq-icon" aria-hidden="true">→</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            Find out how this product can meet your needs and help you
+                            achieve your goals.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Is this product for me?</span>
+                        <span class="faq-icon" aria-hidden="true">→</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>
+                            Learn more about the product, its features, and how to get started.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-    </div>
-</main>
+</div>
+
+@Html.Action("aitalent", "Home")
+
+<script src="~/Scripts/owl.carousel.min.js"></script>
+
+<script>
+    $('.job-carousel').owlCarousel({
+        loop: true,
+        margin: 20,
+        nav: false,
+        dots: true,
+        autoplay: true,
+        autoplayTimeout: 7000,
+        autoplayHoverPause: true,
+        slideBy: 3,
+
+        responsive: {
+            0: {
+                items: 1,
+                slideBy: 1
+            },
+            600: {
+                items: 2,
+                slideBy: 2
+            },
+            1000: {
+                items: 3,
+                slideBy: 3
+            }
+        }
+    });
+    $('.case-carousel').owlCarousel({
+        loop: true,
+        margin: 20,
+        nav: false,
+        dots: true,
+        autoplay: true,
+        autoplayTimeout: 7000,
+        autoplayHoverPause: true,
+        slideBy: 1,
+
+        responsive: {
+            0: {
+                items: 1,
+            },
+            600: {
+                items: 1,
+            },
+            1000: {
+                items: 1,
+            }
+        }
+    });
+    $('.review-carousel').owlCarousel({
+        loop: true,
+        margin: 20,
+        nav: false,
+        dots: true,
+        autoplay: true,
+        autoplayTimeout: 7000,
+        autoplayHoverPause: true,
+        slideBy: 1,
+
+        responsive: {
+            0: {
+                items: 1,
+            },
+            600: {
+                items: 2,
+            },
+            1000: {
+                items: 4,
+            }
+        }
+    });
+
+
+
+    document.querySelectorAll(".faq-item").forEach((item) => {
+        const button = item.querySelector(".faq-question");
+        const icon = item.querySelector(".faq-icon");
+
+        button.addEventListener("click", () => {
+            const shouldOpen = !item.classList.contains("active");
+
+            document.querySelectorAll(".faq-item").forEach((other) => {
+                other.classList.remove("active");
+                other.querySelector(".faq-question")
+                    .setAttribute("aria-expanded", "false");
+                other.querySelector(".faq-icon").textContent = "→";
+            });
+
+            if (shouldOpen) {
+                item.classList.add("active");
+                button.setAttribute("aria-expanded", "true");
+                icon.textContent = "↑";
+            }
+        });
+    });
+
+</script>
