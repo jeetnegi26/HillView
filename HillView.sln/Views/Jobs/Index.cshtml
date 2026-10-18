@@ -134,6 +134,69 @@
     .job-desc {
         font-size: 14px;
     }
+
+    @@media screen and (min-width: 1024px) and (max-width: 1339px) {
+        .jobs-usp-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+            .jobs-usp-row > :nth-child(3) {
+                grid-column: 1 / -1;
+            }
+    }
+
+
+    @@media screen and (min-width: 600px) and (max-width: 1023px) {
+        .jobs-usp-row {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .orb-scene {
+            height: 120vh;
+        }
+
+        .banner-text {
+            padding-top: 20rem;
+        }
+
+        .journey-item {
+            padding: 1rem 0;
+        }
+    }
+
+    @@media (max-width: 600px){
+        .jobs-usp-row {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .orb-scene {
+            height: 160vh;
+        }
+
+        .banner-text {
+            padding-top: 46rem;
+        }
+    }
+
+    @@media (max-width: 430px) {
+        .orb-scene {
+            height: 200vh;
+        }
+
+        .banner-text {
+            padding-top: 58rem;
+        }
+    }
+
+    @@media (max-width: 380px) {
+        .orb-scene {
+            height: 270vh;
+        }
+
+        .banner-text {
+            padding-top: 80rem;
+        }
+    }
 </style>
 
 <section class="banner">
@@ -157,7 +220,7 @@
                 <div class="job-usp-container container">
                     <div class="jobs-usp-items-box">
                         <div class="jobs-usp-row row">
-                            <div class="jobs-usp-col col-lg-4 col-md-4 col-12">
+                            <div class="jobs-usp-col col-xl-4 col-lg-4 col-md-4 col-12">
                                 <div class="jobs-usp-item">
                                     <h3>
                                         Your Success Is Our Priority
@@ -172,7 +235,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="jobs-usp-col col-lg-4 col-md-4 col-12">
+                            <div class="jobs-usp-col col-xl-4 col-lg-4 col-md-4 col-12">
                                 <div class="jobs-usp-item">
                                     <h3>
                                         Support Beyond Placement
@@ -187,7 +250,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="jobs-usp-col col-lg-4 col-md-4 col-12">
+                            <div class="jobs-usp-col col-xl-4 col-lg-4 col-md-4 col-12">
                                 <div class="jobs-usp-item">
                                     <h3>
                                         More Than an Opportunity. A Partnership.
@@ -223,7 +286,7 @@
             </div>
             <div class="journey-items-box">
                 <div class="journey-items-row row">
-                    <div class="col-lg-6 col-md-6 col-12">
+                    <div class="col-lg-6 col-md-12 col-12">
                         <div class="journey-item">
                             <div class="journey-item-icon">
                                 <h2><i class="bi bi-check-circle"></i></h2>
@@ -237,7 +300,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-6 col-12">
+                    <div class="col-lg-6 col-md-12 col-12">
                         <div class="journey-item">
                             <div class="journey-item-icon">
                                 <h2><i class="bi bi-check-circle"></i></h2>
@@ -251,7 +314,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-6 col-12">
+                    <div class="col-lg-6 col-md-12 col-12">
                         <div class="journey-item">
                             <div class="journey-item-icon">
                                 <h2><i class="bi bi-check-circle"></i></h2>
@@ -265,7 +328,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-6 col-12">
+                    <div class="col-lg-6 col-md-12 col-12">
                         <div class="journey-item">
                             <div class="journey-item-icon">
                                 <h2><i class="bi bi-check-circle"></i></h2>
@@ -279,7 +342,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-6 col-12">
+                    <div class="col-lg-6 col-md-12 col-12">
                         <div class="journey-item">
                             <div class="journey-item-icon">
                                 <h2><i class="bi bi-check-circle"></i></h2>
@@ -293,7 +356,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-6 col-12">
+                    <div class="col-lg-6 col-md-12 col-12">
                         <div class="journey-item">
                             <div class="journey-item-icon">
                                 <h2><i class="bi bi-check-circle"></i></h2>

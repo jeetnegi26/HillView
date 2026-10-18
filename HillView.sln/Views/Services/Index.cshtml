@@ -93,9 +93,6 @@
     padding: 2rem 0 5rem;;
 }
 
-.additional-section .additional-container {
-    max-width: 1440px;
-}
 
 .additional-section .additional-row {
     display: grid;
@@ -281,7 +278,7 @@
 }
 
 /* Mobile: stack in the exact reference order */
-@@media (max-width: 767px) {
+@@media (max-width: 800px) {
     .additional-section {
         padding: 10px 0;
     }
@@ -330,10 +327,11 @@
         margin-bottom: 8px;
     }
 
-    .additional-section h2 {
-        line-height: 1.2;
-        margin-bottom: 8px;
-    }
+        .additional-section h2 {
+            line-height: 1.2;
+            margin-bottom: 8px;
+            font-size: 24px;
+        }
 
     .additional-section p {
         font-size: 11px;
@@ -406,6 +404,48 @@
     .areas-item p {
         font-size: 14px;
     }
+
+
+    @@media screen and (min-width: 600px) and (max-width: 1023px) {
+        .banner-text {
+            max-width: 600px;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .banner-text {
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .home-head {
+            padding: 0rem 1rem 5rem;
+        }
+
+        .services-items {
+            padding: 0 0rem;
+        }
+
+        .industries-item-box {
+            padding: 0 1.5rem 5rem;
+        }
+
+        .additional-items {
+            padding: 0 1rem;
+        }
+    }
+
+    @@media (max-width: 430px) {
+        .banner-text {
+            max-width: 350px;
+        }
+    }
+
+    @@media (max-width: 380px) {
+        .banner-text {
+            max-width: 340px;
+        }
+    }
 </style>
 
 <section class="banner">
@@ -436,8 +476,8 @@
         <div class="services-container container">
             <div class="services-items">
                 <div class="services-row row">
-                    <div class="col-lg-6 h6 col-md-6 col-12 services-col">
-                        <div class="services-item">
+                    <div class="col-lg-6 h6 col-md-12 col-12 services-col">
+                        <div class="service-item">
                             <div class="d-flex">
                                 <div class="ser-icon">
                                     <img src="~/Content/Images/Services/hire.svg" />
@@ -454,7 +494,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 h6 col-md-6 col-12 services-col">
+                    <div class="col-lg-6 h6 col-md-12 col-12 services-col">
                         <div class="service-item">
                             <div class="d-flex">
                                 <div class="ser-icon">
@@ -472,7 +512,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 h6 col-md-6 col-12 services-col">
+                    <div class="col-lg-6 h6 col-md-12 col-12 services-col">
                         <div class="service-item">
                             <div class="d-flex">
                                 <div class="ser-icon">
@@ -490,7 +530,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-6 h6 col-md-6 col-12 services-col">
+                    <div class="col-lg-6 h6 col-md-12 col-12 services-col">
                         <div class="service-item">
                             <div class="d-flex">
                                 <div class="ser-icon">

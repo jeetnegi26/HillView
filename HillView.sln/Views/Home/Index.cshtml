@@ -53,6 +53,9 @@
 
     .ser-img-box {
         padding-left: 5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
     }
 
     .candidate-section {
@@ -92,7 +95,21 @@
         padding: 1rem;
     }
 
+    .candidate-row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .candidate-col-box {
+        display: flex;
+        margin-bottom: 20px;
+    }
+
     .candidate-item {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        align-items: flex-start;
         padding: 2rem;
         border: 1px solid var(--text);
         border-radius: 20px;
@@ -334,7 +351,68 @@
         outline-offset: 4px;
     }
 
+    @@media screen and (min-width: 1024px) and (max-width: 1339px) {
+        .ser-img-box {
+            padding-left: 2rem;
+        }
+
+        .candidate-list-box {
+            padding: 0 0rem 3rem;
+        }
+
+        .case-desc {
+            padding-left: 1rem;
+        }
+    }
+
+    @@media screen and (min-width: 600px) and (max-width: 1023px) {
+        .ser-img-box {
+            padding: 0 1REM;;
+        }
+
+        .candidate-list-box {
+            padding: 0 0rem 3rem;
+        }
+
+        .case-desc {
+            padding: 1rem 0;
+        }
+    }
+
     @@media (max-width: 600px) {
+        .banner-text {
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .adv-sec {
+            height: 27rem;
+        }
+
+        .ser-desc-box {
+            padding: 0 2rem;
+        }
+
+        .ser-img-box {
+            padding: 0 2rem;
+        }
+
+        .candidate-list-box {
+            padding: 0 0rem 3rem;
+        }
+
+        .candidate-col-box {
+            margin-bottom: 0px;
+        }
+
+        .case-desc {
+            padding: 1rem;
+        }
+
+        .reviews-carousel-box {
+            padding: 1rem 1rem 5rem;
+        }
+
         .faq-section {
             padding: 32px 20px;
         }
@@ -356,6 +434,17 @@
 
         .faq-item.active .faq-answer p {
             padding: 4px 0 22px;
+        }
+    }
+
+    @@media (max-width: 430px){
+        .banner-text {
+            max-width: 350px;
+        }
+    }
+    @@media (max-width: 380px){
+        .banner-text {
+            max-width: 340px;
         }
     }
 </style>
@@ -395,7 +484,7 @@
     <div class="home-services-box">
         <div class="home-services-container container">
             <div class="home-services-row row">
-                <div class="col-lg-6 col-md-6 col-12 ser-desc-box">
+                <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
                     <div class="home-head">
                         <h3>Our Services</h3>
                         <h2>Solutions Built Around Your Hiring Needs</h2>
@@ -450,7 +539,7 @@
 
                 </div>
 
-                <div class="col-lg-6 col-md-6 col-12 ser-img-box">
+                <div class="col-lg-6 col-md-12 col-12 ser-img-box">
                     <img src="~/Content/Images/Services/ser-right.png" />
                 </div>
             </div>

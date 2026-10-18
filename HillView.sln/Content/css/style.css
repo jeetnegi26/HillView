@@ -1,6 +1,7 @@
 ﻿
 html {
     scroll-behavior: smooth;
+    overflow-x: clip;
 }
 
 body {
@@ -714,5 +715,9 @@ footer {
 
     .navbar-icon {
         padding-top: 0rem;
+    }
+
+    h2 {
+        font-size: 25px;
     }
 }

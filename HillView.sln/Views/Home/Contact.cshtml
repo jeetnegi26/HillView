@@ -131,6 +131,43 @@
         color: var(--primary);
         padding-right: 1rem;
     }
+
+    @@media screen and (min-width: 1024px) and (max-width: 1339px){
+        .contact-box {
+            padding: 3rem;
+        }
+    }
+
+    @@media screen and (min-width: 600px) and (max-width: 1023px){
+        .contact-box {
+            padding: 3rem;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .banner-text {
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .contact-form-box, .contact-desc {
+            padding: 0 0rem;
+        }
+
+    }
+
+    @@media (max-width: 430px) {
+        .banner-text {
+            max-width: 350px;
+        }
+    }
+
+    @@media (max-width: 380px) {
+        .banner-text {
+            max-width: 340px;
+        }
+    }
+
 </style>
 
 <section class="banner">
@@ -159,20 +196,20 @@
         <div class="contact-container container">
             <div class="contact-items-box">
                 <div class="contact-row row">
-                    <div class="col-lg-6 col-md-6 col-12 contact-left-item">
+                    <div class="col-lg-6 col-md-12 col-12 contact-left-item">
                         <div class="contact-desc">
                             <h1>Get in touch with us!</h1>
                             <p class="cont-desc-text">
                                 Whether you’re looking for exceptional IT talent or exploring your next career opportunity,
                                 HillView Consulting Solutions is here to help. Get in touch with our team and let’s find the right solution for you.
                             </p>
-                            <p class="tel"><i class="bi bi-telephone"></i>925-215-8582</p>
-                            <p class="email"><i class="bi bi-envelope"></i>hr@hillviewconsulting.com / team@hillviewconsulting.com</p>
-                            <p class="geo"><i class="bi bi-geo-alt"></i>6200 Stoneridge Mall Rd. Suite 300 Pleasanton, CA 94588</p>
-                            <p class="time"><i class="bi bi-clock"></i>Mon - Fri: 8:00 AM to 5:00 PM PST</p>
+                            <p class="tel d-flex"><i class="bi bi-telephone"></i><span>925-215-8582</span></p>
+                            <p class="email d-flex"><i class="bi bi-envelope"></i><span>hr@hillviewconsulting.com / team@hillviewconsulting.com</span></p>
+                            <p class="geo d-flex"><i class="bi bi-geo-alt"></i><span>6200 Stoneridge Mall Rd. Suite 300 Pleasanton, CA 94588</span></p>
+                            <p class="time d-flex"><i class="bi bi-clock"></i><span>Mon - Fri: 8:00 AM to 5:00 PM PST</span></p>
                         </div>
                     </div>
-                    <div class="col-lg-6 col-md-6 col-12 contact-left-item">
+                    <div class="col-lg-6 col-md-12 col-12 contact-left-item">
                         <div class="contact-form-box">
                             <form class="contact-form" action="#" method="post">
 
