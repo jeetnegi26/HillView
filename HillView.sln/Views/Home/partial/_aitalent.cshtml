@@ -1,0 +1,131 @@
+﻿
+<style>
+
+    .ai-talent-section {
+        width: 100%;
+        padding: 5rem 3rem;
+        color: #fff;
+        box-sizing: border-box;
+        background: var(--lightbg);
+    }
+
+    .ai-talent-container {
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 70px;
+        align-items: start;
+    }
+
+    .ai-talent-heading {
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .waving-hand {
+        display: inline-block;
+        flex-shrink: 0;
+        font-size: 40px;
+        line-height: 1.5;
+        transform-origin: 70% 70%;
+        animation: hand-wave 2s ease-in-out infinite;
+    }
+
+    .ai-talent-heading h1 {
+        margin: 0;
+        font-weight: 500;
+        line-height: 1.28;
+        letter-spacing: -1px;
+    }
+
+    .ai-talent-content p {
+        margin: 5px 0 24px;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+
+    .ai-talent-buttons {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+
+
+    @@keyframes hand-wave {
+        0%, 60%, 100% {
+            transform: rotate(0deg);
+        }
+
+        10%, 30% {
+            transform: rotate(14deg);
+        }
+
+        20%, 40% {
+            transform: rotate(-8deg);
+        }
+
+        50% {
+            transform: rotate(5deg);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .ai-talent-section {
+            padding: 45px 24px;
+        }
+
+        .ai-talent-container {
+            grid-template-columns: 1fr;
+            gap: 28px;
+        }
+
+        .ai-talent-heading {
+            gap: 14px;
+        }
+
+        .ai-talent-content p {
+            font-size: 14px;
+            margin-top: 0;
+        }
+    }
+
+    @@media (prefers-reduced-motion: reduce) {
+        .waving-hand {
+            animation: none;
+        }
+    }
+</style>
+
+<section class="ai-talent-section">
+    <div class="ai-talent-container container">
+
+        <div class="ai-talent-heading">
+            <span class="waving-hand" aria-hidden="true">👋</span>
+            <h1>
+                Powering Innovation<br />
+                with AI Talent
+            </h1>
+        </div>
+
+        <div class="ai-talent-content">
+            <p>
+                We connect businesses with top AI talent, including Machine Learning
+                Engineers, Data Scientists, AI Researchers, and Generative AI Specialists.
+                At HillView Consulting Solutions, we help you quickly access skilled
+                professionals to drive innovation and digital transformation.
+            </p>
+
+            <div class="ai-talent-buttons">
+                <a href="#learn-more" class="ai-btn btn btn-secondary">
+                    Learn more
+                </a>
+                <a href="#services" class="ai-btn btn btn-primary">
+                    Our Services
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>

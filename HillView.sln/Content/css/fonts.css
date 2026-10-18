@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'headn';
+    src: url('../fonts/body.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'head';
+    src: url('../fonts/body.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'body';
+    src: url('../fonts/body.ttf') format('truetype');
+}

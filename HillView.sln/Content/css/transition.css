@@ -1,0 +1,191 @@
+﻿
+
+/* Slide-down animation */
+@keyframes slideDown {
+    0% {
+        transform: translateY(-300px);
+        opacity: 0;
+        visibility: hidden !important;
+    }
+    1% {
+        visibility: visible !important;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    40% {
+        opacity: 1;
+        transform: translateY(-20px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateY(-10px);
+    }
+}
+
+@keyframes slideRight {
+    0% {
+        transform: translateX(100px);
+        opacity: 0;
+        visibility: hidden !important;
+    }
+    1% {
+        visibility: visible !important;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideLeftToRight {
+    0% {
+        transform: translateX(-500px); /* Starts from the left */
+        opacity: 0;
+        visibility: hidden !important;
+    }
+    1% {
+        visibility: visible !important;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInLeft {
+    0% {
+        opacity: 0; /* Start fully transparent */
+        clip-path: inset(0 0 100% 0);
+        filter: blur(5px); /* Add blur for smoother edges */
+    }
+
+    100% {
+        opacity: 1; /* Fully visible */
+        clip-path: inset(0 0 0 0);
+        filter: blur(0); /* End with a sharp image */
+    }
+}
+
+@keyframes flip {
+    0% {
+        transform: rotateY(180deg);
+        opacity:0;
+    }
+    1% {
+        visibility: visible !important;
+    }
+
+    100% {
+        transform: rotateY(360deg);
+        opacity:1;
+    }
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes blurToClear {
+    0% {
+        filter: blur(10px);
+    }
+
+    100% {
+        filter: blur(0);
+    }
+}
+
+.hidden {
+    opacity: 0;
+    visibility: hidden !important;
+    transform: translateY(0);
+}
+
+.hidden-horizontal {
+    opacity: 0;
+    visibility: hidden !important;
+    transform: translateX(0);
+}
+
+
+.arrow {
+    animation: bounce 2s ease forwards;
+    animation-delay: 5s; /* Delayed start by 5 seconds */
+    animation-iteration-count: infinite; /* Runs once */
+    opacity: 0; /* Initial state */
+    transform: translateY(-50px); /* Initial state */
+    animation-fill-mode: forwards; /* Keeps final animation state */
+}
+
+.slide-left-to-right {
+    animation: slideLeftToRight 1.5s ease forwards;
+    opacity: 0; /* Initial state */
+    transform: translateY(-50px); /* Initial state */
+}
+
+.slide-top {
+    animation: slideLeftToRight 1.5s ease forwards;
+    opacity: 0; /* Initial state */
+    transform: translateY(-50px); /* Initial state */
+}
+
+.slide-right {
+    animation: slideRight 1.2s ease forwards;
+    animation-delay: 1s !important; /* Slide right delay for "Since 2017" */
+    opacity: 0; /* Initial state */
+    transform: translateY(-50px); /* Initial state */
+}
+
+.slide-right-one {
+    animation: slideRight 1.2s ease forwards;
+    animation-delay: 1s !important; /* Slide right delay for "GSC Philosophy Mission" */
+    opacity: 0; /* Initial state */
+    transform: translateY(-50px); /* Initial state */
+}
+
+.slide-right-two {
+    animation: slideRight 1.2s ease forwards;
+    animation-delay: 1s !important; /* Slide right delay for the paragraph */
+    opacity: 0; /* Initial state */
+    transform: translateY(-50px); /* Initial state */
+}
+
+.blurClear {
+    animation: blurToClear 1.5s ease-in-out forwards;
+}
+
+.fade-in-left {
+    opacity: 0; /* Start fully transparent */
+    animation: fadeInLeft 3s ease-in-out forwards;
+    animation-delay:1s
+}
+
+.flip {
+    perspective: 1000px; /* Enables 3D space for the flip */
+    animation: flip 2s ease-in-out;
+    opacity: 0; /* Initial state */
+    animation-fill-mode: forwards; /* Retain the final state */
+}
+
+
+
+
+

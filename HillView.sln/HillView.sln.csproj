@@ -198,6 +198,8 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
+    <Compile Include="Controllers\JobsController.cs" />
+    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -712,11 +714,55 @@
     <Content Include="Content\ckeditor\skins\moono-lisa\images\spinner.gif" />
     <Content Include="Content\ckeditor\styles.js" />
     <Content Include="Content\ckeditor\vendor\promise.js" />
+    <Content Include="Content\css\all.css" />
+    <Content Include="Content\css\animate.css" />
+    <Content Include="Content\css\banner.css" />
+    <Content Include="Content\css\bootstrap\bootstrap-grid.css" />
+    <Content Include="Content\css\bootstrap\bootstrap-icons.css" />
+    <Content Include="Content\css\bootstrap\bootstrap.min.css" />
+    <Content Include="Content\css\fonts.css" />
+    <Content Include="Content\css\otherbanner.css" />
+    <Content Include="Content\css\owl.carousel.min.css" />
+    <Content Include="Content\css\Site.css" />
+    <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\transition.css" />
     <Content Include="Content\fonts.css" />
     <Content Include="Content\fontWoff.css" />
     <Content Include="Content\icons\loader.gif" />
     <Content Include="Content\icons\tabler-icons\fonts\tabler-icons.svg" />
     <Content Include="Content\icons\tabler-icons\tabler-icons.css" />
+    <Content Include="Content\Images\ai-icon.svg" />
+    <Content Include="Content\Images\case-study\casestudy1.png" />
+    <Content Include="Content\Images\consoth.png" />
+    <Content Include="Content\Images\Home\adv-img.png" />
+    <Content Include="Content\Images\Home\alarm_on.svg" />
+    <Content Include="Content\Images\Home\credit_score.svg" />
+    <Content Include="Content\Images\Home\Graph-bg.png" />
+    <Content Include="Content\Images\Home\people.svg" />
+    <Content Include="Content\Images\Industries\in1.png" />
+    <Content Include="Content\Images\Industries\in2.png" />
+    <Content Include="Content\Images\Industries\in3.png" />
+    <Content Include="Content\Images\journey.png" />
+    <Content Include="Content\Images\Logo.svg" />
+    <Content Include="Content\Images\orb-1.png" />
+    <Content Include="Content\Images\orb-2.png" />
+    <Content Include="Content\Images\Practice\cloud-print-outline.svg" />
+    <Content Include="Content\Images\Practice\cloud_sync.svg" />
+    <Content Include="Content\Images\Practice\code-tags.svg" />
+    <Content Include="Content\Images\Practice\cogs.svg" />
+    <Content Include="Content\Images\Practice\design_services.svg" />
+    <Content Include="Content\Images\Practice\image-filter-drama.svg" />
+    <Content Include="Content\Images\Practice\Processor.svg" />
+    <Content Include="Content\Images\Practice\Server.svg" />
+    <Content Include="Content\Images\Practice\troubleshoot.svg" />
+    <Content Include="Content\Images\rest.png" />
+    <Content Include="Content\Images\Services\augument.svg" />
+    <Content Include="Content\Images\Services\consult.svg" />
+    <Content Include="Content\Images\Services\hire.svg" />
+    <Content Include="Content\Images\Services\ser-right.png" />
+    <Content Include="Content\Images\Services\staff.svg" />
+    <Content Include="Content\Images\staffother.png" />
+    <Content Include="Content\Images\Teams\team1.png" />
     <Content Include="Content\logo\logo.svg" />
     <Content Include="Content\profile\user-1.jpg" />
     <Content Include="db.txt" />
@@ -778,6 +824,7 @@
     <Content Include="Scripts\jquery-3.4.1.min.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\owl.carousel.min.js" />
     <Content Include="Scripts\sidebarmenu.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Web.config" />
@@ -808,6 +855,7 @@
     <Folder Include="Views\Image\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\fonts\body.ttf" />
     <None Include="packages.config" />
     <Content Include="Scripts\bootstrap.js.map" />
     <Content Include="Views\Account\Login.cshtml" />
@@ -831,6 +879,11 @@
     <Content Include="Views\Admin\PageContent.cshtml" />
     <Content Include="Views\Admin\MenuManagement.cshtml" />
     <Content Include="Views\Admin\AddMenuItem.cshtml" />
+    <Content Include="Views\Home\partial\_advantages.cshtml" />
+    <Content Include="Views\Home\partial\_aitalent.cshtml" />
+    <Content Include="Views\Home\partial\_milestones.cshtml" />
+    <Content Include="Views\Jobs\Index.cshtml" />
+    <Content Include="Views\Services\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">
