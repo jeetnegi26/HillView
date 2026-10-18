@@ -10,7 +10,7 @@ namespace DTOs
 
         [Required(ErrorMessage = "Page title is required.")]
         [StringLength(200)]
-        [Display(Name = "Page Title *")]
+        [Display(Name = "Page Title")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Page URL slug is required.")]
@@ -18,7 +18,7 @@ namespace DTOs
         [RegularExpression(
             @"^[a-z0-9]+(?:-[a-z0-9]+)*$",
             ErrorMessage = "Use lowercase letters, numbers, and hyphens only.")]
-        [Display(Name = "URL Slug *")]
+        [Display(Name = "URL Slug")]
         public string Slug { get; set; }
 
 

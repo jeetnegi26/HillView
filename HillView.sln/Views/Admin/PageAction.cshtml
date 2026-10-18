@@ -8,19 +8,42 @@
 
     Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
 }
-
+<style>
+    .form-group{
+        margin-bottom:20px;
+    }
+    label{
+        margin-bottom:7px;
+    }
+    .input-group-text {
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        padding: 10px 14px;
+        font-size: 0.875rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #5A6A85;
+        text-align: center;
+        white-space: nowrap;
+        background-color: #EAEFF4;
+        border-radius: 0px;
+        /* border-radius: 7px; */
+        border: var(--bs-border-width) solid #DFE5EF;
+    }
+</style>
 <div class="container-fluid">
     <div class="row mb-3 align-items-center">
         <div class="col-md-8">
             <h2>@ViewBag.Title</h2>
             <p class="text-muted">
                 Enter page details and SEO settings.
-                Fields marked with * are required.
             </p>
         </div>
-        <div class="col-md-4 text-right">
+        <div class="col-md-4 text-end">
             <a href="@Url.Action("Pages", "Admin")"
-               class="btn btn-secondary">
+               class="btn btn-dark-light">
                 Back to Pages
             </a>
         </div>
@@ -28,7 +51,6 @@
 
     <div class="card">
         <div class="card-body">
-
             @using (Html.BeginForm(
                 "PageAction",
                 "Admin",
@@ -38,48 +60,52 @@
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(m => m.Id)
 
-                @Html.ValidationSummary(
-                    false,
-                    "",
-                    new { @class = "alert alert-danger" })
+                if (!ViewData.ModelState.IsValid)
+                {
+                    Html.ValidationSummary(
+                        false,
+                        "",
+                        new { @class = "alert alert-danger" });
+                }
 
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Title)
-                    @Html.TextBoxFor(m => m.Title, new
-                    {
-                        @class = "form-control",
-                        placeholder = "Enter page title",
-                        maxlength = "200"
-                    })
-                    @Html.ValidationMessageFor(
-                        m => m.Title, "",
-                        new { @class = "text-danger" })
-                </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Title)
+                <span class="text-danger">*required</span>
+                @Html.TextBoxFor(m => m.Title, new
+                {
+                    @class = "form-control",
+                    placeholder = "Enter page title",
+                    maxlength = "200"
+                })
+                @Html.ValidationMessageFor(
+                    m => m.Title, "",
+                    new { @class = "text-danger" })
+            </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(m => m.Slug)
-
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">/</span>
-                        </div>
-
-                        @Html.TextBoxFor(m => m.Slug, new
-                        {
-                            @class = "form-control",
-                            placeholder = "about-us",
-                            maxlength = "250"
-                        })
+            <div class="form-group">
+                @Html.LabelFor(m => m.Slug)
+                <span class="text-danger">*required</span>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">/</span>
                     </div>
 
-                    @Html.ValidationMessageFor(
-                        m => m.Slug, "",
-                        new { @class = "text-danger" })
-
-                    <small class="form-text text-muted">
-                        Use lowercase letters, numbers, and hyphens only.
-                    </small>
+                    @Html.TextBoxFor(m => m.Slug, new
+                    {
+                        @class = "form-control",
+                        placeholder = "about-us",
+                        maxlength = "250"
+                    })
                 </div>
+
+                @Html.ValidationMessageFor(
+                    m => m.Slug, "",
+                    new { @class = "text-danger" })
+
+                <small class="form-text text-muted">
+                    Use lowercase letters, numbers, and hyphens only.
+                </small>
+            </div>
 
                 <hr />
                 <h5>SEO Settings</h5>
@@ -170,12 +196,12 @@
 
                 <hr />
 
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-indigo">
                     Save Page
                 </button>
 
                 <a href="@Url.Action("Pages", "Admin")"
-                   class="btn btn-secondary">
+                   class="btn btn-outline-danger">
                     Cancel
                 </a>
             }

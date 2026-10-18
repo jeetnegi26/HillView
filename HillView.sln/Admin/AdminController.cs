@@ -54,13 +54,6 @@ namespace HillView.sln.Admin
         {
             return View();
         }
-
-        //[ChildActionOnly]
-        //public async Task<ActionResult> Sidebar()
-        //{
-        //    ViewBag.WebLogo = await _webInfoService.GetBrandLogoAsync();
-        //    return PartialView("~/Views/Shared/Admin/_AdminSidebar.cshtml");
-        //}
         [HttpGet]
         public async Task<JsonResult> GetSidebarLogo()
         {
@@ -72,8 +65,6 @@ namespace HillView.sln.Admin
                 logo = logo
             }, JsonRequestBehavior.AllowGet);
         }
-
-
         [ChildActionOnly]
         public ActionResult AdminSidebar()
         {
@@ -100,8 +91,6 @@ namespace HillView.sln.Admin
                     new AdminSidebarVM());
             }
         }
-
-
         public async Task<ActionResult> MenuManagement()
         {
             try
@@ -175,7 +164,6 @@ namespace HillView.sln.Admin
                     new HandleErrorInfo(ex, "Admin", "AddMenuItem"));
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SaveMenuItem(DTOs.AdminMenuItemEditVM model)
@@ -243,7 +231,6 @@ namespace HillView.sln.Admin
                 return View("AddMenuItem", formData);
             }
         }
-
         [HttpGet]
         public async Task<ActionResult> EditMenuItem(Guid id)
         {
