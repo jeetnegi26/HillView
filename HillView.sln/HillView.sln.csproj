@@ -869,7 +869,7 @@
     <Content Include="Views\Admin\Sections.cshtml" />
     <Content Include="Views\Admin\SectionAction.cshtml" />
     <Content Include="Views\Admin\SectionItems.cshtml" />
-    <Content Include="Views\Admin\SectionItemAction.cshtml" />
+    <Content Include="Views\Admin\SectionItemAction_Old.cshtml" />
     <Content Include="Views\Admin\Images.cshtml" />
     <Content Include="Views\Admin\ImageAction.cshtml" />
     <Content Include="Views\Admin\Buttons.cshtml" />
@@ -884,6 +884,7 @@
     <Content Include="Views\Home\partial\_milestones.cshtml" />
     <Content Include="Views\Jobs\Index.cshtml" />
     <Content Include="Views\Services\Index.cshtml" />
+    <Content Include="Views\Admin\SectionItemAction.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">

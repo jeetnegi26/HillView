@@ -7,6 +7,22 @@
     var pageId = (Guid)ViewBag.PageId;
 }
 
+<style>
+    .content-container{
+        border: 1px solid #ebebeb;
+        border-radius: 4px;
+        padding: 1.5em;
+        background: white;
+    }
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        margin-bottom: 7px;
+    }
+</style>
+
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
@@ -15,11 +31,16 @@
                 Page: <strong>@ViewBag.PageTitle</strong>
             </p>
         </div>
-
-        <a href="@Url.Action("Pages", "Admin")"
-           class="btn btn-secondary">
-            Back to Pages
-        </a>
+        <div class="d-flex justify-content-end mb-3">
+            <a href="@Url.Action("PageSectionAction", "Admin")"
+               class="btn btn-outline-info mx-2">
+                Assign Existing Section
+            </a>
+            <a href="@Url.Action("Pages", "Admin")"
+               class="btn btn-dark-light">
+                Back to Pages
+            </a>
+        </div>
     </div>
 
     @if (TempData["SuccessMessage"] != null)
@@ -36,12 +57,7 @@
         </div>
     }
 
-    <div class="d-flex justify-content-end mb-3">
-        <a href="@Url.Action("PageSectionAction", "Admin")"
-           class="btn btn-primary">
-            <i class="fa fa-plus"></i> Assign Existing Section
-        </a>
-    </div>
+
 
     <div class="card">
         <div class="card-header">
@@ -53,11 +69,11 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th style="width: 70px;">Order</th>
+                            <th style="width: 60px;">Order</th>
                             <th>Section</th>
                             <th>Status</th>
                             <th>Created</th>
-                            <th style="width: 180px;">Actions</th>
+                            <th style="width: 560px;">Actions</th>
                         </tr>
                     </thead>
 
@@ -72,13 +88,13 @@
                                     <td>
                                         @if (item.Status)
                                         {
-                                            <span class="badge badge-success">
+                                            <span class="badge bg-success">
                                                 Active
                                             </span>
                                         }
                                         else
                                         {
-                                            <span class="badge badge-secondary">
+                                            <span class="badge bg-danger">
                                                 Inactive
                                             </span>
                                         }
@@ -94,16 +110,13 @@
                                             Edit Content
                                         </button>
 
-                                        <a href="@Url.Action(
-        "PageSectionAction",
-        "Admin",
-        new { id = item.Id })"
-                                           class="btn btn-sm btn-outline-secondary">
+                                        <a href="@Url.Action("PageSectionAction","Admin",new { id = item.Id })"
+                                           class="btn btn-sm btn-success">
                                             Assignment
                                         </a>
 
                                         <button type="button"
-                                                class="btn btn-sm btn-info manage-section-items-btn"
+                                                class="btn btn-sm btn-indigo manage-section-items-btn"
                                                 data-section-id="@item.SectionId"
                                                 data-section-title="@item.SectionTitle">
                                             Manage Cards
@@ -163,11 +176,11 @@
     </div>
 
     <div class="card mt-4" id="sectionEditor" style="display:none;">
-        <div class="card-header">
-            <h5 class="mb-0" id="editorTitle">Edit Section Content</h5>
+        <div class="card-header bg-dark-light">
+            <h5 class="mb-0 text-light" id="editorTitle">Edit Section Content</h5>
         </div>
 
-        <div class="card-body">
+        <div class="card-body bg-body-secondary">
             <div id="editorLoading" class="text-muted" style="display:none;">
                 Loading section...
             </div>
@@ -175,36 +188,41 @@
             <div id="editorError" class="alert alert-danger"
                  style="display:none;"></div>
 
-            <div id="editorFields" style="display:none;">
+            <div id="editorFields" style="display:none;" class="content-container">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Section</h5>
+                </div>
+                <hr class="my-4" />
                 <input type="hidden" id="editSectionId" />
 
                 <div class="form-group">
-                    <label for="editHeading">Heading</label>
+                    <label for="editHeading" class="form-label">Heading</label>
                     <input type="text" id="editHeading"
                            class="form-control" maxlength="200" />
                 </div>
 
                 <div class="form-group">
-                    <label for="editSubHeading">Subheading</label>
+                    <label for="editSubHeading" class="form-label">Subheading</label>
                     <input type="text" id="editSubHeading"
                            class="form-control" maxlength="200" />
                 </div>
 
                 <div class="form-group">
-                    <label for="editDescription">Description</label>
+                    <label for="editDescription" class="form-label">Description</label>
                     <textarea id="editDescription"
                               class="form-control" rows="5"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="editBackgroundColor">Background Color</label>
+                    <label for="editBackgroundColor" class="form-label">Background Color</label>
                     <input type="text" id="editBackgroundColor"
                            class="form-control" maxlength="50"
                            placeholder="#13092F" />
                 </div>
 
                 <div class="form-group">
-                    <label for="editCssClass">CSS Class</label>
+                    <label for="editCssClass" class="form-label">CSS Class</label>
                     <input type="text" id="editCssClass"
                            class="form-control" maxlength="200" />
                 </div>
@@ -223,9 +241,9 @@
             <!-- Section Image Management -->
             <hr class="my-4" />
 
-            <div id="sectionImageManager" style="display:none;">
+            <div id="sectionImageManager" style="display:none;" class="content-container">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="mb-0">Section Images</h5>
+                    <h5 class="mb-0">Images</h5>
                     <button type="button" id="loadSectionImages"
                             class="btn btn-outline-primary btn-sm">
                         Load Images
@@ -255,15 +273,15 @@
                 <h6>Upload Section Image</h6>
 
                 <div class="form-group">
-                    <label for="sectionImageFile">Choose Image</label>
+                    <label for="sectionImageFile" class="form-label">Choose Image</label>
                     <input type="file"
                            id="sectionImageFile"
                            class="form-control-file"
-                           accept="image/jpeg,image/png,image/gif,image/webp" />
+                           accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,.svg" />
                 </div>
 
                 <div class="form-group">
-                    <label for="sectionImageAlt">Alt Text</label>
+                    <label for="sectionImageAlt" class="form-label">Alt Text</label>
                     <input type="text"
                            id="sectionImageAlt"
                            class="form-control"
@@ -272,7 +290,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="sectionImageCaption">Caption</label>
+                    <label for="sectionImageCaption" class="form-label">Caption</label>
                     <input type="text"
                            id="sectionImageCaption"
                            class="form-control"
@@ -281,19 +299,18 @@
                 </div>
 
                 <button type="button" id="uploadSectionImage"
-                        class="btn btn-success btn-sm">
+                        class="btn btn-primary btn-sm">
                     Upload Image
                 </button>
 
                 <span id="sectionImageUploadMessage" class="ml-2"></span>
             </div>
 
+            <hr class="my-4" />
 
-            <div id="sectionButtonManager" style="display:none;">
-                <hr />
-
+            <div id="sectionButtonManager" style="display:none;" class="content-container">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5>Section Buttons</h5>
+                    <h5>Buttons</h5>
                     <button type="button" id="loadSectionButtons"
                             class="btn btn-outline-primary btn-sm">
                         Load Buttons
@@ -321,21 +338,21 @@
                 <input type="hidden" id="sectionButtonId" />
 
                 <div class="form-group">
-                    <label for="sectionButtonTitle">Button Text</label>
+                    <label for="sectionButtonTitle" class="form-label">Button Text</label>
                     <input type="text" id="sectionButtonTitle"
                            class="form-control" maxlength="200"
                            placeholder="e.g. Learn More" />
                 </div>
 
                 <div class="form-group">
-                    <label for="sectionButtonUrl">URL</label>
+                    <label for="sectionButtonUrl" class="form-label">URL</label>
                     <input type="text" id="sectionButtonUrl"
                            class="form-control" maxlength="1000"
                            placeholder="e.g. /About or https://example.com" />
                 </div>
 
                 <div class="form-group">
-                    <label for="sectionButtonTarget">Link Target</label>
+                    <label for="sectionButtonTarget" class="form-label">Link Target</label>
                     <select id="sectionButtonTarget" class="form-control">
                         <option value="_self">Same tab</option>
                         <option value="_blank">New tab</option>
@@ -343,21 +360,21 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="sectionButtonCssClass">CSS Class</label>
+                    <label for="sectionButtonCssClass" class="form-label">CSS Class</label>
                     <input type="text" id="sectionButtonCssClass"
                            class="form-control" maxlength="200"
                            placeholder="e.g. btn btn-primary" />
                 </div>
 
                 <div class="form-group">
-                    <label for="sectionButtonType">Button Type</label>
+                    <label for="sectionButtonType" class="form-label">Button Type</label>
                     <input type="text" id="sectionButtonType"
                            class="form-control" maxlength="100"
                            placeholder="e.g. Primary or Secondary" />
                 </div>
 
                 <div class="form-group">
-                    <label for="sectionButtonDisplayOrder">Display Order</label>
+                    <label for="sectionButtonDisplayOrder" class="form-label">Display Order</label>
                     <input type="number" id="sectionButtonDisplayOrder"
                            class="form-control" min="0" value="1" />
                 </div>
@@ -383,13 +400,16 @@
                 <span id="sectionButtonSaveMessage" class="ml-2"></span>
             </div>
 
+            <hr class="my-3" />
+
+
         </div>
     </div>
 
 
     <div class="card mt-4" id="sectionItemsEditor" style="display:none;">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0" id="itemsEditorTitle">Manage Section Items</h5>
+        <div class="card-header d-flex justify-content-between align-items-center bg-dark-light">
+            <h5 class="mb-0 text-light" id="itemsEditorTitle">Manage Section Items</h5>
 
             <button type="button" class="btn btn-sm btn-primary"
                     id="addSectionItem">
@@ -397,7 +417,7 @@
             </button>
         </div>
 
-        <div class="card-body">
+        <div class="card-body bg-body-secondary">
             <div id="itemsEditorError" class="alert alert-danger"
                  style="display:none;"></div>
 
@@ -711,7 +731,7 @@ $(".manage-section-items-btn").on("click", function () {
 
     function renderSectionItem(item) {
         var html = `
-    <div class="border rounded p-3 mb-3 section-item-card"
+    <div class="border rounded p-3 mb-3 section-item-card bg-white"
          data-item-id="${item.id || ""}">
 
         <input type="hidden" class="item-id"
@@ -758,7 +778,7 @@ $(".manage-section-items-btn").on("click", function () {
             </button>
 
             <button type="button"
-                    class="btn btn-danger btn-sm delete-section-item ml-2">
+                    class="btn btn-danger btn-sm delete-section-item mx-2">
                 Delete Card
             </button>
 
@@ -771,7 +791,6 @@ $(".manage-section-items-btn").on("click", function () {
         <div class="section-item-image-manager mt-3">
 
 <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
-    <h6 class="mb-0">Card Images</h6>
 
     <div>
         <button type="button"
@@ -800,7 +819,7 @@ $(".manage-section-items-btn").on("click", function () {
         <label>Choose Image</label>
         <input type="file"
                class="form-control-file card-image-file"
-               accept="image/jpeg,image/png,image/gif,image/webp" />
+               accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,.svg" />
     </div>
 
     <div class="form-group">
@@ -837,11 +856,42 @@ $(".manage-section-items-btn").on("click", function () {
                      style="display: none;"></div>
             </div>
         </div>
+        <hr class="my-3">
+<div class="child-items-manager mt-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">Child Items</h6>
 
+        <button type="button"
+                class="btn btn-outline-success btn-sm add-child-item">
+            + Add Child Item
+        </button>
+    </div>
+
+    <div class="child-items-error alert alert-danger"
+         style="display:none;"></div>
+
+    <div class="child-items-list"></div>
+
+    <div class="child-items-empty text-muted small"
+         style="display:none;">
+        No child items have been added.
+    </div>
+</div>
     </div>`;
 
         $("#sectionItemsContainer").append(html);
+
+        // Get the parent card that was just added.
+        var $parentCard = $("#sectionItemsContainer")
+            .children(".section-item-card")
+            .last();
+
+        // Load its child items inside Manage Cards.
+        if (item.id) {
+            loadChildSectionItems($parentCard);
+        }
     }
+
 
 
     $("#sectionItemsContainer").on("click", ".save-section-item", function () {
@@ -1208,7 +1258,7 @@ $("#sectionItemsContainer").on("click", ".upload-card-image", function () {
     $message.text("").removeClass("text-success text-danger");
 
     $.ajax({
-        url: '@Url.Action("Upload_Content_Image", "Admin")',
+        url: '@Url.Action("Upload_PageContent_Image", "Admin")',
         type: "POST",
         data: formData,
         processData: false,
@@ -1592,7 +1642,7 @@ $("#uploadSectionImage").on("click", function () {
     $message.text("").removeClass("text-success text-danger");
 
     $.ajax({
-        url: '@Url.Action("Upload_Content_Image", "Admin")',
+        url: '@Url.Action("Upload_PageContent_Image", "Admin")',
         type: "POST",
         data: formData,
         processData: false,
@@ -1839,29 +1889,33 @@ $("#loadSectionButtons").on("click", function () {
                     .text(button.title || "(Untitled button)")
                     .appendTo($details);
 
+                var $detailsContainer = $("<div>", {
+                    "class": "mb-2 row row-cols-lg-3 row-2"
+                }).appendTo($details);
+
                 $("<div>")
                     .text("URL: " + (button.url || "Not set"))
-                    .appendTo($details);
+                    .appendTo($detailsContainer);
 
                 $("<div>")
                     .text("Target: " + (button.target || "_self"))
-                    .appendTo($details);
+                    .appendTo($detailsContainer);
 
                 $("<div>")
                     .text("CSS Class: " + (button.cssClass || "None"))
-                    .appendTo($details);
+                    .appendTo($detailsContainer);
 
                 $("<div>")
                     .text("Type: " + (button.buttonType || "None"))
-                    .appendTo($details);
+                    .appendTo($detailsContainer);
 
                 $("<div>")
                     .text("Display Order: " + button.displayOrder)
-                    .appendTo($details);
+                    .appendTo($detailsContainer);
 
                 $("<div>")
                     .text("Status: " + (button.status ? "Active" : "Inactive"))
-                    .appendTo($details);
+                    .appendTo($detailsContainer);
 
                 var $editButton = $("<button>", {
                     type: "button",
@@ -1888,58 +1942,58 @@ $("#loadSectionButtons").on("click", function () {
                 });
 
 
-var $deleteButton = $("<button>", {
-    type: "button",
-    "class": "btn btn-sm btn-danger mt-2",
-    text: "Delete"
-});
+            var $deleteButton = $("<button>", {
+                type: "button",
+                "class": "btn btn-sm btn-danger mt-2 mx-2",
+                text: "Delete"
+            });
 
-$deleteButton.on("click", function () {
-    if (!confirm("Are you sure you want to delete this button?")) {
-        return;
-    }
+            $deleteButton.on("click", function () {
+                if (!confirm("Are you sure you want to delete this button?")) {
+                    return;
+                }
 
-    var token = $("#sectionAntiForgeryToken")
-        .find('input[name="__RequestVerificationToken"]')
-        .val();
+                var token = $("#sectionAntiForgeryToken")
+                    .find('input[name="__RequestVerificationToken"]')
+                    .val();
 
-    $deleteButton.prop("disabled", true).text("Deleting...");
+                $deleteButton.prop("disabled", true).text("Deleting...");
 
-    $.ajax({
-        url: '@Url.Action("DeleteSectionButton", "Admin")',
-        type: "POST",
-        dataType: "json",
-        data: {
-            __RequestVerificationToken: token,
-            sectionId: $("#editSectionId").val(),
-            id: button.id
-        },
+                $.ajax({
+                    url: '@Url.Action("DeleteSectionButton", "Admin")',
+                    type: "POST",
+                    dataType: "json",
+                    data: {
+                        __RequestVerificationToken: token,
+                        sectionId: $("#editSectionId").val(),
+                        id: button.id
+                    },
 
-        success: function (response) {
-            if (!response.success) {
-                alert(response.message || "Unable to delete the button.");
-                $deleteButton.prop("disabled", false).text("Delete");
-                return;
-            }
+                    success: function (response) {
+                        if (!response.success) {
+                            alert(response.message || "Unable to delete the button.");
+                            $deleteButton.prop("disabled", false).text("Delete");
+                            return;
+                        }
 
-            $("#loadSectionButtons").trigger("click");
-            $("#sectionButtonSaveMessage")
-                .removeClass("text-danger")
-                .addClass("text-success")
-                .text(response.message || "Button deleted successfully.");
+                        $("#loadSectionButtons").trigger("click");
+                        $("#sectionButtonSaveMessage")
+                            .removeClass("text-danger")
+                            .addClass("text-success")
+                            .text(response.message || "Button deleted successfully.");
 
-            // Clear the form if the deleted button was being edited.
-            if ($("#sectionButtonId").val() === button.id) {
-                $("#cancelSectionButtonEdit").trigger("click");
-            }
-        },
+                        // Clear the form if the deleted button was being edited.
+                        if ($("#sectionButtonId").val() === button.id) {
+                            $("#cancelSectionButtonEdit").trigger("click");
+                        }
+                    },
 
-        error: function () {
-            alert("An error occurred while deleting the button.");
-            $deleteButton.prop("disabled", false).text("Delete");
-        }
-    });
-});
+                    error: function () {
+                        alert("An error occurred while deleting the button.");
+                        $deleteButton.prop("disabled", false).text("Delete");
+                    }
+                });
+            });
 
 
                 $row.append($details, $editButton, $deleteButton);
@@ -2127,7 +2181,341 @@ $deleteButton.on("click", function () {
     });
 });
 
+$("#sectionItemsContainer").on("click", ".delete-child-section-item", function () {
+    var $button = $(this);
+    var $child = $button.closest(".child-section-item-card");
+    var childId = $child.find(".item-id").val();
+    var $parentCard = $child.parent().closest(".section-item-card");
 
+    if (!childId ||
+        childId === "00000000-0000-0000-0000-000000000000") {
+        $child.remove();
+
+        if (!$parentCard.find(".child-items-list")
+                        .children(".child-section-item-card").length) {
+            $parentCard.find(".child-items-empty").show();
+        }
+
+        return;
+    }
+
+    if (!confirm("Are you sure you want to delete this child item?")) {
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find('input[name="__RequestVerificationToken"]').val();
+
+    $button.prop("disabled", true).text("Deleting...");
+
+    $.ajax({
+        url: '@Url.Action("DeleteSectionItemContent", "Admin")',
+        type: "POST",
+        dataType: "json",
+        data: {
+            id: childId,
+            __RequestVerificationToken: token
+        },
+
+        success: function (response) {
+            if (!response.success) {
+                alert(response.message || "Unable to delete child item.");
+                $button.prop("disabled", false).text("Delete Child");
+                return;
+            }
+
+            $child.remove();
+
+            if (!$parentCard.find(".child-items-list")
+                            .children(".child-section-item-card").length) {
+                $parentCard.find(".child-items-empty").show();
+            }
+        },
+
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            alert("An error occurred while deleting the child item.");
+            $button.prop("disabled", false).text("Delete Child");
+        }
+    });
+});
+
+$("#sectionItemsContainer").on("click", ".save-child-section-item", function () {
+    var $button = $(this);
+    var $child = $button.closest(".child-section-item-card");
+    var $parentCard = $child.parent().closest(".section-item-card");
+    var parentId = $parentCard.find(".item-id").first().val();
+    var childId = $child.find(".item-id").val();
+    var title = $child.find(".child-item-title").val().trim();
+    var orderValue = $child.find(".child-item-display-order").val();
+    var displayOrder = Number(orderValue);
+    var $message = $child.find(".child-item-save-message");
+
+    if (!parentId) {
+        $message.text("Save the parent card first.").css("color", "red");
+        return;
+    }
+
+    if (!title) {
+        $message.text("Title is required.").css("color", "red");
+        return;
+    }
+
+    if (orderValue === "" || !Number.isInteger(displayOrder) ||
+        displayOrder < 0) {
+        $message.text("Display order must be a non-negative whole number.")
+                .css("color", "red");
+        return;
+    }
+
+    var token = $("#sectionAntiForgeryToken")
+        .find('input[name="__RequestVerificationToken"]').val();
+
+    var model = {
+        Id: childId || "00000000-0000-0000-0000-000000000000",
+        SectionId: currentItemsSectionId,
+        ParentSectionItemId: parentId,
+        Title: title,
+        Heading: $child.find(".child-item-heading").val(),
+        Description: $child.find(".child-item-description").val(),
+        DisplayOrder: displayOrder,
+        Status: $child.find(".child-item-status").is(":checked"),
+        __RequestVerificationToken: token
+    };
+
+    $button.prop("disabled", true).text("Saving...");
+    $message.text("");
+
+    $.ajax({
+        url: '@Url.Action("SaveChildSectionItem", "Admin")',
+        type: "POST",
+        dataType: "json",
+        data: model,
+
+        success: function (response) {
+            if (!response.success) {
+                $message.text(response.message || "Unable to save child.")
+                        .css("color", "red");
+                return;
+            }
+
+            $child.find(".item-id").val(response.id);
+            $child.attr("data-item-id", response.id);
+
+            $message.text(response.message || "Child saved successfully.")
+                    .css("color", "green");
+        },
+
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            $message.text("An error occurred while saving the child.")
+                    .css("color", "red");
+        },
+
+        complete: function () {
+            $button.prop("disabled", false).text("Save Child");
+        }
+    });
+});
+
+    $("#sectionItemsContainer").on("click", ".add-child-item", function () {
+        var $parentCard = $(this).closest(".section-item-card");
+        var parentId = $parentCard.find(".item-id").first().val();
+
+        if (!parentId ||
+            parentId === "00000000-0000-0000-0000-000000000000") {
+            alert("Please save the parent card before adding a child item.");
+            return;
+        }
+
+        var $list = $parentCard.find(".child-items-list").first();
+        var nextOrder = $list.children(".child-section-item-card").length + 1;
+
+        $parentCard.find(".child-items-empty").hide();
+        $parentCard.find(".child-items-error").hide();
+
+        renderChildSectionItem({
+            id: "",
+            title: "",
+            heading: "",
+            description: "",
+            displayOrder: nextOrder,
+            status: true
+        }, $parentCard);
+
+        $list.children(".child-section-item-card").last()
+            .find(".child-item-title").focus();
+    });
+
+    function loadChildSectionItems($parentCard) {
+    var parentId = $parentCard.find(".item-id").first().val();
+
+    if (!parentId) return;
+
+    var $list = $parentCard.find(".child-items-list").first();
+    var $empty = $parentCard.find(".child-items-empty").first();
+    var $error = $parentCard.find(".child-items-error").first();
+
+    $list.empty();
+    $empty.hide();
+    $error.hide();
+
+    $.ajax({
+        url: '@Url.Action("GetChildSectionItems", "Admin")',
+        type: "GET",
+        data: { parentSectionItemId: parentId },
+        dataType: "json",
+
+        success: function (response) {
+            if (!response.success) {
+                $error.text(response.message || "Unable to load child items.")
+                      .show();
+                return;
+            }
+
+            var children = response.data || [];
+
+            if (children.length === 0) {
+                $empty.show();
+                return;
+            }
+
+            $.each(children, function (_, child) {
+                renderChildSectionItem(child, $parentCard);
+            });
+        },
+
+        error: function (xhr) {
+            console.error(xhr.responseText);
+            $error.text("An error occurred while loading child items.")
+                  .show();
+        }
+    });
+}
+
+
+function renderChildSectionItem(item, $parentCard) {
+    var html = `
+        <div class="border rounded p-3 mb-3 section-item-card child-section-item-card"
+             data-item-id="${item.id || ""}">
+
+            <input type="hidden" class="item-id"
+                   value="${item.id || ""}" />
+
+            <div class="form-group">
+                <label>Child Item Title *</label>
+                <input type="text" class="form-control child-item-title"
+                       maxlength="200"
+                       value="${escapeHtml(item.title || "")}" />
+            </div>
+
+            <div class="form-group">
+                <label>Heading</label>
+                <input type="text" class="form-control child-item-heading"
+                       maxlength="200"
+                       value="${escapeHtml(item.heading || "")}" />
+            </div>
+
+            <div class="form-group">
+                <label>Description</label>
+                <textarea class="form-control child-item-description"
+                          rows="2">${escapeHtml(item.description || "")}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Display Order</label>
+                <input type="number" min="0"
+                       class="form-control child-item-display-order"
+                       value="${item.displayOrder || 0}" />
+            </div>
+
+            <div class="form-check mb-3">
+                <input type="checkbox"
+                       class="form-check-input child-item-status"
+                       ${item.status ? "checked" : ""} />
+                <label class="form-check-label">Active</label>
+            </div>
+
+            <button type="button"
+                    class="btn btn-primary btn-sm save-child-section-item">
+                Save Child
+            </button>
+
+            <button type="button"
+                    class="btn btn-danger btn-sm delete-child-section-item ml-2">
+                Delete Child
+            </button>
+
+            <span class="child-item-save-message ml-2"></span>
+
+            <hr />
+
+            <div class="section-item-image-manager mt-3">
+                <div class="d-flex justify-content-between align-items-center mb-2 flex-wrap">
+                    <h6 class="mb-0">Child Images</h6>
+
+                    <div>
+                        <button type="button"
+                                class="btn btn-outline-primary btn-sm manage-card-images">
+                            Manage Images
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-outline-success btn-sm manage-card-buttons ml-2">
+                            Manage Buttons
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card-images-container" style="display:none;">
+                    <div class="card-images-loading text-muted small"
+                         style="display:none;">Loading images...</div>
+
+                    <div class="card-images-list"></div>
+
+                    <div class="card-image-upload mt-3">
+                        <div class="form-group">
+                            <label>Choose Image</label>
+                            <input type="file"
+                                   class="form-control-file card-image-file"
+                                  accept="image/jpeg,image/png,image/gif,image/webp,image/svg+xml,.svg" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Alt Text</label>
+                            <input type="text"
+                                   class="form-control card-image-alt"
+                                   maxlength="500"
+                                   placeholder="Describe the image" />
+                        </div>
+
+                        <div class="form-group">
+                            <label>Caption</label>
+                            <input type="text"
+                                   class="form-control card-image-caption"
+                                   maxlength="500"
+                                   placeholder="Optional image caption" />
+                        </div>
+
+                        <button type="button"
+                                class="btn btn-success btn-sm upload-card-image">
+                            Upload Image
+                        </button>
+
+                        <span class="card-image-upload-message ml-2"></span>
+                    </div>
+
+                    <div class="card-images-empty text-muted small"
+                         style="display:none;">No images have been added.</div>
+
+                    <div class="card-images-error text-danger small"
+                         style="display:none;"></div>
+                </div>
+            </div>
+        </div>`;
+
+    $parentCard.find(".child-items-list").first().append(html);
+}
 
 $("#saveSectionButton").on("click", function () {
     var sectionId = $("#editSectionId").val();

@@ -19,8 +19,8 @@
         </div>
 
         <a href="@Url.Action("Buttons", "Admin")"
-           class="btn btn-outline-secondary">
-            <i class="ti ti-arrow-left"></i> Back to Buttons
+           class="btn btn-dark-light">
+            Back to Buttons
         </a>
     </div>
 
@@ -38,10 +38,14 @@
                 @Html.HiddenFor(m => m.CreatedAt)
                 @Html.HiddenFor(m => m.UpdatedAt)
 
-                @Html.ValidationSummary(
-                    false,
-                    "",
-                    new { @class = "alert alert-danger" })
+
+                if (!ViewData.ModelState.IsValid)
+                {
+                    <div id="formErrors">
+                        @Html.ValidationSummary(false, "",
+                            new { @class = "alert alert-danger" })
+                    </div>
+                }
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -79,7 +83,7 @@
                     <div class="col-md-6 mb-3">
                         @Html.LabelFor(m => m.Title,
                             new { @class = "form-label" })
-
+                        <span class="text-danger">*required</span>
                         @Html.TextBoxFor(m => m.Title,
                             new
                             {
@@ -96,7 +100,7 @@
                     <div class="col-md-6 mb-3">
                         @Html.LabelFor(m => m.Url,
                             new { @class = "form-label" })
-
+                        <span class="text-danger">*required</span>
                         @Html.TextBoxFor(m => m.Url,
                             new
                             {
@@ -196,12 +200,12 @@
 
                 <button type="submit"
                         id="saveButton"
-                        class="btn btn-primary">
-                    <i class="ti ti-device-floppy"></i> Save Button
+                        class="btn btn-indigo">
+                   Save Button
                 </button>
 
                 <a href="@Url.Action("Buttons", "Admin")"
-                   class="btn btn-light">
+                   class="btn btn-outline-danger">
                     Cancel
                 </a>
             }

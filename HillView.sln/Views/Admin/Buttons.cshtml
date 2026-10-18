@@ -17,7 +17,7 @@
 
         <a href="@Url.Action("ButtonAction", "Admin")"
            class="btn btn-primary">
-            <i class="ti ti-plus"></i> Add Button
+            Add Button
         </a>
     </div>
 
@@ -47,13 +47,13 @@
                         <tr>
                             <th>Title</th>
                             <th>URL</th>
-                            <th>Target</th>
-                            <th>Button Type</th>
+                            @*<th>Target</th>*@
+                            <th title="Button Type">Type</th>
                             <th>Parent</th>
-                            <th>Display Order</th>
+                            <th title="Display Order">Order</th>
                             <th>Status</th>
                             <th>Created At</th>
-                            <th class="text-end">Actions</th>
+                            <th class="text-end" style="width: 150px;">Actions</th>
                         </tr>
                     </thead>
 
@@ -75,11 +75,11 @@
                                             : button.Url)
                                     </td>
 
-                                    <td>
+                                    @*<td>
                                         @(string.IsNullOrWhiteSpace(button.Target)
                                             ? "-"
                                             : button.Target)
-                                    </td>
+                                    </td>*@
 
                                     <td>
                                         @(string.IsNullOrWhiteSpace(button.ButtonType)
@@ -136,7 +136,7 @@
                                             "Admin",
                                             new { id = button.Id })"
                                            class="btn btn-sm btn-outline-primary">
-                                            <i class="ti ti-edit"></i> Edit
+                                            Edit
                                         </a>
 
                                         @using (Html.BeginForm(
@@ -150,7 +150,7 @@
 
                                             <button type="submit"
                                                     class="btn btn-sm btn-outline-danger">
-                                                <i class="ti ti-trash"></i> Delete
+                                                 Delete
                                             </button>
                                         }
                                     </td>

@@ -9,12 +9,12 @@ namespace DTOs
 
         [Required(ErrorMessage = "Section type is required.")]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a valid section type.")]
-        [Display(Name = "Section Type *")]
+        [Display(Name = "Section Type")]
         public int SectionTypeId { get; set; }
 
         [Required(ErrorMessage = "Section title is required.")]
         [StringLength(200)]
-        [Display(Name = "Section Title *")]
+        [Display(Name = "Section Title")]
         public string Title { get; set; }
 
         [StringLength(200)]

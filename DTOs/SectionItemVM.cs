@@ -48,5 +48,8 @@ namespace DTOs
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+
+        [Display(Name = "Parent Section Item")]
+        public Guid? ParentSectionItemId { get; set; }
     }
 }

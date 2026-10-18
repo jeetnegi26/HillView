@@ -17,7 +17,7 @@
 
         <a href="@Url.Action("SectionItemAction", "Admin")"
            class="btn btn-primary">
-            <i class="ti ti-plus"></i> Add Section Item
+            Add Section Item
         </a>
     </div>
 
@@ -48,7 +48,7 @@
                             <th>Title</th>
                             <th>Heading</th>
                             <th>Value</th>
-                            <th>Display Order</th>
+                            <th title="Display Order">Order</th>
                             <th>Status</th>
                             <th>Created At</th>
                             <th class="text-end">Actions</th>
@@ -106,8 +106,8 @@
                                             "SectionItemAction",
                                             "Admin",
                                             new { id = item.Id })"
-                                           class="btn btn-sm btn-outline-primary">
-                                            <i class="ti ti-edit"></i> Edit
+                                           class="btn btn-sm btn-primary">
+                                            Edit
                                         </a>
 
                                         @using (Html.BeginForm(
@@ -120,8 +120,8 @@
                                             @Html.AntiForgeryToken()
 
                                             <button type="submit"
-                                                    class="btn btn-sm btn-outline-danger">
-                                                <i class="ti ti-trash"></i> Delete
+                                                    class="btn btn-sm btn-danger">
+                                                Delete
                                             </button>
                                         }
                                     </td>

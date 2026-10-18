@@ -1,0 +1,282 @@
+﻿
+@model DTOs.SectionItemVM
+
+@{
+    ViewBag.Title = Model.Id == Guid.Empty
+        ? "Add Section Item"
+        : "Edit Section Item";
+
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>@ViewBag.Title</h2>
+            <p class="text-muted mb-0">
+                Add or update content within a website section.
+            </p>
+        </div>
+
+        <a href="@Url.Action("SectionItems", "Admin")" class="btn btn-dark-light">
+            Back to Section Items
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @using (Html.BeginForm(
+                "SectionItemAction",
+                "Admin",
+                FormMethod.Post,
+                new { id = "sectionItemForm" }))
+            {
+                @Html.AntiForgeryToken()
+
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.CreatedAt)
+                @Html.HiddenFor(m => m.UpdatedAt)
+
+                if (!ViewData.ModelState.IsValid)
+                {
+                    Html.ValidationSummary(
+                        false,
+                        "",
+                        new { @class = "alert alert-danger" });
+                }
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(
+                            m => m.SectionId,
+                            new { @class = "form-label" })
+
+                        @Html.DropDownListFor(
+                            m => m.SectionId,
+                            (SelectList)ViewBag.Sections,
+                            "-- Select Section --",
+                            new { @class = "form-select" })
+
+                        @Html.ValidationMessageFor(
+                            m => m.SectionId,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(
+                            m => m.Title,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(
+                            m => m.Title,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "Enter item title"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.Title,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(
+                            m => m.Heading,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(
+                            m => m.Heading,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "Enter heading"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.Heading,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(
+                            m => m.SubHeading,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(
+                            m => m.SubHeading,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "Enter subheading"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.SubHeading,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        @Html.LabelFor(
+                            m => m.Description,
+                            new { @class = "form-label" })
+
+                        @Html.TextAreaFor(
+                            m => m.Description,
+                            new
+                            {
+                                @class = "form-control",
+                                rows = 4,
+                                placeholder = "Enter description"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.Description,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(
+                            m => m.Value,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(
+                            m => m.Value,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "e.g. 100+"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.Value,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(
+                            m => m.Label,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(
+                            m => m.Label,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "e.g. Happy Clients"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.Label,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(
+                            m => m.LinkUrl,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(
+                            m => m.LinkUrl,
+                            new
+                            {
+                                @class = "form-control",
+                                placeholder = "https://example.com"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.LinkUrl,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        @Html.LabelFor(
+                            m => m.DisplayOrder,
+                            new { @class = "form-label" })
+
+                        @Html.TextBoxFor(
+                            m => m.DisplayOrder,
+                            new
+                            {
+                                @class = "form-control",
+                                type = "number",
+                                min = "0"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.DisplayOrder,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        @Html.LabelFor(
+                            m => m.AdditionalData,
+                            new { @class = "form-label" })
+
+                        @Html.TextAreaFor(
+                            m => m.AdditionalData,
+                            new
+                            {
+                                @class = "form-control",
+                                rows = 4,
+                                placeholder = "Optional additional data, such as JSON"
+                            })
+
+                        @Html.ValidationMessageFor(
+                            m => m.AdditionalData,
+                            "",
+                            new { @class = "text-danger" })
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <div class="form-check">
+                            @Html.CheckBoxFor(
+                                m => m.Status,
+                                new { @class = "form-check-input" })
+
+                            @Html.LabelFor(
+                                m => m.Status,
+                                new { @class = "form-check-label" })
+                        </div>
+                    </div>
+                </div>
+
+                <hr />
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                         Save Item
+                    </button>
+
+                    <a href="@Url.Action("SectionItems", "Admin")"
+                       class="btn btn-outline-danger">
+                        Cancel
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            $("#sectionItemForm").on("submit", function () {
+                if ($(this).valid()) {
+                    $(this)
+                        .find('button[type="submit"]')
+                        .prop("disabled", true);
+                }
+            });
+        });
+    </script>
+}

@@ -16,12 +16,12 @@ namespace DTOs
 
         [Required(ErrorMessage = "Button title is required.")]
         [StringLength(200)]
-        [Display(Name = "Button Title *")]
+        [Display(Name = "Button Title")]
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Button URL is required.")]
         [StringLength(1000)]
-        [Display(Name = "Button URL *")]
+        [Display(Name = "Button URL")]
         public string Url { get; set; }
 
         [StringLength(50)]

@@ -41,5 +41,8 @@ namespace DTOs
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+
+        public string SectionTitle { get; set; }
+        public string SectionItemTitle { get; set; }
     }
 }

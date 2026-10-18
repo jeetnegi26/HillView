@@ -26,20 +26,18 @@
             @TempData["PageMessage"]
         </div>
     }
-
     <div id="pageMessage"></div>
-
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-bordered table-hover">
+                <table class="table table-striped table-hover align-middle">
                     <thead>
                         <tr>
                             <th>Title</th>
                             <th>URL Slug</th>
                             <th>Status</th>
                             <th>Display Order</th>
-                            <th style="width: 160px;">Actions</th>
+                            <th style="width: 260px;">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -53,13 +51,13 @@
                                     <td>
                                         @if (page.Status)
                                         {
-                                            <span class="badge badge-success">
+                                            <span class="badge bg-success">
                                                 Published
                                             </span>
                                         }
                                         else
                                         {
-                                            <span class="badge badge-secondary">
+                                            <span class="badge bg-secondary">
                                                 Draft
                                             </span>
                                         }
@@ -74,8 +72,8 @@
                                         </a>
 
                                         <a href="@Url.Action("PageContent", "Admin", new { id = page.Id })"
-                                           class="btn btn-sm btn-info">
-                                            <i class="fa fa-layer-group"></i> Edit Content
+                                           class="btn btn-sm btn-outline-info">
+                                            <i class="fa fa-layer-group"></i> Edit Section
                                         </a>
 
                                         <button type="button"

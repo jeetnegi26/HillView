@@ -9,12 +9,21 @@
     Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
 }
 
+<style>
+    .form-group {
+        margin-bottom: 20px;
+    }
+    label {
+        margin-bottom: 7px;
+    }
+</style>
+
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2>@ViewBag.Title</h2>
 
         <a href="@Url.Action("PageSections", "Admin")"
-           class="btn btn-secondary">
+           class="btn btn-dark-light">
             Back to Assignments
         </a>
     </div>
@@ -33,12 +42,15 @@
         <div class="card">
             <div class="card-body">
 
-                @Html.ValidationSummary(
-                    false, "", new { @class = "text-danger mb-3" })
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    Html.ValidationSummary(false, "", new { @class = "text-danger mb-3" });
+                }
+
 
                 <div class="form-group">
                     @Html.LabelFor(m => m.PageId)
-
+                    <span class="text-danger">*required</span>
                     @Html.DropDownListFor(
                         m => m.PageId,
                         ViewBag.Pages as SelectList,
@@ -51,7 +63,7 @@
 
                 <div class="form-group">
                     @Html.LabelFor(m => m.SectionId)
-
+                    <span class="text-danger">*required</span>
                     @Html.DropDownListFor(
                         m => m.SectionId,
                         ViewBag.Sections as SelectList,
@@ -97,12 +109,12 @@
                 <hr />
 
                 <button type="submit" id="saveButton"
-                        class="btn btn-primary">
+                        class="btn btn-indigo">
                     Save Assignment
                 </button>
 
                 <a href="@Url.Action("PageSections", "Admin")"
-                   class="btn btn-secondary">
+                   class="btn btn-outline-danger">
                     Cancel
                 </a>
             </div>

@@ -14,8 +14,8 @@
         </div>
 
         <a href="@Url.Action("Images", "Admin")"
-           class="btn btn-outline-secondary">
-            <i class="ti ti-arrow-left"></i> Back to Images
+           class="btn btn-dark-light">
+            Back to Images
         </a>
     </div>
 
@@ -30,10 +30,13 @@
                 @Html.HiddenFor(m => m.CreatedAt)
                 @Html.HiddenFor(m => m.UpdatedAt)
 
-                <div id="formErrors">
-                    @Html.ValidationSummary(false, "",
-                        new { @class = "alert alert-danger" })
-                </div>
+                if (!ViewData.ModelState.IsValid)
+                {
+                    <div id="formErrors">
+                        @Html.ValidationSummary(false, "",
+                            new { @class = "alert alert-danger" })
+                    </div>
+                }
 
                 @Html.HiddenFor(m => m.ImageUrl, new { id = "ImageUrl" })
 
@@ -62,10 +65,15 @@
 
                     <div class="col-12 mb-3">
                         <label class="form-label">Image File</label>
-                        <input type="file" id="imageFile" class="form-control"
-                               accept="image/jpeg,image/png,image/webp,image/gif" />
+                        <span class="text-danger">*required</span>
+
+                        <input type="file"
+                               id="imageFile"
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.webp,.gif,.svg,image/jpeg,image/png,image/webp,image/gif,image/svg+xml" />
+
                         <small class="text-muted">
-                            Select a JPG, PNG, WebP, or GIF image.
+                            Select a JPG, JPEG, PNG, WebP, SVG or GIF image.
                         </small>
                     </div>
 
@@ -124,12 +132,12 @@
                 <hr />
 
                 <button type="submit" id="saveImageButton"
-                        class="btn btn-primary">
-                    <i class="ti ti-device-floppy"></i> Save Image
+                        class="btn btn-indigo">
+                   Save Image
                 </button>
 
                 <a href="@Url.Action("Images", "Admin")"
-                   class="btn btn-light">Cancel</a>
+                   class="btn btn-outline-danger">Cancel</a>
             }
         </div>
     </div>
@@ -142,7 +150,7 @@
 
             function showImage(url) {
                 if (url) {
-                    $("#imagePreview").attr("src", url);
+                    $("#imagePreview").attr("src", "/content/uploads/" + url);
                     $("#imagePreviewContainer").show();
                 } else {
                     $("#imagePreview").attr("src", "");
@@ -154,11 +162,47 @@
             showImage(uploadedImageUrl);
 
             // Only one parent can be selected.
-            $("#SectionId").on("change", function () {
-                if ($(this).val()) {
-                    $("#SectionItemId").val("");
-                }
+$("#SectionId").on("change", function () {
+    var sectionId = $(this).val();
+    var $sectionItem = $("#SectionItemId");
+
+    // Clear the old selection and items.
+    $sectionItem.empty();
+    $sectionItem.append(
+        $("<option>", {
+            value: "",
+            text: "-- Select Section Item --"
+        })
+    );
+
+    if (!sectionId) {
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("GetImageSectionItems", "Admin")',
+        type: "GET",
+        data: { sectionId: sectionId },
+        success: function (response) {
+            if (!response || !response.success) {
+                alert("Unable to load section items.");
+                return;
+            }
+
+            $.each(response.items, function (_, item) {
+                $sectionItem.append(
+                    $("<option>", {
+                        value: item.id,
+                        text: item.title
+                    })
+                );
             });
+        },
+        error: function () {
+            alert("An error occurred while loading section items.");
+        }
+    });
+});
 
             $("#SectionItemId").on("change", function () {
                 if ($(this).val()) {
@@ -172,8 +216,11 @@
                 if (!file) return;
 
                 var allowedTypes = [
-                    "image/jpeg", "image/png",
-                    "image/webp", "image/gif"
+                    "image/jpeg",
+                    "image/png",
+                    "image/webp",
+                    "image/gif",
+                    "image/svg+xml"
                 ];
 
                 if (allowedTypes.indexOf(file.type) === -1) {
@@ -193,6 +240,8 @@
                 var formData = new FormData();
                 formData.append("file", file);
                 formData.append("oldImage", uploadedImageUrl);
+                formData.append("sectionId", $("#SectionId").val() || "");
+                formData.append("sectionItemId", $("#SectionItemId").val() || "");
 
                 var token = $("#imageForm input[name='__RequestVerificationToken']").val();
                 formData.append("__RequestVerificationToken", token);

@@ -29,11 +29,27 @@ namespace Services
             {
                 using (var connection = new SqlConnection(_connectionString))
                 using (var command = new SqlCommand(@"
-                    SELECT Id, SectionId, SectionItemId, ImageUrl,
-                           AltText, Caption, ImageType, DisplayOrder,
-                           Status, CreatedAt, UpdatedAt
-                    FROM Images
-                    ORDER BY DisplayOrder, CreatedAt DESC;", connection))
+    SELECT
+        i.Id,
+        i.SectionId,
+        i.SectionItemId,
+        s.Title AS SectionTitle,
+        si.Title AS SectionItemTitle,
+        i.ImageUrl,
+        i.AltText,
+        i.Caption,
+        i.ImageType,
+        i.DisplayOrder,
+        i.Status,
+        i.CreatedAt,
+        i.UpdatedAt
+    FROM dbo.Images i
+    LEFT JOIN dbo.Sections s
+        ON i.SectionId = s.Id
+    LEFT JOIN dbo.SectionItems si
+        ON i.SectionItemId = si.Id
+    ORDER BY i.DisplayOrder, i.CreatedAt DESC;",
+                    connection))
                 {
                     await connection.OpenAsync();
 
@@ -318,11 +334,25 @@ namespace Services
                 CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),
                 UpdatedAt = reader.IsDBNull(reader.GetOrdinal("UpdatedAt"))
                     ? (DateTime?)null
-                    : reader.GetDateTime(reader.GetOrdinal("UpdatedAt"))
+                    : reader.GetDateTime(reader.GetOrdinal("UpdatedAt")),
+                SectionTitle = GetStringIfExists(reader, "SectionTitle"),
+                SectionItemTitle = GetStringIfExists(reader, "SectionItemTitle"),
             };
         }
 
+        private static string GetStringIfExists(SqlDataReader reader, string columnName)
+        {
+            for (int i = 0; i < reader.FieldCount; i++)
+            {
+                if (reader.GetName(i).Equals(
+                    columnName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return reader.IsDBNull(i) ? null : reader.GetString(i);
+                }
+            }
 
+            return null;
+        }
         public async Task<bool> IsImageUrlReferencedAsync(
             string imageUrl,
             Guid excludedImageId,

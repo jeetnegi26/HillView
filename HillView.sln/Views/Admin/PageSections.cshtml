@@ -18,22 +18,28 @@
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success alert-dismissible fade show">
-            @TempData["SuccessMessage"]
-            <button type="button" class="close" data-dismiss="alert"
+        <div class="alert alert-success alert-dismissible fade show d-flex justify-content-between align-items-center">
+            <div>
+                @TempData["SuccessMessage"]
+            </div>
+            <button type="button"
+                    class="btn-close ms-2"
+                    data-bs-dismiss="alert"
                     aria-label="Close">
-                <span aria-hidden="true">&times;</span>
             </button>
         </div>
     }
 
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show">
-            @TempData["ErrorMessage"]
-            <button type="button" class="close" data-dismiss="alert"
+        <div class="alert alert-danger alert-dismissible fade show d-flex justify-content-between align-items-center">
+            <div>
+                @TempData["ErrorMessage"]
+            </div>
+            <button type="button"
+                    class="btn-close ms-2"
+                    data-bs-dismiss="alert"
                     aria-label="Close">
-                <span aria-hidden="true">&times;</span>
             </button>
         </div>
     }
@@ -65,13 +71,13 @@
                                     <td>
                                         @if (item.Status)
                                         {
-                                            <span class="badge badge-success">
+                                            <span class="badge bg-success">
                                                 Active
                                             </span>
                                         }
                                         else
                                         {
-                                            <span class="badge badge-secondary">
+                                            <span class="badge bg-secondary">
                                                 Inactive
                                             </span>
                                         }
@@ -84,7 +90,7 @@
                                             "PageSectionAction",
                                             "Admin",
                                             new { id = item.Id })"
-                                           class="btn btn-sm btn-warning">
+                                           class="btn btn-sm btn-outline-info">
                                             Edit
                                         </a>
 
@@ -98,7 +104,7 @@
                                             @Html.Hidden("id", item.Id)
 
                                             <button type="submit"
-                                                    class="btn btn-sm btn-danger">
+                                                    class="btn btn-sm btn-outline-danger">
                                                 Delete
                                             </button>
                                         }

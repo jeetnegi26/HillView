@@ -32,7 +32,8 @@ namespace HillView.sln.Admin
 
         public AdminController(WebInfoService webService, LogErrorService logErrorService, ImageService imageService, WebInfoService webInfoService, 
             PageService pageService, SectionTypeService sectionTypeService, SectionService sectionService, SectionItemService sectionItemService,
-            ButtonService buttonService, PageSectionService pageSectionService, AdminMenuService adminMenuService)
+            ButtonService buttonService, PageSectionService pageSectionService, AdminMenuService adminMenuService
+          )
         {
             _webService = webService;
             _logErrorService = logErrorService;
@@ -288,7 +289,6 @@ namespace HillView.sln.Admin
         #endregion
 
         #region Pages CRUD
-
         [HttpGet]
         public async Task<ActionResult> Pages()
         {
@@ -308,7 +308,6 @@ namespace HillView.sln.Admin
                 return View("Error");
             }
         }
-
         [HttpGet]
         public async Task<ActionResult> PageAction(Guid? id)
         {
@@ -336,7 +335,6 @@ namespace HillView.sln.Admin
                 return View("Error");
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -385,7 +383,6 @@ namespace HillView.sln.Admin
                 return View(model);
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> DeletePage(Guid id)
@@ -434,7 +431,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         [HttpGet]
         public async Task<ActionResult> PageContent(Guid id)
         {
@@ -484,8 +480,6 @@ namespace HillView.sln.Admin
                 return RedirectToAction("Pages");
             }
         }
-
-
         [HttpGet]
         public async Task<JsonResult> GetSectionContent(Guid id)
         {
@@ -544,7 +538,6 @@ namespace HillView.sln.Admin
                 }, JsonRequestBehavior.AllowGet);
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveSectionContent(SectionVM model)
@@ -607,11 +600,9 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         #endregion
 
         #region Section Types CRUD
-
         [HttpGet]
         public async Task<ActionResult> SectionTypes()
         {
@@ -631,8 +622,6 @@ namespace HillView.sln.Admin
                 return View("Error");
             }
         }
-
-
         [HttpGet]
         public async Task<ActionResult> SectionTypeAction(
             int? id, bool validation = false)
@@ -687,7 +676,6 @@ namespace HillView.sln.Admin
                 return View("Error");
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SectionTypeAction(SectionTypeVM model)
@@ -753,8 +741,6 @@ namespace HillView.sln.Admin
                 });
         }
 
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteSection(Guid id, Guid? pageId)
@@ -798,12 +784,9 @@ namespace HillView.sln.Admin
 
             return RedirectToAction("Sections");
         }
-
-
         #endregion
 
         #region Sections CRUD
-
         [HttpGet]
         public async Task<ActionResult> Sections()
         {
@@ -823,7 +806,6 @@ namespace HillView.sln.Admin
                 return View("Error");
             }
         }
-
         [HttpGet]
         public async Task<ActionResult> SectionAction(Guid? id, bool validation = false)
         {
@@ -872,7 +854,6 @@ namespace HillView.sln.Admin
             await LoadSectionTypesAsync(model.SectionTypeId);
             return View(model);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -928,46 +909,6 @@ namespace HillView.sln.Admin
                 "SectionAction",
                 new { id = model.Id == Guid.Empty ? (Guid?)null : model.Id, validation = true });
         }
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> DeleteSection(Guid id)
-        //{
-        //    try
-        //    {
-        //        if (id == Guid.Empty)
-        //        {
-        //            TempData["ErrorMessage"] = "Invalid section ID.";
-        //            return RedirectToAction("Sections");
-        //        }
-
-        //        bool deleted = await _sectionService.DeleteSectionAsync(
-        //            id, Request.UserHostAddress);
-
-        //        TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
-        //            deleted
-        //                ? "Section deleted successfully."
-        //                : "Section not found.";
-        //    }
-        //    catch (System.Data.SqlClient.SqlException ex)
-        //        when (ex.Number == 547)
-        //    {
-        //        TempData["ErrorMessage"] =
-        //            "This section is assigned to a page or has related content. Remove those assignments before deleting it.";
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logErrorService.LogError(
-        //            ex, "Admin/Sections", "DELETE", 0,
-        //            Request.UserHostAddress, "DeleteSection");
-
-        //        TempData["ErrorMessage"] =
-        //            "Unable to delete the section. Please try again.";
-        //    }
-
-        //    return RedirectToAction("Sections");
-        //}
-
         private async Task LoadSectionTypesAsync(int selectedId = 0)
         {
             var sectionTypes = await _sectionService.GetSectionTypesAsync(
@@ -976,11 +917,9 @@ namespace HillView.sln.Admin
             ViewBag.SectionTypes = new SelectList(
                 sectionTypes, "Id", "Title", selectedId);
         }
-
         #endregion
 
         #region Section Items CRUD
-
         [HttpGet]
         public async Task<ActionResult> SectionItems()
         {
@@ -1000,10 +939,8 @@ namespace HillView.sln.Admin
                 return View("Error");
             }
         }
-
         [HttpGet]
-        public async Task<ActionResult> SectionItemAction(
-            Guid? id, bool validation = false)
+        public async Task<ActionResult> SectionItemAction(Guid? id, bool validation = false)
         {
             SectionItemVM model;
 
@@ -1054,7 +991,6 @@ namespace HillView.sln.Admin
 
             return View(model);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ValidateInput(false)]
@@ -1078,7 +1014,10 @@ namespace HillView.sln.Admin
                         TempData["SuccessMessage"] =
                             "Section item saved successfully.";
 
-                        return RedirectToAction("SectionItems");
+                        return RedirectToAction(
+                            "SectionItemAction",
+                            new { id = savedId.Value }
+                        );
                     }
 
                     ModelState.AddModelError(
@@ -1120,7 +1059,6 @@ namespace HillView.sln.Admin
                     validation = true
                 });
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteSectionItem(Guid id)
@@ -1158,7 +1096,6 @@ namespace HillView.sln.Admin
 
             return RedirectToAction("SectionItems");
         }
-
         private async Task LoadSectionsForItemAsync(Guid selectedSectionId)
         {
             var sections = await _sectionItemService.GetSectionsAsync(
@@ -1167,7 +1104,6 @@ namespace HillView.sln.Admin
             ViewBag.Sections = new SelectList(
                 sections, "Id", "Title", selectedSectionId);
         }
-
         [HttpGet]
         public async Task<JsonResult> GetSectionItemsContent(Guid sectionId)
         {
@@ -1236,7 +1172,6 @@ namespace HillView.sln.Admin
                 }, JsonRequestBehavior.AllowGet);
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> DeleteSectionItemContent(Guid id)
@@ -1281,7 +1216,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveSectionItemContent(SectionItemVM model)
@@ -1345,7 +1279,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         [HttpGet]
         public async Task<JsonResult> GetSectionItemImages(Guid sectionItemId)
         {
@@ -1390,7 +1323,6 @@ namespace HillView.sln.Admin
                 }, JsonRequestBehavior.AllowGet);
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> UpdateSectionItemImage(Guid id, string altText, string caption, int displayOrder, bool status)
@@ -1452,7 +1384,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> DeleteSectionItemImage(Guid id)
@@ -1569,7 +1500,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         [HttpGet]
         public async Task<JsonResult> GetSectionImages(Guid sectionId)
         {
@@ -1622,8 +1552,6 @@ namespace HillView.sln.Admin
                 }, JsonRequestBehavior.AllowGet);
             }
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> UpdateSectionImage(
@@ -1707,7 +1635,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> DeleteSectionImage(Guid id, Guid sectionId)
@@ -1860,8 +1787,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
-
         [HttpGet]
         public async Task<JsonResult> GetSectionButtons(Guid sectionId)
         {
@@ -1925,7 +1850,6 @@ namespace HillView.sln.Admin
                 }, JsonRequestBehavior.AllowGet);
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveSectionButton(
@@ -2041,7 +1965,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteSectionButton(Guid sectionId, Guid id)
@@ -2084,7 +2007,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         [HttpGet]
         public async Task<ActionResult> GetSectionItemButtons(Guid sectionItemId)
         {
@@ -2129,8 +2051,6 @@ namespace HillView.sln.Admin
                 }, JsonRequestBehavior.AllowGet);
             }
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SaveSectionItemButton(
@@ -2145,7 +2065,6 @@ namespace HillView.sln.Admin
             bool status)
         {
             var ip = Request.UserHostAddress ?? string.Empty;
-
             try
             {
                 if (sectionItemId == Guid.Empty)
@@ -2229,13 +2148,9 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteSectionItemButton(
-            Guid sectionItemId,
-            Guid id)
+        public async Task<ActionResult> DeleteSectionItemButton(Guid sectionItemId, Guid id)
         {
             var ip = Request.UserHostAddress ?? string.Empty;
 
@@ -2275,12 +2190,181 @@ namespace HillView.sln.Admin
                 });
             }
         }
+        #endregion
 
+        #region Section Item Content
+        [HttpGet]
+        public async Task<JsonResult> GetChildSectionItems(Guid parentSectionItemId)
+        {
+            try
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
 
+                if (parentSectionItemId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Invalid parent item ID."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                var parent = await _sectionItemService.GetSectionItemByIdAsync(
+                    parentSectionItemId, ip);
+
+                if (parent == null || parent.ParentSectionItemId.HasValue)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Parent section item not found."
+                    }, JsonRequestBehavior.AllowGet);
+                }
+
+                var children = await _sectionItemService.GetChildSectionItemsAsync(
+                    parentSectionItemId, ip);
+
+                return Json(new
+                {
+                    success = true,
+                    data = children.Select(item => new
+                    {
+                        id = item.Id,
+                        sectionId = item.SectionId,
+                        parentSectionItemId = item.ParentSectionItemId,
+                        title = item.Title,
+                        heading = item.Heading,
+                        subHeading = item.SubHeading,
+                        description = item.Description,
+                        value = item.Value,
+                        label = item.Label,
+                        linkUrl = item.LinkUrl,
+                        additionalData = item.AdditionalData,
+                        displayOrder = item.DisplayOrder,
+                        status = item.Status
+                    })
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                _logErrorService.LogError(
+                    ex,
+                    Request.Url?.ToString(),
+                    nameof(GetChildSectionItems),
+                    0,
+                    ip,
+                    null);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "Unable to load child items."
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> SaveChildSectionItem(SectionItemVM model)
+        {
+            try
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                if (model == null ||
+                    model.ParentSectionItemId == null ||
+                    model.ParentSectionItemId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "A valid parent item is required."
+                    });
+                }
+
+                if (model.SectionId == Guid.Empty)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "A valid section is required."
+                    });
+                }
+
+                if (string.IsNullOrWhiteSpace(model.Title))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Child item title is required."
+                    });
+                }
+
+                if (model.DisplayOrder < 0)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Display order cannot be negative."
+                    });
+                }
+
+                var parent = await _sectionItemService.GetSectionItemByIdAsync(
+                    model.ParentSectionItemId.Value, ip);
+
+                if (parent == null ||
+                    parent.ParentSectionItemId.HasValue ||
+                    parent.SectionId != model.SectionId)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "The parent item is invalid for the selected section."
+                    });
+                }
+
+                Guid? savedId = await _sectionItemService.SaveSectionItemAsync(
+                    model, ip);
+
+                if (!savedId.HasValue)
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        message = "Unable to save the child item."
+                    });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    id = savedId.Value,
+                    message = "Child item saved successfully."
+                });
+            }
+            catch (Exception ex)
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                _logErrorService.LogError(
+                    ex,
+                    Request.Url?.ToString(),
+                    nameof(SaveChildSectionItem),
+                    0,
+                    ip,
+                    null);
+
+                return Json(new
+                {
+                    success = false,
+                    message = "An error occurred while saving the child item."
+                });
+            }
+        }
         #endregion
 
         #region Images CRUD
-
         [HttpGet]
         public async Task<ActionResult> Images()
         {
@@ -2300,10 +2384,8 @@ namespace HillView.sln.Admin
                 return View("Error");
             }
         }
-
         [HttpGet]
-        public async Task<ActionResult> ImageAction(
-            Guid? id, bool validation = false)
+        public async Task<ActionResult> ImageAction(Guid? id, bool validation = false)
         {
             ImageVM model;
 
@@ -2353,7 +2435,6 @@ namespace HillView.sln.Admin
 
             return View(model);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ImageAction(ImageVM model)
@@ -2422,7 +2503,6 @@ namespace HillView.sln.Admin
                     validation = true
                 });
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteImage(Guid id)
@@ -2469,34 +2549,81 @@ namespace HillView.sln.Admin
 
             return RedirectToAction("Images");
         }
-
         private async Task LoadImageDropdownsAsync(ImageVM model)
         {
             string ip = Request.UserHostAddress;
 
             var sections = await _imageService.GetSectionsAsync(ip);
-            var sectionItems = await _imageService.GetSectionItemsAsync(ip);
 
             ViewBag.Sections = new SelectList(
                 sections, "Id", "Title", model.SectionId);
 
+            var sectionItems = new List<SectionItemVM>();
+
+            if (model.SectionId.HasValue &&
+                model.SectionId.Value != Guid.Empty)
+            {
+                sectionItems = await _sectionItemService
+                    .GetSectionItemsBySectionIdAsync(
+                        model.SectionId.Value, ip);
+            }
+
             ViewBag.SectionItems = new SelectList(
                 sectionItems, "Id", "Title", model.SectionItemId);
         }
+        [HttpGet]
+        public async Task<JsonResult> GetImageSectionItems(Guid sectionId)
+        {
+            if (sectionId == Guid.Empty)
+            {
+                return Json(new
+                {
+                    success = false,
+                    items = new object[0]
+                }, JsonRequestBehavior.AllowGet);
+            }
 
+            try
+            {
+                var items = await _sectionItemService
+                    .GetSectionItemsBySectionIdAsync(
+                        sectionId, Request.UserHostAddress);
+
+                return Json(new
+                {
+                    success = true,
+                    items = items.Select(item => new
+                    {
+                        id = item.Id,
+                        title = item.Title
+                    })
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/GetImageSectionItems",
+                    "GET",
+                    0,
+                    Request.UserHostAddress,
+                    "GetImageSectionItems");
+
+                Response.StatusCode = 500;
+
+                return Json(new
+                {
+                    success = false,
+                    items = new object[0]
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
         #endregion
 
         #region Upload Content Image
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> Upload_Content_Image(
-    HttpPostedFileBase file,
-    Guid? sectionItemId,
-    Guid? sectionId,
-    string altText,
-    string caption)
-
+        public async Task<JsonResult> Upload_Content_Image(HttpPostedFileBase file, Guid? sectionItemId, Guid? sectionId, string altText,string caption)
         {
             try
             {
@@ -2539,7 +2666,7 @@ namespace HillView.sln.Admin
 
                 string extension = Path.GetExtension(file.FileName)?.ToLowerInvariant();
 
-                string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+                string[] allowedExtensions = { ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg" };
 
                 if (string.IsNullOrWhiteSpace(extension) ||
                     !allowedExtensions.Contains(extension))
@@ -2547,12 +2674,14 @@ namespace HillView.sln.Admin
                     return Json(new
                     {
                         Success = false,
-                        Message = "Only JPG, PNG, WebP, and GIF files are allowed."
+                        Message = "Only JPG, PNG, WebP, SVG and GIF files are allowed."
                     });
                 }
 
                 // Validate the file signature instead of trusting the extension alone.
+                // Validate the file signature instead of trusting the extension alone.
                 byte[] signature = new byte[12];
+
                 int bytesRead = await file.InputStream.ReadAsync(
                     signature, 0, signature.Length);
 
@@ -2582,6 +2711,227 @@ namespace HillView.sln.Admin
                         ? bytesRead >= 12 &&
                           System.Text.Encoding.ASCII.GetString(signature, 0, 4) == "RIFF" &&
                           System.Text.Encoding.ASCII.GetString(signature, 8, 4) == "WEBP"
+                    : extension == ".svg"
+                        ? IsValidSvg(file.InputStream)
+                    : false;
+
+                if (!validSignature)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "The file contents do not match a supported image format."
+                    });
+                }
+
+                string folderPath = HostingEnvironment.MapPath("/Content/Uploads/");
+
+                if (string.IsNullOrWhiteSpace(folderPath))
+                {
+                    throw new InvalidOperationException(
+                        "Unable to resolve the image upload directory.");
+                }
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                // Generate a unique filename to prevent overwriting existing images.
+                string fileName = Guid.NewGuid().ToString("N") + extension;
+                string physicalPath = Path.Combine(folderPath, fileName);
+
+                await Task.Run(() => file.SaveAs(physicalPath));
+
+                var image = new ImageVM
+                {
+                    Id = Guid.Empty,
+
+                    // Associate the image with the selected parent or child item.
+                    SectionId = hasSection ? sectionId : null,
+                    SectionItemId = hasSectionItem ? sectionItemId : null,
+
+                    // Save the filename, not the physical disk path.
+                    ImageUrl = fileName,
+
+                    AltText = altText,
+                    Caption = caption,
+                    ImageType = "Content",
+                    DisplayOrder = 0,
+                    Status = true
+                };
+
+                //bool saved = await _imageService.SaveImageAsync(image, Request.UserHostAddress);
+
+                //if (!saved)
+                //{
+                //    // Remove the physical file if its database record was not saved.
+                //    if (System.IO.File.Exists(physicalPath))
+                //    {
+                //        System.IO.File.Delete(physicalPath);
+                //    }
+
+                //    return Json(new
+                //    {
+                //        Success = false,
+                //        Message = "The image file was uploaded, but its database record could not be saved."
+                //    });
+                //}
+
+                return Json(new
+                {
+                    Success = true,
+                    ImageUrl = fileName,
+                    Message = "Image uploaded successfully."
+                });
+
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/Upload_Content_Image",
+                    "POST",
+                    0,
+                    Request.UserHostAddress,
+                    "Content Image Upload");
+
+                Response.StatusCode = 500;
+
+                return Json(new
+                {
+                    Success = false,
+                    Message = "Unable to upload the image. Please try again."
+                });
+            }
+        }
+        private bool IsValidSvg(Stream stream)
+        {
+            try
+            {
+                stream.Position = 0;
+
+                var settings = new System.Xml.XmlReaderSettings
+                {
+                    DtdProcessing = System.Xml.DtdProcessing.Prohibit,
+                    XmlResolver = null
+                };
+
+                using (var reader = System.Xml.XmlReader.Create(stream, settings))
+                {
+                    var document = System.Xml.Linq.XDocument.Load(reader);
+
+                    return document.Root != null &&
+                           document.Root.Name.LocalName == "svg" &&
+                           document.Root.Name.NamespaceName ==
+                               "http://www.w3.org/2000/svg";
+                }
+            }
+            catch (System.Xml.XmlException)
+            {
+                return false;
+            }
+            finally
+            {
+                if (stream.CanSeek)
+                    stream.Position = 0;
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> Upload_PageContent_Image(HttpPostedFileBase file, Guid? sectionItemId, Guid? sectionId, string altText, string caption)
+        {
+            try
+            {
+
+                bool hasSectionItem = sectionItemId.HasValue &&
+                                      sectionItemId.Value != Guid.Empty;
+
+                bool hasSection = sectionId.HasValue &&
+                                  sectionId.Value != Guid.Empty;
+
+                if (hasSectionItem == hasSection)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Select exactly one section or card for this image."
+                    });
+                }
+
+
+                if (file == null || file.ContentLength == 0)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Please select an image file."
+                    });
+                }
+
+                const int maxFileSize = 15 * 1024 * 1024;
+
+                if (file.ContentLength > maxFileSize)
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Maximum image size is 15 MB."
+                    });
+                }
+
+                string extension = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+
+                string[] allowedExtensions =
+  {
+    ".jpg", ".jpeg", ".png", ".webp", ".gif", ".svg"
+};
+
+                if (string.IsNullOrWhiteSpace(extension) ||
+                    !allowedExtensions.Contains(extension))
+                {
+                    return Json(new
+                    {
+                        Success = false,
+                        Message = "Only JPG, PNG, WebP, SVG and GIF files are allowed."
+                    });
+                }
+
+                // Validate the file signature instead of trusting the extension alone.
+                // Validate the file signature instead of trusting the extension alone.
+                byte[] signature = new byte[12];
+
+                int bytesRead = await file.InputStream.ReadAsync(
+                    signature, 0, signature.Length);
+
+                file.InputStream.Position = 0;
+
+                bool validSignature =
+                    (extension == ".jpg" || extension == ".jpeg")
+                        ? bytesRead >= 3 &&
+                          signature[0] == 0xFF &&
+                          signature[1] == 0xD8 &&
+                          signature[2] == 0xFF
+                    : extension == ".png"
+                        ? bytesRead >= 8 &&
+                          signature[0] == 0x89 &&
+                          signature[1] == 0x50 &&
+                          signature[2] == 0x4E &&
+                          signature[3] == 0x47 &&
+                          signature[4] == 0x0D &&
+                          signature[5] == 0x0A &&
+                          signature[6] == 0x1A &&
+                          signature[7] == 0x0A
+                    : extension == ".gif"
+                        ? bytesRead >= 6 &&
+                          System.Text.Encoding.ASCII.GetString(signature, 0, 6)
+                              .StartsWith("GIF8")
+                    : extension == ".webp"
+                        ? bytesRead >= 12 &&
+                          System.Text.Encoding.ASCII.GetString(signature, 0, 4) == "RIFF" &&
+                          System.Text.Encoding.ASCII.GetString(signature, 8, 4) == "WEBP"
+                    : extension == ".svg"
+                        ? IsValidSvg(file.InputStream)
                     : false;
 
                 if (!validSignature)
@@ -2683,7 +3033,6 @@ namespace HillView.sln.Admin
                 });
             }
         }
-
         #endregion
 
         #region Buttons CRUD
@@ -2891,9 +3240,7 @@ namespace HillView.sln.Admin
 
         #endregion
 
-
         #region PageSections CRUD
-
         [HttpGet]
         public async Task<ActionResult> PageSections()
         {
@@ -2916,10 +3263,8 @@ namespace HillView.sln.Admin
                 return View(new List<PageSectionVM>());
             }
         }
-
         [HttpGet]
-        public async Task<ActionResult> PageSectionAction(
-            Guid? id, bool validation = false)
+        public async Task<ActionResult> PageSectionAction(Guid? id, bool validation = false)
         {
             PageSectionVM model;
 
@@ -2969,11 +3314,9 @@ namespace HillView.sln.Admin
 
             return View(model);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> PageSectionAction(
-            PageSectionVM model)
+        public async Task<ActionResult> PageSectionAction(PageSectionVM model)
         {
             if (model.PageId == Guid.Empty)
             {
@@ -3056,9 +3399,6 @@ namespace HillView.sln.Admin
                     validation = true
                 });
         }
-
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeletePageSection(Guid id, Guid pageId)
@@ -3092,11 +3432,7 @@ namespace HillView.sln.Admin
 
             return RedirectToAction("PageContent", new { id = pageId });
         }
-
-
-
-        private async Task LoadPageSectionDropdownsAsync(
-            PageSectionVM model)
+        private async Task LoadPageSectionDropdownsAsync(PageSectionVM model)
         {
             string ip = Request.UserHostAddress;
 
@@ -3109,9 +3445,7 @@ namespace HillView.sln.Admin
             ViewBag.Sections = new SelectList(
                 sections, "Id", "Title", model.SectionId);
         }
-
         #endregion
-
 
         #region Website Info
         public async Task<ActionResult> WebInfos()

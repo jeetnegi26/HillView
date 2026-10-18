@@ -47,7 +47,7 @@
                     new { @class = "alert alert-danger" })
 
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Name)
+                    @Html.LabelFor(m => m.Name, new { @class = "form-label" })
 
                     @Html.TextBoxFor(m => m.Name, new
                     {
@@ -68,7 +68,7 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Title)
+                    @Html.LabelFor(m => m.Title, new { @class = "form-label" })
 
                     @Html.TextBoxFor(m => m.Title, new
                     {
@@ -84,7 +84,7 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Description)
+                    @Html.LabelFor(m => m.Description, new { @class = "form-label" })
 
                     @Html.TextAreaFor(m => m.Description, new
                     {
@@ -101,7 +101,7 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(m => m.DisplayOrder)
+                    @Html.LabelFor(m => m.DisplayOrder, new { @class = "form-label" })
 
                     @Html.TextBoxFor(m => m.DisplayOrder, new
                     {

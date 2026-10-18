@@ -17,10 +17,9 @@
 
         <a href="@Url.Action("ImageAction", "Admin")"
            class="btn btn-primary">
-            <i class="ti ti-plus"></i> Add Image
+            Add Image
         </a>
     </div>
-
     @if (TempData["SuccessMessage"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show">
@@ -29,7 +28,6 @@
                     data-bs-dismiss="alert"></button>
         </div>
     }
-
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show">
@@ -38,7 +36,6 @@
                     data-bs-dismiss="alert"></button>
         </div>
     }
-
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
@@ -47,7 +44,6 @@
                         <tr>
                             <th>Preview</th>
                             <th>Alt Text</th>
-                            <th>Caption</th>
                             <th>Image Type</th>
                             <th>Parent</th>
                             <th>Display Order</th>
@@ -66,7 +62,7 @@
                                     <td>
                                         @if (!string.IsNullOrWhiteSpace(image.ImageUrl))
                                         {
-                                            <img src="@Url.Content(image.ImageUrl)"
+                                            <img src="@("/Content/Uploads/" + image.ImageUrl)"
                                                  alt="@(image.AltText ?? "Image preview")"
                                                  style="width:80px;height:60px;object-fit:cover;"
                                                  class="rounded border" />
@@ -82,13 +78,6 @@
                                             ? "-"
                                             : image.AltText)
                                     </td>
-
-                                    <td>
-                                        @(string.IsNullOrWhiteSpace(image.Caption)
-                                            ? "-"
-                                            : image.Caption)
-                                    </td>
-
                                     <td>
                                         @(string.IsNullOrWhiteSpace(image.ImageType)
                                             ? "-"
@@ -98,14 +87,14 @@
                                     <td>
                                         @if (image.SectionId.HasValue)
                                         {
-                                            <span class="badge bg-info">
-                                                Section
+                                            <span class="badge bg-info fs-2">
+                                                Section <br /> @image.SectionTitle
                                             </span>
                                         }
                                         else if (image.SectionItemId.HasValue)
                                         {
-                                            <span class="badge bg-primary">
-                                                Section Item
+                                            <span class="badge bg-primary fs-2">
+                                                Section Item  <br /> @image.SectionItemTitle
                                             </span>
                                         }
                                         else
@@ -140,9 +129,9 @@
                                         <a href="@Url.Action(
                                             "ImageAction",
                                             "Admin",
-                                            new { id = image.Id })"
+                                            new { id = image.Id, validation =false })"
                                            class="btn btn-sm btn-outline-primary">
-                                            <i class="ti ti-edit"></i> Edit
+                                            Edit
                                         </a>
 
                                         @using (Html.BeginForm(
@@ -156,7 +145,7 @@
 
                                             <button type="submit"
                                                     class="btn btn-sm btn-outline-danger">
-                                                <i class="ti ti-trash"></i> Delete
+                                                Delete
                                             </button>
                                         }
                                     </td>

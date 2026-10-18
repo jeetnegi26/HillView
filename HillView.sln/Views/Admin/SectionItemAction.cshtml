@@ -1,4 +1,4 @@
-﻿
+
 @model DTOs.SectionItemVM
 
 @{
@@ -18,9 +18,8 @@
             </p>
         </div>
 
-        <a href="@Url.Action("SectionItems", "Admin")"
-           class="btn btn-outline-secondary">
-            <i class="ti ti-arrow-left"></i> Back to Section Items
+        <a href="@Url.Action("SectionItems", "Admin")" class="btn btn-dark-light">
+            Back to Section Items
         </a>
     </div>
 
@@ -38,10 +37,13 @@
                 @Html.HiddenFor(m => m.CreatedAt)
                 @Html.HiddenFor(m => m.UpdatedAt)
 
-                @Html.ValidationSummary(
-                    false,
-                    "",
-                    new { @class = "alert alert-danger" })
+                if (!ViewData.ModelState.IsValid)
+                {
+                    Html.ValidationSummary(
+                        false,
+                        "",
+                        new { @class = "alert alert-danger" });
+                }
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
@@ -252,13 +254,127 @@
 
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-primary">
-                        <i class="ti ti-device-floppy"></i> Save Item
+                         Save Item
                     </button>
 
                     <a href="@Url.Action("SectionItems", "Admin")"
-                       class="btn btn-light">
+                       class="btn btn-outline-danger">
                         Cancel
                     </a>
+                </div>
+            }
+
+
+            @* Child items are managed on this same page after the parent has been saved. *@
+            @if (Model.Id != Guid.Empty && !Model.ParentSectionItemId.HasValue)
+            {
+                <hr class="my-4" />
+
+                <div id="childContentSection"
+                     data-parent-id="@Model.Id"
+                     data-section-id="@Model.SectionId">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div>
+                            <h4 class="mb-1">Child Content</h4>
+                            <p class="text-muted mb-0">
+                                Manage the content displayed inside this parent card.
+                            </p>
+                        </div>
+                        <button type="button" id="addChildContentBtn" class="btn btn-primary">
+                            <i class="fa fa-plus"></i> Add Child Content
+                        </button>
+                    </div>
+
+                    <div id="childContentMessage" class="alert d-none" role="alert"></div>
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Description</th>
+                                    <th>Value</th>
+                                    <th>Label</th>
+                                    <th>Status</th>
+                                    <th style="width: 130px;" title="Display Order">Order</th>
+                                    <th style="width: 150px;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="childContentTableBody">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        Loading child content...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="childContentModal" tabindex="-1"
+                     role="dialog" aria-labelledby="childContentModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="childContentModalTitle">Add Child Content</h5>
+                            </div>
+
+                            <div class="modal-body">
+                                <div id="childFormMessage" class="alert d-none" role="alert"></div>
+
+                                <form id="childContentForm">
+                                    <input type="hidden" id="childId" value="" />
+
+                                    <div class="form-group mb-3">
+                                        <label for="childTitle">Title <span class="text-danger">*</span></label>
+                                        <input type="text" id="childTitle" class="form-control"
+                                               maxlength="200" required
+                                               placeholder="Enter child content title" />
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="childDescription">Description</label>
+                                        <textarea id="childDescription" class="form-control"
+                                                  rows="3" placeholder="Enter description"></textarea>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="childValue">Value</label>
+                                            <input type="text" id="childValue" class="form-control"
+                                                   placeholder="Optional value" />
+                                        </div>
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="childLabel">Label</label>
+                                            <input type="text" id="childLabel" class="form-control"
+                                                   placeholder="Optional label" />
+                                        </div>
+                                        <div class="col-md-6 form-group mb-3">
+                                            <label for="childDisplayOrder">Display Order</label>
+                                            <input type="number" id="childDisplayOrder" class="form-control"
+                                                   min="0" value="0" required />
+                                        </div>
+                                        <div class="col-md-6 form-group mb-3 d-flex align-items-center">
+                                            <div class="form-check mt-3">
+                                                <input type="checkbox" id="childStatus"
+                                                       class="form-check-input" checked />
+                                                <label class="form-check-label" for="childStatus">Active</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" id="cancelChildContentBtn" class="btn btn-secondary">
+                                    Cancel
+                                </button>
+                                <button type="button" id="saveChildContentBtn" class="btn btn-primary">
+                                    Save Child Content
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
@@ -275,6 +391,254 @@
                         .prop("disabled", true);
                 }
             });
+
+            var $childSection = $("#childContentSection");
+
+            // Child content is available only when editing an already-saved parent.
+            if (!$childSection.length) {
+                return;
+            }
+
+            var parentId = $childSection.data("parent-id");
+            var sectionId = $childSection.data("section-id");
+            var childrenCache = [];
+            var childListUrl = '@Url.Action("GetChildSectionItems", "Admin")';
+            var childSaveUrl = '@Url.Action("SaveChildSectionItem", "Admin")';
+            var childDeleteUrl = '@Url.Action("DeleteSectionItemContent", "Admin")';
+
+            function getValue(item, lowerName, upperName) {
+                if (item[lowerName] !== undefined && item[lowerName] !== null) {
+                    return item[lowerName];
+                }
+                return item[upperName] !== undefined && item[upperName] !== null
+                    ? item[upperName]
+                    : "";
+            }
+
+            function escapeHtml(value) {
+                return $("<div>").text(value == null ? "" : value).html();
+            }
+
+            function showMessage($element, message, isError) {
+                $element
+                    .removeClass("d-none alert-success alert-danger")
+                    .addClass(isError ? "alert-danger" : "alert-success")
+                    .text(message);
+            }
+
+            function hideMessage($element) {
+                $element.addClass("d-none").text("");
+            }
+
+            function getAntiForgeryToken() {
+                return $("#sectionItemForm input[name='__RequestVerificationToken']").val();
+            }
+
+            function loadChildContent() {
+                $("#childContentTableBody").html(
+                    '<tr><td colspan="6" class="text-center text-muted">Loading child content...</td></tr>'
+                );
+
+                $.ajax({
+                    url: childListUrl,
+                    type: "GET",
+                    data: { parentSectionItemId: parentId },
+                    success: function (response) {
+                        // Supports either a direct JSON array or an object containing data/items.
+                        var items = Array.isArray(response)
+                            ? response
+                            : (response.data || response.items || response.Data || response.Items || []);
+
+                        childrenCache = items;
+
+                        if (!items.length) {
+                            $("#childContentTableBody").html(
+                                '<tr><td colspan="6" class="text-center text-muted">No child content has been added yet.</td></tr>'
+                            );
+                            return;
+                        }
+
+                        var rows = "";
+
+                        $.each(items, function (index, item) {
+                            var id = getValue(item, "id", "Id");
+                            var title = getValue(item, "title", "Title");
+                            var description = getValue(item, "description", "Description");
+                            var value = getValue(item, "value", "Value");
+                            var label = getValue(item, "label", "Label");
+                            var status = getValue(item, "status", "Status");
+                            var isActive =
+                                status === true ||
+                                status === "true" ||
+                                status === 1 ||
+                                status === "1";
+                            var statusHtml = isActive
+                                ? '<span class="badge bg-success">Active</span>'
+                                : '<span class="badge bg-danger">Inactive</span>';
+
+                            var order = getValue(item, "displayOrder", "DisplayOrder");
+
+
+                            rows += '<tr>' +
+                                '<td>' + escapeHtml(title) + '</td>' +
+                                '<td>' + escapeHtml(description) + '</td>' +
+                                '<td>' + escapeHtml(value) + '</td>' +
+                                '<td>' + escapeHtml(label) + '</td>' +
+                                '<td>' + statusHtml + '</td>' +
+                                '<td>' + escapeHtml(order) + '</td>' +
+                                '<td class="text-nowrap">' +
+                                '<button type="button" class="btn btn-sm btn-outline-primary edit-child-btn" data-id="' + escapeHtml(id) + '">Edit</button> ' +
+                                '<button type="button" class="btn btn-sm btn-outline-danger delete-child-btn" data-id="' + escapeHtml(id) + '">Delete</button>' +
+                                '</td>' +
+                                '</tr>';
+                        });
+
+                        $("#childContentTableBody").html(rows);
+                    },
+                    error: function (xhr) {
+                        $("#childContentTableBody").html(
+                            '<tr><td colspan="6" class="text-center text-danger">Unable to load child content.</td></tr>'
+                        );
+                        console.error("GetChildSectionItems failed:", xhr.responseText);
+                    }
+                });
+            }
+
+            function resetChildForm() {
+                $("#childContentForm")[0].reset();
+                $("#childId").val("");
+                $("#childDisplayOrder").val(0);
+                $("#childStatus").prop("checked", true);
+                hideMessage($("#childFormMessage"));
+            }
+
+            $("#addChildContentBtn").on("click", function () {
+                resetChildForm();
+                $("#childContentModalTitle").text("Add Child Content");
+                $("#childContentModal").modal("show");
+            });
+
+            $("#childContentTableBody").on("click", ".edit-child-btn", function () {
+                var id = $(this).data("id");
+                var item = childrenCache.find(function (x) {
+                    return String(getValue(x, "id", "Id")) === String(id);
+                });
+
+                if (!item) {
+                    showMessage($("#childContentMessage"), "The selected child item could not be found. Refresh and try again.", true);
+                    return;
+                }
+
+                resetChildForm();
+                $("#childContentModalTitle").text("Edit Child Content");
+                $("#childId").val(getValue(item, "id", "Id"));
+                $("#childTitle").val(getValue(item, "title", "Title"));
+                $("#childDescription").val(getValue(item, "description", "Description"));
+                $("#childValue").val(getValue(item, "value", "Value"));
+                $("#childLabel").val(getValue(item, "label", "Label"));
+                $("#childDisplayOrder").val(getValue(item, "displayOrder", "DisplayOrder") || 0);
+
+                var status = getValue(item, "status", "Status");
+                $("#childStatus").prop("checked", status === true || status === "true" || status === 1);
+
+                $("#childContentModal").modal("show");
+            });
+
+            $("#saveChildContentBtn").on("click", function () {
+                var title = $.trim($("#childTitle").val());
+                var displayOrder = parseInt($("#childDisplayOrder").val(), 10);
+
+                hideMessage($("#childFormMessage"));
+
+                if (!title) {
+                    showMessage($("#childFormMessage"), "Please enter a title.", true);
+                    $("#childTitle").focus();
+                    return;
+                }
+
+                if (isNaN(displayOrder) || displayOrder < 0) {
+                    showMessage($("#childFormMessage"), "Display Order must be zero or greater.", true);
+                    $("#childDisplayOrder").focus();
+                    return;
+                }
+
+                var $button = $(this);
+                $button.prop("disabled", true);
+
+                $.ajax({
+                    url: childSaveUrl,
+                    type: "POST",
+                    data: {
+                        __RequestVerificationToken: getAntiForgeryToken(),
+                        Id: $("#childId").val() || "00000000-0000-0000-0000-000000000000",
+                        SectionId: sectionId,
+                        ParentSectionItemId: parentId,
+                        Title: title,
+                        Description: $("#childDescription").val(),
+                        Value: $("#childValue").val(),
+                        Label: $("#childLabel").val(),
+                        DisplayOrder: displayOrder,
+                        Status: $("#childStatus").is(":checked")
+                    },
+                    success: function (response) {
+                        if (response && response.success === false) {
+                            showMessage($("#childFormMessage"), response.message || "Unable to save child content.", true);
+                            return;
+                        }
+
+                        $("#childContentModal").modal("hide");
+                        showMessage($("#childContentMessage"), "Child content saved successfully.", false);
+                        loadChildContent();
+                    },
+                    error: function (xhr) {
+                        var message = "Unable to save child content. Check the server response and try again.";
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        }
+                        showMessage($("#childFormMessage"), message, true);
+                        console.error("SaveChildSectionItem failed:", xhr.responseText);
+                    },
+                    complete: function () {
+                        $button.prop("disabled", false);
+                    }
+                });
+            });
+
+            $("#childContentTableBody").on("click", ".delete-child-btn", function () {
+                var id = $(this).data("id");
+
+                if (!confirm("Are you sure you want to delete this child content?")) {
+                    return;
+                }
+
+                $.ajax({
+                    url: childDeleteUrl,
+                    type: "POST",
+                    data: {
+                        __RequestVerificationToken: getAntiForgeryToken(),
+                        id: id
+                    },
+                    success: function (response) {
+                        if (response && response.success === false) {
+                            showMessage($("#childContentMessage"), response.message || "Unable to delete child content.", true);
+                            return;
+                        }
+
+                        showMessage($("#childContentMessage"), "Child content deleted successfully.", false);
+                        loadChildContent();
+                    },
+                    error: function (xhr) {
+                        showMessage($("#childContentMessage"), "Unable to delete child content.", true);
+                        console.error("DeleteSectionItemContent failed:", xhr.responseText);
+                    }
+                });
+            });
+
+            $("#cancelChildContentBtn").on("click", function () {
+                $("#childContentModal").modal("hide");
+            });
+
+            loadChildContent();
         });
     </script>
 }
