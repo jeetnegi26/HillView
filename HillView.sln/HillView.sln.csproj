@@ -885,6 +885,8 @@
     <Content Include="Views\Jobs\Index.cshtml" />
     <Content Include="Views\Services\Index.cshtml" />
     <Content Include="Views\Admin\SectionItemAction.cshtml" />
+    <Content Include="Views\Admin\TestimonialAction.cshtml" />
+    <Content Include="Views\Admin\Testimonials.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">

@@ -82,6 +82,7 @@
     <Compile Include="SectionItemVM.cs" />
     <Compile Include="SectionTypeVM.cs" />
     <Compile Include="SectionVM.cs" />
+    <Compile Include="TestimonialVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

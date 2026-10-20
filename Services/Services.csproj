@@ -82,6 +82,7 @@
     <Compile Include="SectionItemService.cs" />
     <Compile Include="SectionService.cs" />
     <Compile Include="SectionTypeService.cs" />
+    <Compile Include="TestimonialService.cs" />
     <Compile Include="WebInfoService.cs" />
   </ItemGroup>
   <ItemGroup>

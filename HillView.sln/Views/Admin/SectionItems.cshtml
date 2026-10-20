@@ -5,17 +5,43 @@
     ViewBag.Title = "Section Items";
     Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
 }
+<style>
+    .section-actions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
 
+    .section-actions-row {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .section-actions-row form {
+            margin: 0;
+        }
+
+        .section-actions-row .btn {
+            white-space: nowrap;
+        }
+</style>
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2>Section Items</h2>
+            <h2>
+                @(ViewBag.SectionTitle == null
+        ? "Section Items"
+        : "Section Items - " + ViewBag.SectionTitle)
+            </h2>
             <p class="text-muted mb-0">
                 Manage content items belonging to website sections.
             </p>
         </div>
 
-        <a href="@Url.Action("SectionItemAction", "Admin")"
+        <a href="@Url.Action("SectionItemAction", "Admin", new { sectionId = ViewBag.SectionId })"
            class="btn btn-primary">
             Add Section Item
         </a>
@@ -51,7 +77,7 @@
                             <th title="Display Order">Order</th>
                             <th>Status</th>
                             <th>Created At</th>
-                            <th class="text-end">Actions</th>
+                            <th class="text-center" style="width: 230px;">Actions</th>
                         </tr>
                     </thead>
 
@@ -102,28 +128,41 @@
                                     </td>
 
                                     <td class="text-end">
-                                        <a href="@Url.Action(
-                                            "SectionItemAction",
-                                            "Admin",
-                                            new { id = item.Id })"
-                                           class="btn btn-sm btn-primary">
-                                            Edit
-                                        </a>
+                                        <div class="section-actions">
 
-                                        @using (Html.BeginForm(
-                                            "DeleteSectionItem",
-                                            "Admin",
-                                            new { id = item.Id },
-                                            FormMethod.Post,
-                                            new { @class = "d-inline delete-section-item-form" }))
-                                        {
-                                            @Html.AntiForgeryToken()
+                                            <div class="section-actions-row">
+                                                <a href="@Url.Action("SectionItemAction", "Admin", new { id = item.Id })" class="btn btn-sm btn-primary">
+                                                    Edit
+                                                </a>
 
-                                            <button type="submit"
-                                                    class="btn btn-sm btn-danger">
-                                                Delete
-                                            </button>
-                                        }
+                                                @using (Html.BeginForm(
+                                               "DeleteSectionItem",
+                                               "Admin",
+                                               new { id = item.Id },
+                                               FormMethod.Post,
+                                               new { @class = "d-inline delete-section-item-form" }))
+                                                {
+                                                    @Html.AntiForgeryToken()
+
+                                                    <button type="submit"
+                                                            class="btn btn-sm btn-danger">
+                                                        Delete
+                                                    </button>
+                                                }
+                                            </div>
+
+                                            <div class="section-actions-row">
+                                                <a href="@Url.Action("ImageAction", "Admin", new { sectionId = item.SectionId, sectionItemId = item.Id })"
+                                                   class="btn btn-sm btn-secondary">
+                                                    <i class="ti ti-photo" style="font-size: 1.3em !important"></i> Add Image
+                                                </a>
+
+                                                <a href="@Url.Action("ButtonAction", "Admin", new { sectionId = item.SectionId, sectionItemId = item.Id })"
+                                                   class="btn btn-sm btn-outline-info">
+                                                    <i class="ti ti-click" style="font-size: 1.3em !important"></i> Add Button
+                                                </a>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             }

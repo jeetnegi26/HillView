@@ -35,6 +35,7 @@
                         <tr>
                             <th>Title</th>
                             <th>URL Slug</th>
+                            <th>Navigation</th>
                             <th>Status</th>
                             <th>Display Order</th>
                             <th style="width: 260px;">Actions</th>
@@ -48,6 +49,19 @@
                                 <tr>
                                     <td>@page.Title</td>
                                     <td>/@page.Slug</td>
+                                    <td>
+                                        @if (page.IsNav)
+                                        {
+                                            <span class="badge bg-success">
+                                                Yes
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">
+                                                No
+                                            </span>
+                                        }
                                     <td>
                                         @if (page.Status)
                                         {

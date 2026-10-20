@@ -22,8 +22,54 @@
             </div>
         </div>
         <!-- Sidebar navigation-->
+        <!--<nav class="sidebar-nav scroll-sidebar data-simplebar">
+        <ul class="list-unstyled components">-->
+        @* Standalone menu items *@
+        <!--@foreach (var item in Model.StandaloneItems)
+    {
+        @RenderMenuItem(item)
+    }-->
+        @* Grouped menu items *@
+        <!--@foreach (var group in Model.Groups)
+            {
+                var groupId = "menu-" + group.Id.ToString("N");
+                var groupIsActive = HasActiveGroup(group);
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link has-arrow @(groupIsActive ? "" : "collapsed")"
+                       href="javascript:void(0)"
+                       data-bs-toggle="collapse"
+                       data-bs-target="#@groupId"
+                       aria-controls="@groupId"
+                       aria-expanded="@(groupIsActive ? "true" : "false")">
+
+                        @if (group.Title == "Content Management")
+                        {
+                            <i class="ti ti-file-description"></i>
+                        }
+                        else
+                        {
+                            <i class="ti ti-folder"></i>
+                        }
+                        <span class="hide-menu">@group.Title</span>
+                    </a>
+
+                    <ul id="@groupId"
+                        class="collapse first-level @(groupIsActive ? "show" : "")">
+
+                        @foreach (var item in group.Items)
+                        {
+                            @RenderMenuItem(item)
+                        }
+
+                    </ul>
+                </li>
+            }
+        </ul>
+    </nav>-->
         <nav class="sidebar-nav scroll-sidebar data-simplebar">
             <ul class="list-unstyled components">
+
                 @* Standalone menu items *@
                 @foreach (var item in Model.StandaloneItems)
                 {
@@ -36,29 +82,49 @@
                     var groupId = "menu-" + group.Id.ToString("N");
                     var groupIsActive = HasActiveGroup(group);
 
-                    <li class="sidebar-item">
-                        <a class="sidebar-link has-arrow @(groupIsActive ? "" : "collapsed")"
-                           href="javascript:void(0)"
-                           data-bs-toggle="collapse"
-                           data-bs-target="#@groupId"
-                           aria-controls="@groupId"
-                           aria-expanded="@(groupIsActive ? "true" : "false")">
+                    if (group.Title != "Others")
+                    {
+                        <li class="sidebar-item">
+                            <a class="sidebar-link has-arrow @(groupIsActive ? "" : "collapsed")"
+                               href="javascript:void(0)"
+                               data-bs-toggle="collapse"
+                               data-bs-target="#@groupId"
+                               aria-controls="@groupId"
+                               aria-expanded="@(groupIsActive ? "true" : "false")">
 
-                            <i class="ti ti-folder"></i>
-                            <span class="hide-menu">@group.Title</span>
-                        </a>
+                                @if (group.Title == "Content Management")
+                                {
+                                    <i class="ti ti-device-analytics"></i>
+                                }
+                                else
+                                {
+                                    <i class="ti ti-folder"></i>
+                                }
 
-                        <ul id="@groupId"
-                            class="collapse first-level @(groupIsActive ? "show" : "")">
+                                <span class="hide-menu">@group.Title</span>
+                            </a>
 
-                            @foreach (var item in group.Items)
-                            {
-                                @RenderMenuItem(item)
-                            }
+                            <ul id="@groupId"
+                                class="collapse first-level @(groupIsActive ? "show" : "")">
 
-                        </ul>
-                    </li>
+                                @foreach (var item in group.Items)
+                                {
+                                    @RenderMenuItem(item)
+                                }
+
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        @* Others: display items directly without a collapsible parent *@
+                        foreach (var item in group.Items)
+                        {
+                            @RenderMenuItem(item)
+                        }
+                    }
                 }
+
             </ul>
         </nav>
         <!-- End Sidebar navigation -->

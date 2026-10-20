@@ -48,7 +48,7 @@ namespace Services
         ON i.SectionId = s.Id
     LEFT JOIN dbo.SectionItems si
         ON i.SectionItemId = si.Id
-    ORDER BY i.DisplayOrder, i.CreatedAt DESC;",
+    ORDER BY i.CreatedAt DESC;",
                     connection))
                 {
                     await connection.OpenAsync();

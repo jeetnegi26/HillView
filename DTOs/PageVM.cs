@@ -43,5 +43,8 @@ namespace DTOs
         public DateTime CreatedAt { get; set; }
 
         public DateTime? UpdatedAt { get; set; }
+
+        [Display(Name = "Show in Navbar")]
+        public bool IsNav { get; set; } = false;
     }
 }

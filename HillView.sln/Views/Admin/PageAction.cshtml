@@ -193,18 +193,33 @@
                         Draft pages should not be displayed publicly.
                     </small>
                 </div>
+                <div class="form-group">
+                    <div class="custom-control custom-checkbox">
+                        @Html.CheckBoxFor(m => m.IsNav, new
+                        {
+                            @class = "custom-control-input",
+                            id = "isNav"
+                        })
+                        <label class="custom-control-label" for="isNav">
+                            Show in Navigation
+                        </label>
+                    </div>
+                    <small class="form-text text-muted">
+                        Check this box to display the page in the navigation menu.
+                    </small> 
+                </div>
 
-                <hr />
+                    <hr />
 
-                <button type="submit" class="btn btn-indigo">
-                    Save Page
-                </button>
+                    <button type="submit" class="btn btn-indigo">
+                        Save Page
+                    </button>
 
-                <a href="@Url.Action("Pages", "Admin")"
-                   class="btn btn-outline-danger">
-                    Cancel
-                </a>
-            }
-        </div>
+                    <a href="@Url.Action("Pages", "Admin")"
+                       class="btn btn-outline-danger">
+                        Cancel
+                    </a>
+                    }
+                </div>
     </div>
 </div>

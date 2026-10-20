@@ -31,7 +31,7 @@ namespace Services
                 using (var connection = new SqlConnection(_connectionString))
                 using (var command = new SqlCommand(@"
                     SELECT Id, Title, Slug, MetaTitle, MetaDescription,
-                           MetaKeywords, CanonicalUrl, Status,
+                           MetaKeywords, CanonicalUrl, Status,IsNav,
                            DisplayOrder, CreatedAt, UpdatedAt
                     FROM dbo.Pages
                     ORDER BY DisplayOrder, Title;", connection))
@@ -65,7 +65,7 @@ namespace Services
                 using (var connection = new SqlConnection(_connectionString))
                 using (var command = new SqlCommand(@"
                     SELECT Id, Title, Slug, MetaTitle, MetaDescription,
-                           MetaKeywords, CanonicalUrl, Status,
+                           MetaKeywords, CanonicalUrl, Status, IsNav,
                            DisplayOrder, CreatedAt, UpdatedAt
                     FROM dbo.Pages
                     WHERE Id = @Id;", connection))
@@ -108,19 +108,19 @@ namespace Services
                             INSERT INTO dbo.Pages
                             (
                                 Title, Slug, MetaTitle, MetaDescription,
-                                MetaKeywords, CanonicalUrl, Status,
+                                MetaKeywords, CanonicalUrl, Status, IsNav,
                                 DisplayOrder
                             )
                             VALUES
                             (
                                 @Title, @Slug, @MetaTitle, @MetaDescription,
-                                @MetaKeywords, @CanonicalUrl, @Status,
+                                @MetaKeywords, @CanonicalUrl, @Status, @IsNav,
                                 @DisplayOrder
                             );";
                     }
                     else
                     {
-                        command.CommandText = @"
+                         command.CommandText = @"
                             UPDATE dbo.Pages
                             SET Title = @Title,
                                 Slug = @Slug,
@@ -129,6 +129,7 @@ namespace Services
                                 MetaKeywords = @MetaKeywords,
                                 CanonicalUrl = @CanonicalUrl,
                                 Status = @Status,
+                                IsNav = @IsNav,
                                 DisplayOrder = @DisplayOrder,
                                 UpdatedAt = SYSUTCDATETIME()
                             WHERE Id = @Id;";
@@ -157,6 +158,8 @@ namespace Services
 
                     command.Parameters.Add("@Status", SqlDbType.Bit)
                         .Value = page.Status;
+                    command.Parameters.Add("@IsNav", SqlDbType.Bit)
+    .Value = page.IsNav;
 
                     command.Parameters.Add("@DisplayOrder", SqlDbType.Int)
                         .Value = page.DisplayOrder;
@@ -214,6 +217,7 @@ namespace Services
                 MetaKeywords = reader["MetaKeywords"] as string,
                 CanonicalUrl = reader["CanonicalUrl"] as string,
                 Status = Convert.ToBoolean(reader["Status"]),
+                IsNav = Convert.ToBoolean(reader["IsNav"]),
                 DisplayOrder = Convert.ToInt32(reader["DisplayOrder"]),
                 CreatedAt = Convert.ToDateTime(reader["CreatedAt"]),
                 UpdatedAt = reader["UpdatedAt"] == DBNull.Value

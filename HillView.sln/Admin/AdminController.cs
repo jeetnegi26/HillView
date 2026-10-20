@@ -29,10 +29,11 @@ namespace HillView.sln.Admin
         private readonly ButtonService _buttonService;
         private readonly PageSectionService _pageSectionService;
         private readonly AdminMenuService _adminMenuService;
+        private readonly TestimonialService _testimonialService;
 
         public AdminController(WebInfoService webService, LogErrorService logErrorService, ImageService imageService, WebInfoService webInfoService, 
             PageService pageService, SectionTypeService sectionTypeService, SectionService sectionService, SectionItemService sectionItemService,
-            ButtonService buttonService, PageSectionService pageSectionService, AdminMenuService adminMenuService
+            ButtonService buttonService, PageSectionService pageSectionService, AdminMenuService adminMenuService, TestimonialService testimonialService
           )
         {
             _webService = webService;
@@ -46,6 +47,7 @@ namespace HillView.sln.Admin
             _buttonService = buttonService;
             _adminMenuService = adminMenuService;
             _pageSectionService = pageSectionService;
+            _testimonialService = testimonialService;
         }
 
         #region Home
@@ -920,27 +922,77 @@ namespace HillView.sln.Admin
         #endregion
 
         #region Section Items CRUD
+        //[HttpGet]
+        //public async Task<ActionResult> SectionItems()
+        //{
+        //    try
+        //    {
+        //        var items = await _sectionItemService.GetSectionItemsAsync(
+        //            Request.UserHostAddress);
+
+        //        return View(items);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        _logErrorService.LogError(
+        //            ex, "Admin/SectionItems", "GET",
+        //            null, Request.UserHostAddress, "SectionItems");
+
+        //        return View("Error");
+        //    }
+        //}
         [HttpGet]
-        public async Task<ActionResult> SectionItems()
+        public async Task<ActionResult> SectionItems(Guid? sectionId)
         {
             try
             {
-                var items = await _sectionItemService.GetSectionItemsAsync(
-                    Request.UserHostAddress);
+                string ip = Request.UserHostAddress ?? "Unknown";
 
-                return View(items);
+                if (sectionId.HasValue && sectionId.Value != Guid.Empty)
+                {
+                    var section = await _sectionService.GetSectionByIdAsync(
+                        sectionId.Value, ip);
+
+                    if (section == null)
+                    {
+                        TempData["ErrorMessage"] = "Section not found.";
+                        return RedirectToAction("Sections");
+                    }
+
+                    var items = await _sectionItemService
+                        .GetSectionItemsBySectionIdAsync(sectionId.Value, ip);
+
+                    ViewBag.SectionId = sectionId.Value;
+                    ViewBag.SectionTitle = section.Title;
+
+                    return View(items);
+                }
+
+                var allItems = await _sectionItemService
+                    .GetSectionItemsAsync(ip);
+
+                ViewBag.SectionId = null;
+                ViewBag.SectionTitle = null;
+
+                return View(allItems);
             }
             catch (Exception ex)
             {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
                 _logErrorService.LogError(
-                    ex, "Admin/SectionItems", "GET",
-                    null, Request.UserHostAddress, "SectionItems");
+                    ex,
+                    "Admin/SectionItems",
+                    "GET",
+                    null,
+                    ip,
+                    "SectionItems");
 
                 return View("Error");
             }
         }
         [HttpGet]
-        public async Task<ActionResult> SectionItemAction(Guid? id, bool validation = false)
+        public async Task<ActionResult> SectionItemAction(Guid? id, Guid? sectionId, bool validation = false)
         {
             SectionItemVM model;
 
@@ -963,7 +1015,10 @@ namespace HillView.sln.Admin
             }
             else
             {
-                model = new SectionItemVM();
+                model = new SectionItemVM
+                {
+                    SectionId = sectionId ?? Guid.Empty
+                };
 
                 if (id.HasValue && id.Value != Guid.Empty)
                 {
@@ -2385,7 +2440,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpGet]
-        public async Task<ActionResult> ImageAction(Guid? id, bool validation = false)
+        public async Task<ActionResult> ImageAction(Guid? id, Guid? sectionId, Guid? sectionItemId, bool validation = false)
         {
             ImageVM model;
 
@@ -2408,7 +2463,11 @@ namespace HillView.sln.Admin
             }
             else
             {
-                model = new ImageVM();
+                model = new ImageVM
+                {
+                    SectionId = sectionId,
+                    SectionItemId = sectionItemId
+                };
 
                 if (id.HasValue && id.Value != Guid.Empty)
                 {
@@ -3058,8 +3117,7 @@ namespace HillView.sln.Admin
         }
 
         [HttpGet]
-        public async Task<ActionResult> ButtonAction(
-            Guid? id, bool validation = false)
+        public async Task<ActionResult> ButtonAction(Guid? id, Guid? sectionId, Guid? sectionItemId, bool validation = false)
         {
             ButtonVM model;
 
@@ -3082,7 +3140,11 @@ namespace HillView.sln.Admin
             }
             else
             {
-                model = new ButtonVM();
+                model = new ButtonVM
+                {
+                    SectionId = sectionId,
+                    SectionItemId = sectionItemId
+                };
 
                 if (id.HasValue && id.Value != Guid.Empty)
                 {
@@ -3445,6 +3507,184 @@ namespace HillView.sln.Admin
             ViewBag.Sections = new SelectList(
                 sections, "Id", "Title", model.SectionId);
         }
+        #endregion
+
+        #region Testimonials CRUD
+
+        [HttpGet]
+        public async Task<ActionResult> Testimonials()
+        {
+            try
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                var testimonials = await _testimonialService
+                    .GetTestimonialsAsync(ip);
+
+                return View(testimonials);
+            }
+            catch (Exception ex)
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/Testimonials",
+                    "GET",
+                    0,
+                    ip,
+                    "GetTestimonials");
+
+                return View("Error");
+            }
+        }
+        [HttpGet]
+        public async Task<ActionResult> TestimonialAction(Guid? id)
+        {
+            try
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+                TestimonialVM model;
+
+                if (id.HasValue && id.Value != Guid.Empty)
+                {
+                    model = await _testimonialService
+                        .GetTestimonialByIdAsync(id.Value, ip);
+
+                    if (model == null)
+                    {
+                        TempData["ErrorMessage"] = "Testimonial not found.";
+                        return RedirectToAction("Testimonials");
+                    }
+                }
+                else
+                {
+                    model = new TestimonialVM
+                    {
+                        Rating = 5,
+                        DisplayOrder = 0,
+                        Status = true
+                    };
+                }
+
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                string ip = Request.UserHostAddress ?? "Unknown";
+
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/TestimonialAction",
+                    "GET",
+                    0,
+                    ip,
+                    "TestimonialAction");
+
+                return View("Error");
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]
+        public async Task<ActionResult> TestimonialAction(TestimonialVM model)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return View(model);
+                }
+
+                // Set audit information on the server.
+                model.UserHostAdd = ip;
+
+                // Set CreatedBy only for a new testimonial.
+                // Existing testimonials retain their original CreatedBy.
+                if (model.Id == Guid.Empty)
+                {
+                    model.CreatedBy = User.Identity != null
+                        && User.Identity.IsAuthenticated
+                        ? User.Identity.Name
+                        : null;
+                }
+
+                Guid? savedId = await _testimonialService
+                    .SaveTestimonialAsync(model, ip);
+
+                if (!savedId.HasValue)
+                {
+                    ModelState.AddModelError(
+                        "",
+                        "The testimonial could not be saved.");
+
+                    return View(model);
+                }
+
+                TempData["SuccessMessage"] = model.Id == Guid.Empty
+                    ? "Testimonial added successfully."
+                    : "Testimonial updated successfully.";
+
+                return RedirectToAction("Testimonials");
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/TestimonialAction",
+                    "POST",
+                    0,
+                    ip,
+                    "SaveTestimonial");
+
+                ModelState.AddModelError(
+                    "",
+                    "An error occurred while saving the testimonial.");
+
+                return View(model);
+            }
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteTestimonial(Guid id)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "Invalid testimonial ID.";
+                    return RedirectToAction("Testimonials");
+                }
+
+                bool deleted = await _testimonialService
+                    .DeleteTestimonialAsync(id, ip);
+
+                TempData[deleted ? "SuccessMessage" : "ErrorMessage"] =
+                    deleted
+                        ? "Testimonial deleted successfully."
+                        : "Testimonial not found.";
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/Testimonials",
+                    "DELETE",
+                    0,
+                    ip,
+                    "DeleteTestimonial");
+
+                TempData["ErrorMessage"] =
+                    "Unable to delete the testimonial. Please try again.";
+            }
+
+            return RedirectToAction("Testimonials");
+        }
+
         #endregion
 
         #region Website Info

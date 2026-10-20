@@ -48,7 +48,7 @@
                 }
 
                 <div class="row">
-                    <div class="col-md-6 mb-3">
+                    @*<div class="col-md-6 mb-3">
                         @Html.LabelFor(m => m.SectionId,
                             new { @class = "form-label" })
 
@@ -62,9 +62,19 @@
                             m => m.SectionId,
                             "",
                             new { @class = "text-danger" })
+                    </div>*@
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="SectionId">Section</label>
+                        @Html.DropDownListFor(
+                            m => m.SectionId,
+                            (SelectList)ViewBag.Sections,
+                            "-- Select Section --",
+                            new { @class = "form-select", id = "SectionId" })
+                        @Html.ValidationMessageFor(
+                            m => m.SectionId, "", new { @class = "text-danger" })
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    @*<div class="col-md-6 mb-3">
                         @Html.LabelFor(m => m.SectionItemId,
                             new { @class = "form-label" })
 
@@ -78,8 +88,17 @@
                             m => m.SectionItemId,
                             "",
                             new { @class = "text-danger" })
+                    </div>*@
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label" for="SectionItemId">Section Item</label>
+                        @Html.DropDownListFor(
+                            m => m.SectionItemId,
+                            (SelectList)ViewBag.SectionItems,
+                            "-- Select Section Item --",
+                            new { @class = "form-select", id = "SectionItemId" })
+                        @Html.ValidationMessageFor(
+                            m => m.SectionItemId, "", new { @class = "text-danger" })
                     </div>
-
                     <div class="col-md-6 mb-3">
                         @Html.LabelFor(m => m.Title,
                             new { @class = "form-label" })
@@ -216,10 +235,52 @@
 @section scripts {
     <script>
         $(document).ready(function () {
-            // A button must belong to either a Section or a Section Item.
-            $("#SectionId").on("change", function () {
+                        // Only one parent can be selected.
+$("#SectionId").on("change", function () {
+    var sectionId = $(this).val();
+    var $sectionItem = $("#SectionItemId");
+
+    // Clear the old selection and items.
+    $sectionItem.empty();
+    $sectionItem.append(
+        $("<option>", {
+            value: "",
+            text: "-- Select Section Item --"
+        })
+    );
+
+    if (!sectionId) {
+        return;
+    }
+
+    $.ajax({
+        url: '@Url.Action("GetImageSectionItems", "Admin")',
+        type: "GET",
+        data: { sectionId: sectionId },
+        success: function (response) {
+            if (!response || !response.success) {
+                alert("Unable to load section items.");
+                return;
+            }
+
+            $.each(response.items, function (_, item) {
+                $sectionItem.append(
+                    $("<option>", {
+                        value: item.id,
+                        text: item.title
+                    })
+                );
+            });
+        },
+        error: function () {
+            alert("An error occurred while loading section items.");
+        }
+    });
+});
+
+            $("#SectionItemId").on("change", function () {
                 if ($(this).val()) {
-                    $("#SectionItemId").val("");
+                    $("#SectionId").val("");
                 }
             });
 
