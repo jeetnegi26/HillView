@@ -18,5 +18,8 @@ namespace DTOs
         public string SVG { get; set; }
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
+
+        public string GroupName { get; set; }
+        public int DisplayOrder { get; set; }
     }
 }

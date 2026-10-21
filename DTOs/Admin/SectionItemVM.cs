@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace DTOs
@@ -51,5 +52,8 @@ namespace DTOs
 
         [Display(Name = "Parent Section Item")]
         public Guid? ParentSectionItemId { get; set; }
+
+        public List<ImageVM> Images { get; set; }
+    = new List<ImageVM>();
     }
 }

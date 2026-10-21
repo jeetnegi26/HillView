@@ -1,7 +1,34 @@
-﻿@{
-    ViewBag.Title = "CSHTHL | Technology & Business Solutions";
-}
+﻿@using System.Linq
+@model DTOs.HomePageVM
 
+@{
+    var heroSection = Model.Sections
+        .FirstOrDefault(s => s.Section != null &&
+                             s.Section.InternalName == "HomeHero");
+
+    var hero = heroSection?.Section;
+
+    var heroImages = heroSection?.Images
+        .Where(i => !i.SectionItemId.HasValue)
+        .OrderBy(i => i.DisplayOrder)
+        .ToList();
+
+    var heroButtons = heroSection?.Buttons
+        .Where(b => !b.SectionItemId.HasValue)
+        .OrderBy(b => b.DisplayOrder)
+        .ToList();
+
+    var servicesSection = Model.Sections
+    .FirstOrDefault(s => s.Section != null &&
+                         s.Section.InternalName == "OurServices");
+
+    var services = servicesSection?.Items
+        .OrderBy(i => i.DisplayOrder)
+        .ToList();
+
+    ViewBag.Title = "CSHTHL | Technology & Business Solutions";
+
+}
 <link href="~/Content/css/banner.css" rel="stylesheet" />
 <link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />
 <style>
@@ -367,7 +394,8 @@
 
     @@media screen and (min-width: 600px) and (max-width: 1023px) {
         .ser-img-box {
-            padding: 0 1REM;;
+            padding: 0 1REM;
+            ;
         }
 
         .candidate-list-box {
@@ -437,115 +465,211 @@
         }
     }
 
-    @@media (max-width: 430px){
+    @@media (max-width: 430px) {
         .banner-text {
             max-width: 350px;
         }
     }
-    @@media (max-width: 380px){
+
+    @@media (max-width: 380px) {
         .banner-text {
             max-width: 340px;
         }
     }
 </style>
 
-<section class="banner-section">
-    <div class="orb-scene">
-        <img class="orb orb-1" src="~/Content/Images/orb-2.png" alt="">
-        <img class="orb orb-2" src="~/Content/images/orb-1.png" alt="">
 
 
-        <div class="banner-text-box">
-            <div class="banner-text">
-                <a class="btn btn-primary">
-                    <img class="ai-icon" src="~/Content/Images/ai-icon.svg" />  HillView.AI
-                </a>
 
-                <h1>Building High-Performing Technology Teams accessible to you! </h1>
-                <p>
-                    With deep expertise across diverse technology stacks, we help businesses
-                    build and scale high-performing IT and engineering teams with confidence.
-                    Our strong talent network and collaborative approach ensure access to top
-                    professionals at competitive costs, enabling flexible, efficient hiring
-                    that adapts to your evolving business needs.
-                </p>
-                <div class="banner-btn pt-3">
-                    <a class="btn btn-secondary">Talk to us</a>
-                    <a class="btn btn-primary">For Candidates</a>
+
+@if (hero != null)
+{
+    <section class="banner-section">
+        <div class="orb-scene">
+
+            @* First image, according to DisplayOrder *@
+            @if (heroImages != null && heroImages.Count > 0)
+            {
+                <img class="orb orb-1"
+                     src="@Url.Content("~/Content/Uploads/" + heroImages[0].ImageUrl)"
+                     alt="@(heroImages[0].AltText ?? "")">
+            }
+
+            @* Second image, according to DisplayOrder *@
+            @if (heroImages != null && heroImages.Count > 1)
+            {
+                <img class="orb orb-2"
+                     src="@Url.Content("~/Content/Uploads/" + heroImages[1].ImageUrl)"
+                     alt="@(heroImages[1].AltText ?? "")">
+            }
+
+            <div class="banner-text-box">
+                <div class="banner-text">
+
+                    @* First button, according to DisplayOrder *@
+                    @if (heroButtons != null && heroButtons.Count > 0)
+                    {
+                        var firstButton = heroButtons[0];
+
+                        <a class="@firstButton.CssClass"
+                           href="@firstButton.Url"
+                           target="@firstButton.Target">
+                            <img class="ai-icon"
+                                 src="~/Content/Images/ai-icon.svg"
+                                 alt="">
+                            @firstButton.Title
+                        </a>
+                    }
+
+                    <h1>@hero.Heading</h1>
+
+                    <p>@hero.Description</p>
+
+                    <div class="banner-btn pt-3">
+
+                        @* Remaining buttons, in DisplayOrder *@
+                        @if (heroButtons != null && heroButtons.Count > 1)
+                        {
+                            foreach (var button in heroButtons.Skip(1))
+                            {
+                                <a class="@button.CssClass"
+                                   href="@button.Url"
+                                   target="@button.Target">
+                                    @button.Title
+                                </a>
+                            }
+                        }
+
+                    </div>
                 </div>
             </div>
+
         </div>
-    </div>
-</section>
+    </section>
+}
+
 
 @Html.Action("advantages", "Home")
 
-<section class="home-services-section">
-    <div class="home-services-box">
-        <div class="home-services-container container">
-            <div class="home-services-row row">
-                <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
-                    <div class="home-head">
-                        <h3>Our Services</h3>
-                        <h2>Solutions Built Around Your Hiring Needs</h2>
-                    </div>
+@if (servicesSection != null)
+{
+    <section class="home-services-section">
+        <div class="home-services-box">
+            <div class="home-services-container container">
+                <div class="home-services-row row">
+                    <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
+                        <div class="home-head">
+                            <h3>@servicesSection.Section.SubHeading</h3>
+                            <h2>@servicesSection.Section.Heading</h2>
+                        </div>
 
-                    <div class="ser-items">
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/hire.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Direct Hire Services</h3>
-                                    <p>Direct Hire Services provide end-to-end IT recruitment to identify, assess, and place top talent aligned with your technical needs</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/staff.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Contract Staffing Solutions</h3>
-                                    <p>Provide flexible access to skilled IT professionals for short-term projects or changing workloads, enabling quick onboarding, timely delivery, and scalable staffing without permanent hiring.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/consult.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>IT Consulting Services</h3>
-                                    <p>Help organizations optimize their technology through expert guidance and strategic planning. Our consultants deliver tailored solutions that align technology with business goals and support growth.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/augument.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Staff Augmentation</h3>
-                                    <p>Helps you quickly scale your workforce with skilled IT professionals who integrate seamlessly into your teams, providing flexible on-demand expertise to accelerate delivery, bridge skill gaps, and adapt to changing business needs.</p>
-                                </div>
-                            </div>
+                        <div class="ser-items">
+                            @if (services != null)
+                            {
+                                foreach (var service in services)
+                                {
+                                    <div class="service-item">
+                                        <div class="d-flex">
+<div class="ser-icon">
+    @{
+        var serviceImage = service.Images
+            .OrderBy(i => i.DisplayOrder)
+            .FirstOrDefault();
+    }
+
+    @if (serviceImage != null &&
+         !string.IsNullOrWhiteSpace(serviceImage.ImageUrl))
+    {
+        <img src="@Url.Content("~/Content/Uploads/" + serviceImage.ImageUrl)"
+             alt="@(serviceImage.AltText ?? service.Title.Trim())" />
+    }
+</div>
+
+                                            <div class="ser-desc">
+                                                <h3>@service.Title.Trim()</h3>
+                                                <p>@service.Description</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            }
                         </div>
                     </div>
 
-                </div>
-
-                <div class="col-lg-6 col-md-12 col-12 ser-img-box">
-                    <img src="~/Content/Images/Services/ser-right.png" />
+                    <div class="col-lg-6 col-md-12 col-12 ser-img-box">
+                        <img src="@Url.Content("~/Content/Uploads/" + servicesSection.Images[0].ImageUrl)" alt="@servicesSection.Images[0].AltText" />
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+@*<section class="home-services-section">
+        <div class="home-services-box">
+            <div class="home-services-container container">
+                <div class="home-services-row row">
+                    <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
+                        <div class="home-head">
+                            <h3>Our Services</h3>
+                            <h2>Solutions Built Around Your Hiring Needs</h2>
+                        </div>
+
+                        <div class="ser-items">
+                            <div class="service-item">
+                                <div class="d-flex">
+                                    <div class="ser-icon">
+                                        <img src="~/Content/Images/Services/hire.svg" />
+                                    </div>
+                                    <div class="ser-desc">
+                                        <h3>Direct Hire Services</h3>
+                                        <p>Direct Hire Services provide end-to-end IT recruitment to identify, assess, and place top talent aligned with your technical needs</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <div class="d-flex">
+                                    <div class="ser-icon">
+                                        <img src="~/Content/Images/Services/staff.svg" />
+                                    </div>
+                                    <div class="ser-desc">
+                                        <h3>Contract Staffing Solutions</h3>
+                                        <p>Provide flexible access to skilled IT professionals for short-term projects or changing workloads, enabling quick onboarding, timely delivery, and scalable staffing without permanent hiring.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <div class="d-flex">
+                                    <div class="ser-icon">
+                                        <img src="~/Content/Images/Services/consult.svg" />
+                                    </div>
+                                    <div class="ser-desc">
+                                        <h3>IT Consulting Services</h3>
+                                        <p>Help organizations optimize their technology through expert guidance and strategic planning. Our consultants deliver tailored solutions that align technology with business goals and support growth.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <div class="d-flex">
+                                    <div class="ser-icon">
+                                        <img src="~/Content/Images/Services/augument.svg" />
+                                    </div>
+                                    <div class="ser-desc">
+                                        <h3>Staff Augmentation</h3>
+                                        <p>Helps you quickly scale your workforce with skilled IT professionals who integrate seamlessly into your teams, providing flexible on-demand expertise to accelerate delivery, bridge skill gaps, and adapt to changing business needs.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12 ser-img-box">
+                        <img src="~/Content/Images/Services/ser-right.png" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>*@
 
 <section class="candidate-section">
     <div class="candidate-box">

@@ -360,7 +360,7 @@ namespace HillView.sln.Admin
                 }
 
                 TempData["PageMessage"] = "Page saved successfully.";
-
+                _webInfoService.ClearLayoutDataCache();
                 return RedirectToAction("Pages");
             }
             catch (System.Data.SqlClient.SqlException ex)
@@ -402,7 +402,7 @@ namespace HillView.sln.Admin
 
                 bool deleted = await _pageService.DeletePageAsync(
                     id, Request.UserHostAddress);
-
+                _webInfoService.ClearLayoutDataCache();
                 return Json(new
                 {
                     success = deleted,

@@ -63,26 +63,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdminMenuGroupVM.cs" />
-    <Compile Include="AdminMenuItemEditVM.cs" />
-    <Compile Include="Base.cs" />
-    <Compile Include="ButtonVM.cs" />
-    <Compile Include="ChangePasswordModel.cs" />
+    <Compile Include="Admin\AdminMenuGroupVM.cs" />
+    <Compile Include="Admin\AdminMenuItemEditVM.cs" />
+    <Compile Include="Admin\Base.cs" />
+    <Compile Include="Admin\ButtonVM.cs" />
+    <Compile Include="Admin\ChangePasswordModel.cs" />
     <Compile Include="ConstantVM.cs" />
-    <Compile Include="Image.cs" />
-    <Compile Include="ImageVM.cs" />
-    <Compile Include="Key.cs" />
-    <Compile Include="LoggedInUserVM.cs" />
-    <Compile Include="LoginOutputModel.cs" />
-    <Compile Include="PageSectionVM.cs" />
-    <Compile Include="PageVM.cs" />
+    <Compile Include="User\HomePageVM.cs" />
+    <Compile Include="Admin\Image.cs" />
+    <Compile Include="Admin\ImageVM.cs" />
+    <Compile Include="Admin\Key.cs" />
+    <Compile Include="Admin\LoggedInUserVM.cs" />
+    <Compile Include="Admin\LoginOutputModel.cs" />
+    <Compile Include="Admin\PageSectionVM.cs" />
+    <Compile Include="Admin\PageVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RegisterViewModel.cs" />
+    <Compile Include="Admin\RegisterViewModel.cs" />
     <Compile Include="ResponseVM.cs" />
-    <Compile Include="SectionItemVM.cs" />
-    <Compile Include="SectionTypeVM.cs" />
-    <Compile Include="SectionVM.cs" />
-    <Compile Include="TestimonialVM.cs" />
+    <Compile Include="Admin\SectionItemVM.cs" />
+    <Compile Include="Admin\SectionTypeVM.cs" />
+    <Compile Include="Admin\SectionVM.cs" />
+    <Compile Include="Admin\TestimonialVM.cs" />
+    <Compile Include="User\LayoutDataVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

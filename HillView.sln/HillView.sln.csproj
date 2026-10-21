@@ -199,6 +199,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
+    <Compile Include="Controllers\LayoutController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -840,7 +841,7 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Index_Bk.cshtml" />
     <Content Include="Views\Shared\Admin\_AdminLayoutPage.cshtml" />
     <Content Include="Views\Shared\Admin\_AdminNavbar.cshtml" />
     <Content Include="Views\Shared\Admin\_AdminSidebar.cshtml" />
@@ -853,6 +854,7 @@
     <Folder Include="Content\Uploads\" />
     <Folder Include="Models\" />
     <Folder Include="Views\Image\" />
+    <Folder Include="Views\Layout\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\fonts\body.ttf" />
@@ -887,6 +889,10 @@
     <Content Include="Views\Admin\SectionItemAction.cshtml" />
     <Content Include="Views\Admin\TestimonialAction.cshtml" />
     <Content Include="Views\Admin\Testimonials.cshtml" />
+    <Content Include="Views\Shared\_SharedData.cshtml" />
+    <Content Include="Views\Shared\_Header.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">
