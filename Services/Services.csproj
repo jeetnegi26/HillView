@@ -84,7 +84,7 @@
     <Compile Include="Admin\SectionTypeService.cs" />
     <Compile Include="Admin\TestimonialService.cs" />
     <Compile Include="Admin\WebInfoService.cs" />
-    <Compile Include="User\HomePageService.cs" />
+    <Compile Include="User\UIPageService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">
@@ -95,5 +95,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

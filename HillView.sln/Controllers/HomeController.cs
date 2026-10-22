@@ -1,62 +1,63 @@
-﻿
+﻿using DTOs;
+using Services;
 using System;
+using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using DTOs;
-using Services;
 
 namespace HillView.sln.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly SectionService _sectionService;
-        private readonly ImageService _imageService;
-        private readonly ButtonService _buttonService;
-        private readonly HomePageService _homePageService;
         private readonly LogErrorService _logErrorService;
+        private readonly UIPageService _uiPageService;
 
-        private static readonly Guid HomePageId =
-            new Guid("35BBA058-A5CA-F111-A44C-E867CD6913A5");
+        // Read from <appSettings> key "Index" in Web.config
+        private static readonly string HomePageId =
+            ConfigurationManager.AppSettings["Index"];
 
-        public HomeController(
-            SectionService sectionService,
-            ImageService imageService,
-            ButtonService buttonService,
-            LogErrorService logErrorService,
-            HomePageService homePageService)
+        public HomeController(LogErrorService logErrorService,  UIPageService uiPageService)
         {
-            _sectionService = sectionService;
-            _imageService = imageService;
-            _buttonService = buttonService;
             _logErrorService = logErrorService;
-            _homePageService = homePageService;
+            _uiPageService = uiPageService;
         }
+
         public async Task<ActionResult> Index()
         {
             try
             {
-                string ip = Request.UserHostAddress ?? "Unknown";
+                if (!Guid.TryParse(HomePageId, out var pageId))
+                {
+                    throw new InvalidOperationException("AppSettings key 'Index' is missing or is not a valid GUID.");
+                }
 
+                var model = await _uiPageService.GetPageContentAsync(pageId, Request.UserHostAddress);
 
-                var homePage = await _homePageService
-                    .GetHomePageDataAsync(HomePageId, ip);
+                if (model == null)
+                {
+                    return HttpNotFound();
+                }
 
-                return View(homePage);
+                return View(model);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return View("Error",
-                    new HandleErrorInfo(ex, "Home", "Index"));
+
+                throw;
             }
         }
 
-        public ActionResult advantages()
+
+        public ActionResult advantages(
+            List<DTOs.UISectionVM> sections)
         {
             return PartialView(
-                "~/Views/Home/partial/_advantages.cshtml");
+                "~/Views/Home/partial/_advantages.cshtml",
+                sections
+            );
         }
-
         public ActionResult milestones()
         {
             return PartialView(

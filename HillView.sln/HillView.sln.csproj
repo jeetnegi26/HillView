@@ -881,7 +881,7 @@
     <Content Include="Views\Admin\PageContent.cshtml" />
     <Content Include="Views\Admin\MenuManagement.cshtml" />
     <Content Include="Views\Admin\AddMenuItem.cshtml" />
-    <Content Include="Views\Home\partial\_advantages.cshtml" />
+    <Content Include="Views\Home\partial\_advantages_bk.cshtml" />
     <Content Include="Views\Home\partial\_aitalent.cshtml" />
     <Content Include="Views\Home\partial\_milestones.cshtml" />
     <Content Include="Views\Jobs\Index.cshtml" />
@@ -893,6 +893,7 @@
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\partial\_advantages.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">

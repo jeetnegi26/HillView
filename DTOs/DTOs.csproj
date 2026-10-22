@@ -69,7 +69,6 @@
     <Compile Include="Admin\ButtonVM.cs" />
     <Compile Include="Admin\ChangePasswordModel.cs" />
     <Compile Include="ConstantVM.cs" />
-    <Compile Include="User\HomePageVM.cs" />
     <Compile Include="Admin\Image.cs" />
     <Compile Include="Admin\ImageVM.cs" />
     <Compile Include="Admin\Key.cs" />
@@ -85,6 +84,9 @@
     <Compile Include="Admin\SectionVM.cs" />
     <Compile Include="Admin\TestimonialVM.cs" />
     <Compile Include="User\LayoutDataVM.cs" />
+    <Compile Include="User\UIPageVM.cs" />
+    <Compile Include="User\UISectionItemVM.cs" />
+    <Compile Include="User\UISectionVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

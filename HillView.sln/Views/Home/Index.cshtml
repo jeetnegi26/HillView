@@ -1,36 +1,24 @@
-﻿@using System.Linq
-@model DTOs.HomePageVM
-
+﻿@model DTOs.UIPageVM
+@using System.Linq
+@using DTOs
 @{
-    var heroSection = Model.Sections
-        .FirstOrDefault(s => s.Section != null &&
-                             s.Section.InternalName == "HomeHero");
+    ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
 
-    var hero = heroSection?.Section;
+    var data = Model?.Sections?
+    .FirstOrDefault(x => x != null && x.DisplayOrder == 1);
 
-    var heroImages = heroSection?.Images
-        .Where(i => !i.SectionItemId.HasValue)
-        .OrderBy(i => i.DisplayOrder)
+    var images = data?.Images?
+        .Where(x => x != null)
         .ToList();
 
-    var heroButtons = heroSection?.Buttons
-        .Where(b => !b.SectionItemId.HasValue)
-        .OrderBy(b => b.DisplayOrder)
+    var buttons = data?.Buttons?
+        .Where(x => x != null)
         .ToList();
-
-    var servicesSection = Model.Sections
-    .FirstOrDefault(s => s.Section != null &&
-                         s.Section.InternalName == "OurServices");
-
-    var services = servicesSection?.Items
-        .OrderBy(i => i.DisplayOrder)
-        .ToList();
-
-    ViewBag.Title = "CSHTHL | Technology & Business Solutions";
-
 }
+
 <link href="~/Content/css/banner.css" rel="stylesheet" />
 <link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />
+
 <style>
     .ai-icon {
         width: 27%;
@@ -219,10 +207,6 @@
             border-radius: 10px;
             background: var(--primary);
         }
-
-    .sk-jobs-header-container {
-        display: none !important;
-    }
 
     .case-item {
         padding: 5rem 0;
@@ -483,197 +467,156 @@
 </style>
 
 
-
-
-
-@if (hero != null)
+@if (data != null)
 {
     <section class="banner-section">
         <div class="orb-scene">
 
-            @* First image, according to DisplayOrder *@
-            @if (heroImages != null && heroImages.Count > 0)
+            @if (images != null && images.Count > 0 &&
+                 !string.IsNullOrWhiteSpace(images[0].ImageUrl))
             {
                 <img class="orb orb-1"
-                     src="@Url.Content("~/Content/Uploads/" + heroImages[0].ImageUrl)"
-                     alt="@(heroImages[0].AltText ?? "")">
+                     src="@Url.Content("~/content/uploads/" + images[0].ImageUrl)"
+                     alt="@(images[0].AltText ?? "")" />
             }
 
-            @* Second image, according to DisplayOrder *@
-            @if (heroImages != null && heroImages.Count > 1)
+            @if (images != null && images.Count > 1 &&
+                 !string.IsNullOrWhiteSpace(images[1].ImageUrl))
             {
                 <img class="orb orb-2"
-                     src="@Url.Content("~/Content/Uploads/" + heroImages[1].ImageUrl)"
-                     alt="@(heroImages[1].AltText ?? "")">
+                     src="@Url.Content("~/content/uploads/" + images[1].ImageUrl)"
+                     alt="@(images[1].AltText ?? "")" />
             }
 
             <div class="banner-text-box">
                 <div class="banner-text">
 
-                    @* First button, according to DisplayOrder *@
-                    @if (heroButtons != null && heroButtons.Count > 0)
+                    @if (buttons != null && buttons.Count > 0)
                     {
-                        var firstButton = heroButtons[0];
-
-                        <a class="@firstButton.CssClass"
-                           href="@firstButton.Url"
-                           target="@firstButton.Target">
+                        <a class="btn btn-primary"
+                           href="@(buttons[0].Url ?? "#")">
                             <img class="ai-icon"
-                                 src="~/Content/Images/ai-icon.svg"
-                                 alt="">
-                            @firstButton.Title
+                                 src="@Url.Content("~/Content/Images/ai-icon.svg")"
+                                 alt="" />
+                            @(buttons[0].Title ?? "")
                         </a>
                     }
 
-                    <h1>@hero.Heading</h1>
+                    @if (!string.IsNullOrWhiteSpace(data.Title))
+                    {
+                        <h1>@data.Title</h1>
+                    }
 
-                    <p>@hero.Description</p>
+                    @if (!string.IsNullOrWhiteSpace(data.Description))
+                    {
+                        <p>@data.Description</p>
+                    }
 
-                    <div class="banner-btn pt-3">
+                    @if (buttons != null && buttons.Count > 1)
+                    {
+                        <div class="banner-btn pt-3">
 
-                        @* Remaining buttons, in DisplayOrder *@
-                        @if (heroButtons != null && heroButtons.Count > 1)
-                        {
-                            foreach (var button in heroButtons.Skip(1))
+                            @if (buttons.Count > 1)
                             {
-                                <a class="@button.CssClass"
-                                   href="@button.Url"
-                                   target="@button.Target">
-                                    @button.Title
+                                <a class="btn btn-secondary"
+                                   href="@(buttons[1].Url ?? "#")">
+                                    @(buttons[1].Title ?? "")
                                 </a>
                             }
-                        }
 
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-}
-
-
-@Html.Action("advantages", "Home")
-
-@if (servicesSection != null)
-{
-    <section class="home-services-section">
-        <div class="home-services-box">
-            <div class="home-services-container container">
-                <div class="home-services-row row">
-                    <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
-                        <div class="home-head">
-                            <h3>@servicesSection.Section.SubHeading</h3>
-                            <h2>@servicesSection.Section.Heading</h2>
-                        </div>
-
-                        <div class="ser-items">
-                            @if (services != null)
+                            @if (buttons.Count > 2)
                             {
-                                foreach (var service in services)
-                                {
-                                    <div class="service-item">
-                                        <div class="d-flex">
-<div class="ser-icon">
-    @{
-        var serviceImage = service.Images
-            .OrderBy(i => i.DisplayOrder)
-            .FirstOrDefault();
-    }
-
-    @if (serviceImage != null &&
-         !string.IsNullOrWhiteSpace(serviceImage.ImageUrl))
-    {
-        <img src="@Url.Content("~/Content/Uploads/" + serviceImage.ImageUrl)"
-             alt="@(serviceImage.AltText ?? service.Title.Trim())" />
-    }
-</div>
-
-                                            <div class="ser-desc">
-                                                <h3>@service.Title.Trim()</h3>
-                                                <p>@service.Description</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                }
+                                <a class="btn btn-primary"
+                                   href="@(buttons[2].Url ?? "#")">
+                                    @(buttons[2].Title ?? "")
+                                </a>
                             }
-                        </div>
-                    </div>
 
-                    <div class="col-lg-6 col-md-12 col-12 ser-img-box">
-                        <img src="@Url.Content("~/Content/Uploads/" + servicesSection.Images[0].ImageUrl)" alt="@servicesSection.Images[0].AltText" />
-                    </div>
+                        </div>
+                    }
+
                 </div>
             </div>
         </div>
     </section>
 }
-@*<section class="home-services-section">
-        <div class="home-services-box">
-            <div class="home-services-container container">
-                <div class="home-services-row row">
-                    <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
-                        <div class="home-head">
-                            <h3>Our Services</h3>
-                            <h2>Solutions Built Around Your Hiring Needs</h2>
-                        </div>
 
-                        <div class="ser-items">
-                            <div class="service-item">
-                                <div class="d-flex">
-                                    <div class="ser-icon">
-                                        <img src="~/Content/Images/Services/hire.svg" />
-                                    </div>
-                                    <div class="ser-desc">
-                                        <h3>Direct Hire Services</h3>
-                                        <p>Direct Hire Services provide end-to-end IT recruitment to identify, assess, and place top talent aligned with your technical needs</p>
-                                    </div>
+@{
+    var advantageSections = Model?.Sections?
+        .Where(x => x != null &&
+                    (x.DisplayOrder == 2 || x.DisplayOrder == 3))
+        .ToList();
+}
+
+@Html.Action("advantages", "Home",
+    new { sections = advantageSections })
+
+<section class="home-services-section">
+    <div class="home-services-box">
+        <div class="home-services-container container">
+            <div class="home-services-row row">
+                <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
+                    <div class="home-head">
+                        <h3>Our Services</h3>
+                        <h2>Solutions Built Around Your Hiring Needs</h2>
+                    </div>
+
+                    <div class="ser-items">
+                        <div class="service-item">
+                            <div class="d-flex">
+                                <div class="ser-icon">
+                                    <img src="~/Content/Images/Services/hire.svg" />
                                 </div>
-                            </div>
-                            <div class="service-item">
-                                <div class="d-flex">
-                                    <div class="ser-icon">
-                                        <img src="~/Content/Images/Services/staff.svg" />
-                                    </div>
-                                    <div class="ser-desc">
-                                        <h3>Contract Staffing Solutions</h3>
-                                        <p>Provide flexible access to skilled IT professionals for short-term projects or changing workloads, enabling quick onboarding, timely delivery, and scalable staffing without permanent hiring.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="service-item">
-                                <div class="d-flex">
-                                    <div class="ser-icon">
-                                        <img src="~/Content/Images/Services/consult.svg" />
-                                    </div>
-                                    <div class="ser-desc">
-                                        <h3>IT Consulting Services</h3>
-                                        <p>Help organizations optimize their technology through expert guidance and strategic planning. Our consultants deliver tailored solutions that align technology with business goals and support growth.</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="service-item">
-                                <div class="d-flex">
-                                    <div class="ser-icon">
-                                        <img src="~/Content/Images/Services/augument.svg" />
-                                    </div>
-                                    <div class="ser-desc">
-                                        <h3>Staff Augmentation</h3>
-                                        <p>Helps you quickly scale your workforce with skilled IT professionals who integrate seamlessly into your teams, providing flexible on-demand expertise to accelerate delivery, bridge skill gaps, and adapt to changing business needs.</p>
-                                    </div>
+                                <div class="ser-desc">
+                                    <h3>Direct Hire Services</h3>
+                                    <p>Direct Hire Services provide end-to-end IT recruitment to identify, assess, and place top talent aligned with your technical needs</p>
                                 </div>
                             </div>
                         </div>
-
+                        <div class="service-item">
+                            <div class="d-flex">
+                                <div class="ser-icon">
+                                    <img src="~/Content/Images/Services/staff.svg" />
+                                </div>
+                                <div class="ser-desc">
+                                    <h3>Contract Staffing Solutions</h3>
+                                    <p>Provide flexible access to skilled IT professionals for short-term projects or changing workloads, enabling quick onboarding, timely delivery, and scalable staffing without permanent hiring.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="d-flex">
+                                <div class="ser-icon">
+                                    <img src="~/Content/Images/Services/consult.svg" />
+                                </div>
+                                <div class="ser-desc">
+                                    <h3>IT Consulting Services</h3>
+                                    <p>Help organizations optimize their technology through expert guidance and strategic planning. Our consultants deliver tailored solutions that align technology with business goals and support growth.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="service-item">
+                            <div class="d-flex">
+                                <div class="ser-icon">
+                                    <img src="~/Content/Images/Services/augument.svg" />
+                                </div>
+                                <div class="ser-desc">
+                                    <h3>Staff Augmentation</h3>
+                                    <p>Helps you quickly scale your workforce with skilled IT professionals who integrate seamlessly into your teams, providing flexible on-demand expertise to accelerate delivery, bridge skill gaps, and adapt to changing business needs.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="col-lg-6 col-md-12 col-12 ser-img-box">
-                        <img src="~/Content/Images/Services/ser-right.png" />
-                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-12 col-12 ser-img-box">
+                    <img src="~/Content/Images/Services/ser-right.png" />
                 </div>
             </div>
         </div>
-    </section>*@
+    </div>
+</section>
 
 <section class="candidate-section">
     <div class="candidate-box">
