@@ -1,0 +1,37 @@
+﻿@model DTOs.LayoutDataVM
+
+
+@if (Model != null)
+{
+    if (!string.IsNullOrWhiteSpace(Model.Phone))
+    {
+        <p class="tel d-flex">
+            <i class="bi bi-telephone"></i>
+            <span>@Model.Phone</span>
+        </p>
+    }
+
+    if (!string.IsNullOrWhiteSpace(Model.Email))
+    {
+        <p class="email d-flex">
+            <i class="bi bi-envelope"></i>
+            <span>@Model.Email</span>
+        </p>
+    }
+
+    if (!string.IsNullOrWhiteSpace(Model.Address))
+    {
+        <p class="geo d-flex">
+            <i class="bi bi-geo-alt"></i>
+            <span>@Model.Address</span>
+        </p>
+    }
+
+    if (!string.IsNullOrWhiteSpace(Model.BusinessHours))
+    {
+        <p class="time d-flex">
+            <i class="bi bi-clock"></i>
+            <span>@Model.BusinessHours</span>
+        </p>
+    }
+}

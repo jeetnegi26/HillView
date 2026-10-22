@@ -14,6 +14,15 @@
     var buttons = data?.Buttons?
         .Where(x => x != null)
         .ToList();
+
+    var dataService = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 4);
+    var data5 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 5);
+    var data6 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 6);
+    var data8 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 8);
+
+    var data10 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 10);
+
+    var reviews = Model.Testimonials.ToList();
 }
 
 <link href="~/Content/css/banner.css" rel="stylesheet" />
@@ -551,147 +560,125 @@
 @Html.Action("advantages", "Home",
     new { sections = advantageSections })
 
-<section class="home-services-section">
-    <div class="home-services-box">
-        <div class="home-services-container container">
-            <div class="home-services-row row">
-                <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
-                    <div class="home-head">
-                        <h3>Our Services</h3>
-                        <h2>Solutions Built Around Your Hiring Needs</h2>
+@if (dataService != null)
+{
+    var serviceItems = dataService.Items?.Where(i => i != null).ToList()
+                       ?? new List<UISectionItemVM>();
+
+    var mainImageUrl = dataService.Images?.FirstOrDefault()?.ImageUrl;
+
+    <section class="home-services-section">
+        <div class="home-services-box">
+            <div class="home-services-container container">
+                <div class="home-services-row row">
+
+                    <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
+                        <div class="home-head">
+                            @if (!string.IsNullOrWhiteSpace(dataService.SubHeading))
+                            {
+                                <h3>@dataService.SubHeading</h3>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(dataService.Heading))
+                            {
+                                <h2>@dataService.Heading</h2>
+                            }
+                        </div>
+                        @if (serviceItems.Any())
+                        {
+                            <div class="ser-items">
+                                @foreach (var item in serviceItems)
+                                {
+                                    var iconUrl = item.Images?.FirstOrDefault()?.ImageUrl;
+
+                                    <div class="service-item">
+                                        <div class="d-flex">
+                                            @if (!string.IsNullOrWhiteSpace(iconUrl))
+                                            {
+                                                <div class="ser-icon">
+                                                    <img src="/Content/Uploads/@iconUrl" alt="@item.Title" />
+                                                </div>
+                                            }
+                                            <div class="ser-desc">
+                                                <h3>@item.Title</h3>
+                                                <p>@item.Description</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
                     </div>
-
-                    <div class="ser-items">
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/hire.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Direct Hire Services</h3>
-                                    <p>Direct Hire Services provide end-to-end IT recruitment to identify, assess, and place top talent aligned with your technical needs</p>
-                                </div>
-                            </div>
+                    @if (!string.IsNullOrWhiteSpace(mainImageUrl))
+                    {
+                        <div class="col-lg-6 col-md-12 col-12 ser-img-box">
+                            <img src="/Content/Uploads/@mainImageUrl" alt="@dataService.Heading" />
                         </div>
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/staff.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Contract Staffing Solutions</h3>
-                                    <p>Provide flexible access to skilled IT professionals for short-term projects or changing workloads, enabling quick onboarding, timely delivery, and scalable staffing without permanent hiring.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/consult.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>IT Consulting Services</h3>
-                                    <p>Help organizations optimize their technology through expert guidance and strategic planning. Our consultants deliver tailored solutions that align technology with business goals and support growth.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/augument.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Staff Augmentation</h3>
-                                    <p>Helps you quickly scale your workforce with skilled IT professionals who integrate seamlessly into your teams, providing flexible on-demand expertise to accelerate delivery, bridge skill gaps, and adapt to changing business needs.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-lg-6 col-md-12 col-12 ser-img-box">
-                    <img src="~/Content/Images/Services/ser-right.png" />
+                    }
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 
-<section class="candidate-section">
-    <div class="candidate-box">
-        <div class="container candidate-container">
-            <div class="home-head">
-                <h3>Candidate First</h3>
-                <h2>Candidates at the Heart of What We Do</h2>
-            </div>
 
-            <div class="candidate-list-box">
-                <div class="row candidate-row">
-                    <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
-                        <div class="candidate-item d-flex">
-                            <div class="candidate-icon">
-                                <i class="bi bi-check-circle"></i>
+@if (data5 != null)
+{
+    var candidateItems = data5.Items?.Where(i => i != null).ToList()
+                   ?? new List<UISectionItemVM>();
+    <section class="candidate-section">
+        <div class="candidate-box">
+            <div class="container candidate-container">
+                <div class="home-head">
+                    <h3>@data5.Title</h3>
+                    <h2>@data5.Heading</h2>
+                </div>
+
+
+                <div class="candidate-list-box">
+                    <div class="row candidate-row">
+                        @foreach (var item in candidateItems)
+                        {
+                            <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
+                                <div class="candidate-item d-flex">
+                                    <div class="candidate-icon">
+                                        <i class="bi bi-check-circle"></i>
+                                    </div>
+                                    <div class="candidate-desc">
+                                        <p><span class="candidate-icon-bold">@item.Heading</span> @item.Description </p>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="candidate-desc">
-                                <p><span class="candidate-icon-bold">Your Success Is Our Priority:</span> At Hillview Consulting Solutions, our relationship with you doesn’t end when you accept an assignment. </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
-                        <div class="candidate-item d-flex">
-                            <div class="candidate-icon">
-                                <i class="bi bi-check-circle"></i>
-                            </div>
-                            <div class="candidate-desc">
-                                <p><span class="candidate-icon-bold">Support Beyond Placement:</span> Starting a new assignment can come with questions, new processes, and new expectations. </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
-                        <div class="candidate-item d-flex">
-                            <div class="candidate-icon">
-                                <i class="bi bi-check-circle"></i>
-                            </div>
-                            <div class="candidate-desc">
-                                <p><span class="candidate-icon-bold">Your Journey With Us:</span> From seamless onboarding to ongoing support and smooth offboarding, we ensure success at every stage. </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
-                        <div class="candidate-item d-flex">
-                            <div class="candidate-icon">
-                                <i class="bi bi-check-circle"></i>
-                            </div>
-                            <div class="candidate-desc">
-                                <p><span class="candidate-icon-bold">More Than an Opportunity. A Partnership :</span> We believe great staffing relationships are built on more than matching skills with opportunities.  </p>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
-            </div>
-            <div class="candidate-knowmore text-center">
-                <a class="btn btn-secondary">Know more</a>
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="home-jobs-section">
-    <div class="home-jobs-box">
-        <div class="container home-jobs-container">
-            <div class="home-head">
-                <h3>Jobs we are offering  </h3>
-                <h2>Browse the latest openings across top companies</h2>
-                <p>Explore exciting IT roles with leading organizations and take the next step in your career with confidence.</p>
-            </div>
-
-            <div class="home-jobs-item-box">
-                <iframe src="https://widgets.sociablekit.com/linkedin-page-jobs/iframe/25721969" frameborder="0" style="width:100%; height:500px;"></iframe>
+                <div class="candidate-knowmore text-center">
+                    <a class="btn btn-secondary" href="@data5.Buttons[0].Url">@data5.Buttons[0].Title</a>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+}
+
+@if (data6 != null)
+{
+    <section class="home-jobs-section">
+        <div class="home-jobs-box">
+            <div class="container home-jobs-container">
+                <div class="home-head">
+                    <h3>@data6.Title  </h3>
+                    <h2>@data6.Heading</h2>
+                    <p>@data6.SubHeading</p>
+                </div>
+
+                <div class="home-jobs-item-box">
+                    <iframe src="https://widgets.sociablekit.com/linkedin-page-jobs/iframe/25721969" frameborder="0" style="width:100%; height:500px;"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
 
 <section class="case-section">
     <div class="case-div-box">
@@ -757,114 +744,146 @@
     </div>
 </section>
 
-<section class="reviews-section">
-    <div class="reviews-box">
-        <div class="reviews-container container">
-            <div class="reviews-head">
-                <div class="home-head">
-                    <h3>150+ Happy Clients</h3>
-                    <h2>Don’t just take our words</h2>
+
+@if (data8 != null && reviews != null)
+{
+    <section class="reviews-section">
+        <div class="reviews-box">
+            <div class="reviews-container container">
+                <div class="reviews-head">
+                    <div class="home-head">
+                        <h3>@data8.SubHeading</h3>
+                        <h2>@data8.Heading</h2>
+                    </div>
                 </div>
-            </div>
-            <div class="reviews-carousel-box">
-                <div class="reviews-items">
-                    <div class="owl-carousel owl-theme review-carousel">
-                        <div class="item">
-                            <div class="review-item">
-                                <div class="review-stars">
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star-fill"></i>
-                                    <i class="bi bi-star"></i>
-                                    <i class="bi bi-star"></i>
+                <div class="reviews-carousel-box">
+                    <div class="reviews-items">
+                        <div class="owl-carousel owl-theme review-carousel">
+                            @foreach (var item in reviews)
+                            {
+                                <div class="item">
+                                    <div class="review-item">
+                                        <div class="review-stars">
+                                            @{
+                                                var rating = Math.Max(0, Math.Min(5, item.Rating));
+                                            }
+                                            @for (int i = 1; i <= 5; i++)
+                                            {
+                                                <i class="bi @(i <= rating ? "bi-star-fill" : "bi-star")"></i>
+                                            }
+                                        </div>
+                                        <div class="item-review">
+                                            <p>"@item.ReviewText"</p>
+                                        </div>
+                                        <div class="review-name">
+                                            @item.ClientName
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="item-review">
-                                    <p>
-                                        "We love Landingfolio! Our designers were using it for their projects, so we already knew what kind of design they want."
-                                    </p>
-                                </div>
-                                <div class="review-name">
-                                    Jenny Wilson
-                                </div>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+
 
 <div class="mile-faq-bg">
+    @*@Html.Action("milestones", "Home")*@
+    @{
+        var milestones = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 9).ToList();
+    }
 
-    @Html.Action("milestones", "Home")
+    @Html.Action("milestones", "Home",
+        new { sections = milestones })
 
-    <section class="faq-section">
-        <div class="faq-container container">
-            <h2 class="faq-title">
-                Answers to our frequently<br />
-                asked questions
-            </h2>
+    @if (data10 != null)
+    {
+        <section class="faq-section">
+            <div class="faq-container container">
+                <h2 class="faq-title">
+                    @data10.Heading
+                    @*Answers to our frequently<br />
+                        asked questions*@
+                </h2>
 
-            <div class="faq-list">
-                <div class="faq-item">
-                    <button class="faq-question" aria-expanded="false">
-                        <span>Is this product for me?</span>
-                        <span class="faq-icon" aria-hidden="true">→</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p>
-                            This product is designed to help you simplify your workflow
-                            and get things done faster. Discover how it can work for you.
-                        </p>
-                    </div>
-                </div>
+                <div class="faq-list">
+                    @{
+                        var items_faq = data10.Items.ToList();
+                    }
 
-                <div class="faq-item active">
-                    <button class="faq-question" aria-expanded="true">
-                        <span>What is Tailwind CSS?</span>
-                        <span class="faq-icon" aria-hidden="true">↑</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p>
-                            Tailwind CSS is a CSS framework like Bootstrap, that speeds up
-                            development time for developers. Tailwind CSS uses classes to
-                            style elements, meaning you do not have to write any CSS.
-                        </p>
-                    </div>
-                </div>
+                    @foreach (var item in items_faq)
+                    {
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span>@item.Title</span>
+                                <span class="faq-icon" aria-hidden="true">?</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    @item.Description
+                                </p>
+                            </div>
+                        </div>
+                    }
 
-                <div class="faq-item">
-                    <button class="faq-question" aria-expanded="false">
-                        <span>Is this product for me?</span>
-                        <span class="faq-icon" aria-hidden="true">→</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p>
-                            Find out how this product can meet your needs and help you
-                            achieve your goals.
-                        </p>
-                    </div>
-                </div>
 
-                <div class="faq-item">
-                    <button class="faq-question" aria-expanded="false">
-                        <span>Is this product for me?</span>
-                        <span class="faq-icon" aria-hidden="true">→</span>
-                    </button>
-                    <div class="faq-answer">
-                        <p>
-                            Learn more about the product, its features, and how to get started.
-                        </p>
-                    </div>
+                    @*<div class="faq-item active">
+                            <button class="faq-question" aria-expanded="true">
+                                <span>What is Tailwind CSS?</span>
+                                <span class="faq-icon" aria-hidden="true">?</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    Tailwind CSS is a CSS framework like Bootstrap, that speeds up
+                                    development time for developers. Tailwind CSS uses classes to
+                                    style elements, meaning you do not have to write any CSS.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span>Is this product for me?</span>
+                                <span class="faq-icon" aria-hidden="true">?</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    Find out how this product can meet your needs and help you
+                                    achieve your goals.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="faq-item">
+                            <button class="faq-question" aria-expanded="false">
+                                <span>Is this product for me?</span>
+                                <span class="faq-icon" aria-hidden="true">?</span>
+                            </button>
+                            <div class="faq-answer">
+                                <p>
+                                    Learn more about the product, its features, and how to get started.
+                                </p>
+                            </div>
+                        </div>*@
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+
+    }
 
 </div>
 
-@Html.Action("aitalent", "Home")
+
+
+@{
+    var aitalent = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 11).ToList();
+}
+@Html.Action("aitalent", "Home",  new { sections = aitalent })
+
+@*@Html.Action("aitalent", "Home")*@
 
 <script src="~/Scripts/owl.carousel.min.js"></script>
 

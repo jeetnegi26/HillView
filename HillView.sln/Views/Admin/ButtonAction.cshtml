@@ -304,6 +304,10 @@ $("#SectionId").on("change", function () {
                     $("#saveButton").prop("disabled", true);
                 }
             });
+
+            if ($("#SectionItemId").val()) {
+                $("#SectionId").val("");
+            }
         });
     </script>
 }

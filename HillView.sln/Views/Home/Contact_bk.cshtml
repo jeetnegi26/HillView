@@ -1,0 +1,255 @@
+﻿@{
+    ViewBag.Title = "Contact";
+}
+
+<link href="~/Content/css/otherbanner.css" rel="stylesheet" />
+
+<style>
+    .banner-text-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .banner-text {
+        max-width: 600px;
+        text-align: center;
+        position: absolute;
+    }
+
+        .banner-text small {
+            color: var(--primary)
+        }
+
+    .contact-box{
+        padding-bottom:3rem;
+    }
+
+    .contact-form {
+        margin: 20px auto;
+    }
+
+        .contact-form .form-label {
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+
+        .contact-form .form-control {
+            border: 1px solid #007bff;
+            border-radius: 10px;
+            background: transparent;
+            box-shadow: none;
+            padding: 10px 12px;
+        }
+
+        .contact-form input.form-control {
+            height: 44px;
+        }
+
+        .contact-form textarea.form-control {
+            height: 110px;
+            resize: vertical;
+        }
+
+        .contact-form .form-control:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+
+    .contact-form {
+        margin: 20px auto;
+    }
+
+        .contact-form .form-label {
+            margin-bottom: 6px;
+            font-size: 16px;
+        }
+
+        .contact-form .form-control {
+            border: 1px solid #007bff;
+            border-radius: 10px;
+            box-shadow: none;
+            padding: 10px 12px;
+        }
+
+        .contact-form input.form-control {
+            height: 44px;
+        }
+
+        .contact-form textarea.form-control {
+            height: 110px;
+            resize: vertical;
+        }
+
+        .contact-form .form-control:focus {
+            border-color: #007bff;
+            box-shadow: none;
+        }
+
+        .contact-form .btn-secondary {
+            width: 188px;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+    .contact-form-box, .contact-desc {
+        padding: 0 2rem;
+    }
+
+    .contact-form-items .form-group {
+        padding-bottom: 1rem;
+    }
+
+        .contact-form-items .form-group label {
+            color: var(--text);
+            padding-bottom: 0.5rem;
+        }
+
+    .contact-left-item {
+        display: flex;
+        align-items: center;
+    }
+
+    .contact-form-box {
+        width: 100%
+    }
+
+    .contact-desc h1 {
+        padding-bottom: 2rem;
+        font-weight600;
+    }
+
+    .cont-desc-text {
+        padding-bottom: 2rem;
+        margin-bottom: 2rem;
+        border-bottom: 1px solid var(--primary);
+    }
+
+    .contact-desc p i {
+        color: var(--primary);
+        padding-right: 1rem;
+    }
+
+    @@media screen and (min-width: 1024px) and (max-width: 1339px){
+        .contact-box {
+            padding: 3rem;
+        }
+    }
+
+    @@media screen and (min-width: 600px) and (max-width: 1023px){
+        .contact-box {
+            padding: 3rem;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .banner-text {
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .contact-form-box, .contact-desc {
+            padding: 0 0rem;
+        }
+
+    }
+
+    @@media (max-width: 430px) {
+        .banner-text {
+            max-width: 350px;
+        }
+    }
+
+    @@media (max-width: 380px) {
+        .banner-text {
+            max-width: 340px;
+        }
+    }
+
+</style>
+
+<section class="banner">
+    <div class="orb-scene">
+        <img class="orb orb-1" src="~/Content/Images/rest.png" alt="">
+        <img class="orb orb-2" src="~/Content/images/rest.png" alt="">
+
+
+        <div class="banner-text-box">
+            <div class="banner-text">
+
+                <small>Contact Us</small>
+                <h2>
+                    Ready to Build Your Team?
+                </h2>
+                <p>
+                    Have a hiring requirement or looking for your next career opportunity? Get in touch with HillView Consulting Solutions
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact-section">
+    <div class="contact-box">
+        <div class="contact-container container">
+            <div class="contact-items-box">
+                <div class="contact-row row">
+                    <div class="col-lg-6 col-md-12 col-12 contact-left-item">
+                        <div class="contact-desc">
+                            <h1>Get in touch with us!</h1>
+                            <p class="cont-desc-text">
+                                Whether you’re looking for exceptional IT talent or exploring your next career opportunity,
+                                HillView Consulting Solutions is here to help. Get in touch with our team and let’s find the right solution for you.
+                            </p>
+                            <p class="tel d-flex"><i class="bi bi-telephone"></i><span>925-215-8582</span></p>
+                            <p class="email d-flex"><i class="bi bi-envelope"></i><span>hr@hillviewconsulting.com / team@hillviewconsulting.com</span></p>
+                            <p class="geo d-flex"><i class="bi bi-geo-alt"></i><span>6200 Stoneridge Mall Rd. Suite 300 Pleasanton, CA 94588</span></p>
+                            <p class="time d-flex"><i class="bi bi-clock"></i><span>Mon - Fri: 8:00 AM to 5:00 PM PST</span></p>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-12 col-12 contact-left-item">
+                        <div class="contact-form-box">
+                            <form class="contact-form" action="#" method="post">
+
+                                <!-- Three inputs in one line -->
+                                <div class="contact-form-items">
+                                    <div class="form-group">
+                                        <label for="fullName" class="form-label">Full name</label>
+                                        <input type="text" class="form-control" id="fullName" name="fullName" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="email" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="email" name="email" required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="phone" class="form-label">Phone</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone">
+                                    </div>
+
+                                    <!-- Message on the next line -->
+                                    <div class="mb-3 form-group">
+                                        <label for="message" class="form-label">Message</label>
+                                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                                    </div>
+                                </div>
+
+
+
+                                <button type="submit" class="btn btn-secondary">
+                                    Submit
+                                </button>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@Html.Action("aitalent", "Home")

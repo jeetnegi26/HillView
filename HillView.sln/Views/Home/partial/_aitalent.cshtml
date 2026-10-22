@@ -1,6 +1,5 @@
 ﻿
 <style>
-
     .ai-talent-section {
         width: 100%;
         padding: 5rem 3rem;
@@ -73,7 +72,8 @@
 
     @@media (max-width: 768px) {
         .ai-talent-section {
-            padding: 3rem 1rem;;
+            padding: 3rem 1rem;
+            ;
         }
 
         .ai-talent-container {
@@ -98,23 +98,54 @@
     }
 </style>
 
+@*<section class="ai-talent-section">
+        <div class="ai-talent-container container">
+
+            <div class="ai-talent-heading">
+                <span class="waving-hand" aria-hidden="true">👋</span>
+                <h1>
+                    Powering Innovation<br />
+                    with AI Talent
+                </h1>
+            </div>
+
+            <div class="ai-talent-content">
+                <p>
+                    We connect businesses with top AI talent, including Machine Learning
+                    Engineers, Data Scientists, AI Researchers, and Generative AI Specialists.
+                    At HillView Consulting Solutions, we help you quickly access skilled
+                    professionals to drive innovation and digital transformation.
+                </p>
+
+                <div class="ai-talent-buttons">
+                    <a href="#learn-more" class="ai-btn btn btn-secondary">
+                        Learn more
+                    </a>
+                    <a href="#services" class="ai-btn btn btn-primary">
+                        Our Services
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>*@
+
+@model List<DTOs.UISectionVM>
+
+
 <section class="ai-talent-section">
     <div class="ai-talent-container container">
 
         <div class="ai-talent-heading">
             <span class="waving-hand" aria-hidden="true">👋</span>
             <h1>
-                Powering Innovation<br />
-                with AI Talent
+                @Model[0].Heading
             </h1>
         </div>
 
         <div class="ai-talent-content">
             <p>
-                We connect businesses with top AI talent, including Machine Learning
-                Engineers, Data Scientists, AI Researchers, and Generative AI Specialists.
-                At HillView Consulting Solutions, we help you quickly access skilled
-                professionals to drive innovation and digital transformation.
+                @Model[0].Description
             </p>
 
             <div class="ai-talent-buttons">

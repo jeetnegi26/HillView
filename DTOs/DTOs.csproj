@@ -83,6 +83,7 @@
     <Compile Include="Admin\SectionTypeVM.cs" />
     <Compile Include="Admin\SectionVM.cs" />
     <Compile Include="Admin\TestimonialVM.cs" />
+    <Compile Include="User\ContactVM.cs" />
     <Compile Include="User\LayoutDataVM.cs" />
     <Compile Include="User\UIPageVM.cs" />
     <Compile Include="User\UISectionItemVM.cs" />

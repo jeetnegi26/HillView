@@ -39,6 +39,9 @@ namespace HillView.sln
             container.RegisterType<AdminMenuService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
             container.RegisterType<TestimonialService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
             container.RegisterType<UIPageService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
+            container.RegisterType<UIPageService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
+            container.RegisterType<ContactService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
+            container.RegisterType<EmailService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
 
 
             container.RegisterType<AdminController>();

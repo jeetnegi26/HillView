@@ -1,5 +1,17 @@
-﻿@{
-    ViewBag.Title = "About";
+﻿@model DTOs.UIPageVM
+@using System.Linq
+@using DTOs
+@{
+    ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+
+    var data = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+    var images = data?.Images?.Where(x => x != null).ToList();
+    var buttons = data?.Buttons?.Where(x => x != null).ToList();
+
+    var data2 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 2);
+    var data4 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 4);
+    var data6 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 6);
+
 }
 
 <link href="~/Content/css/otherbanner.css" rel="stylesheet" />
@@ -129,6 +141,7 @@
             padding-left: 1rem;
         }
     }
+
     @@media screen and (min-width: 600px) and (max-width: 1023px) {
         .banner-text {
             max-width: 675px;
@@ -150,7 +163,8 @@
         .why-us-items-box {
             margin-bottom: 0rem;
         }
-        .team-desc{
+
+        .team-desc {
             padding: 2rem 1rem;
         }
     }
@@ -167,7 +181,7 @@
         }
 
         .why-us-item {
-            padding : 1rem 0;
+            padding: 1rem 0;
         }
 
         .team-desc {
@@ -186,242 +200,272 @@
             max-width: 340px;
         }
     }
-}
+    }
 </style>
 
-<section class="banner">
-    <div class="orb-scene">
-        <img class="orb orb-1" src="~/Content/Images/rest.png" alt="">
-        <img class="orb orb-2" src="~/Content/images/rest.png" alt="">
+@if (data != null)
+{
+    <section class="banner">
+        <div class="orb-scene">
+            @if (images != null && images.Count > 0 && !string.IsNullOrWhiteSpace(images[0].ImageUrl))
+            {
+                <img class="orb orb-1" src="@Url.Content("~/content/uploads/" + images[0].ImageUrl)" alt="@(images[0].AltText ?? "")" />
+            }
+            @if (images != null && images.Count > 1 && !string.IsNullOrWhiteSpace(images[1].ImageUrl))
+            {
+                <img class="orb orb-2" src="@Url.Content("~/content/uploads/" + images[1].ImageUrl)" alt="@(images[1].AltText ?? "")" />
+            }
 
-
-        <div class="banner-text-box">
-            <div class="banner-text">
-
-                <small>About Us</small>
-                <h2>
-                    Empowering growth through strategic talent partnerships.<br /> Connecting top-tier IT professionals with leading organizations for mutual success.
-                </h2>
-
-            </div>
-        </div>
-    </div>
-</section>
-
-<section class="about-desc-section">
-    <div class="about-desc-container container">
-        <div class="about-desc-row row ">
-            <div class="about-desc-box col-lg-6 col-md-8 col-12 ">
-                <div class="about-desc">
-                    <p>
-                        We are well-versed in a variety of technology stacks and have a team of experienced
-                        individuals to help our customers scale their IT and Engineering teams. We have been
-                        working closely with our Customers to access the best talent pool at a very competitive
-                        cost. We use this expertise to help customers have the flexibility to scale up and
-                        scale down as per the business need.
-                    </p>
+            <div class="banner-text-box">
+                <div class="banner-text">
+                    <small>@data.Title</small>
+                    <h2>
+                        @data.Description
+                    </h2>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 
-
-@Html.Action("advantages", "Home")
-
-<section class="why-us-section">
-    <div class="why-us-container container">
-        <div class="why-us-box">
-            <div class="why-us-head about-head">
-                <div class="home-head">
-                    <h3>Why only Us?  </h3>
-                    <h2>Discover how our expertise, help businesses hire exceptional technology talent faster</h2>
-                </div>
-            </div>
-            <div class="why-us-items-box">
-                <div class="why-us-items-row row">
-                    <div class="col-lg-6 col-md-12 col-12">
-                        <div class="why-us-item">
-                            <div class="why-us-item-icon">
-                                <h2><i class="bi bi-check-circle"></i></h2>
-                            </div>
-                            <div class="why-us-item-desc">
-                                <h3>Expertise in IT Talent Acquisition</h3>
-                                <p>
-                                    We bring deep expertise across diverse technology stacks, helping businesses access top
-                                    IT and engineering talent at competitive costs. Our flexible solutions make it easy to
-                                    scale teams up or down, adapting seamlessly to evolving business needs.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 col-md-12 col-12">
-                        <div class="why-us-item">
-                            <div class="why-us-item-icon">
-                                <h2><i class="bi bi-check-circle"></i></h2>
-                            </div>
-                            <div class="why-us-item-desc">
-                                <h3>Agile and Responsive Service</h3>
-                                <p>
-                                    In the fast-paced IT landscape, timing matters. Our agile approach enables us to respond
-                                    quickly to urgent hiring needs and changing project demands, delivering the right talent
-                                    when you need it most.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 col-md-12 col-12">
-                        <div class="why-us-item">
-                            <div class="why-us-item-icon">
-                                <h2><i class="bi bi-check-circle"></i></h2>
-                            </div>
-                            <div class="why-us-item-desc">
-                                <h3>Customized Solutions for Your Needs</h3>
-                                <p>
-                                    Every business has unique needs. We provide tailored IT staffing solutions, from direct
-                                    hiring and contract staffing to consulting, designed to align with your goals and scale
-                                    with your business.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 col-md-12 col-12">
-                        <div class="why-us-item">
-                            <div class="why-us-item-icon">
-                                <h2><i class="bi bi-check-circle"></i></h2>
-                            </div>
-                            <div class="why-us-item-desc">
-                                <h3>Proven Track Record of Success</h3>
-                                <p>
-                                    Our success is measured by yours. With a proven track record of successful placements
-                                    and satisfied clients, we consistently deliver quality IT talent to businesses of all
-                                    sizes, from growing startups to established enterprises.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 col-md-12 col-12">
-                        <div class="why-us-item">
-                            <div class="why-us-item-icon">
-                                <h2><i class="bi bi-check-circle"></i></h2>
-                            </div>
-                            <div class="why-us-item-desc">
-                                <h3>Rigorous Candidate Vetting Process</h3>
-                                <p>
-                                    Our rigorous vetting process goes beyond technical skills to assess cultural fit and
-                                    values, ensuring every candidate is qualified, compatible, and ready to integrate
-                                    seamlessly into your team.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-6 col-md-12 col-12">
-                        <div class="why-us-item">
-                            <div class="why-us-item-icon">
-                                <h2><i class="bi bi-check-circle"></i></h2>
-                            </div>
-                            <div class="why-us-item-desc">
-                                <h3>Long-Term Relationship Focus</h3>
-                                <p>
-                                    At HillView Consulting Solutions, we focus on building lasting partnerships, not just
-                                    filling positions. We work alongside you as a strategic talent partner, supporting your
-                                    growth and the long-term success of your IT initiatives.
-                                </p>
-                            </div>
-                        </div>
+@if (data2 != null)
+{
+    <section class="about-desc-section">
+        <div class="about-desc-container container">
+            <div class="about-desc-row row ">
+                <div class="about-desc-box col-lg-6 col-md-8 col-12 ">
+                    <div class="about-desc">
+                        <p>
+                            @data2.Description
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+
+@{
+    var advantageSections = Model?.Sections?.Where(x => x != null && (x.DisplayOrder == 3 || x.DisplayOrder == 4)).ToList();
+}
+
+@Html.Action("advantages", "Home",
+    new { sections = advantageSections })
 
 
-<section class="team-section">
-    <div class="team-div-box">
-        <div class="team-cointainer container">
-            <div class="about-head">
-                <div class="home-head">
-                    <h3>Innovative team</h3>
-                    <h2>Meet the Minds Behind HillView</h2>
+@if (data4 != null)
+{
+    var items = data4.Items.ToList();
+
+    <section class="why-us-section">
+        <div class="why-us-container container">
+            <div class="why-us-box">
+                <div class="why-us-head about-head">
+                    <div class="home-head">
+                        <h3>@data4.Heading </h3>
+                        <h2>@data4.Description</h2>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="team-carousel-container-box">
-            <div class="team-carousel-container container">
-
-                <div class="team-items">
-                    <div class="owl-carousel owl-theme team-carousel">
-                        <div class="item">
-                            <div class="team-item">
-                                <div class="team-row row">
-                                    <div class="col-lg-6 col-12 team-item-img">
-                                        <div class="team-img">
-                                            <img src="~/Content/Images/Teams/team1.png" />
-                                        </div>
+                <div class="why-us-items-box">
+                    <div class="why-us-items-row row">
+                        @foreach (var item in items)
+                        {
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="why-us-item">
+                                    <div class="why-us-item-icon">
+                                        <h2><i class="bi bi-check-circle"></i></h2>
                                     </div>
-                                    <div class="col-lg-6 col-12 team-item-desc">
-                                        <div class="team-desc">
-                                            <h3>Vice precident</h3>
-                                            <h2>Abhishek Raina</h2>
-                                            <p>
-                                                With over 12 years of IT sales and service experience,
-                                                I am a seasoned advisor and sales leader who helps companies build
-                                                and scale their engineering and IT teams. I have a proven track record
-                                                of delivering exceptional customer service, generating new business opportunities,
-                                                and managing key accounts across various domains and geographies.
-                                            </p>
-                                            <div class="team-item-btns">
-                                                <a class="">Linkedin  Profile <i class="bi bi-arrow-up-right"></i></a>
+                                    <div class="why-us-item-desc">
+                                        <h3>@item.Title</h3>
+                                        <p>
+                                            @item.Description
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @*<div class="col-lg-6 col-md-12 col-12">
+                                <div class="why-us-item">
+                                    <div class="why-us-item-icon">
+                                        <h2><i class="bi bi-check-circle"></i></h2>
+                                    </div>
+                                    <div class="why-us-item-desc">
+                                        <h3>Agile and Responsive Service</h3>
+                                        <p>
+                                            In the fast-paced IT landscape, timing matters. Our agile approach enables us to respond
+                                            quickly to urgent hiring needs and changing project demands, delivering the right talent
+                                            when you need it most.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="why-us-item">
+                                    <div class="why-us-item-icon">
+                                        <h2><i class="bi bi-check-circle"></i></h2>
+                                    </div>
+                                    <div class="why-us-item-desc">
+                                        <h3>Customized Solutions for Your Needs</h3>
+                                        <p>
+                                            Every business has unique needs. We provide tailored IT staffing solutions, from direct
+                                            hiring and contract staffing to consulting, designed to align with your goals and scale
+                                            with your business.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="why-us-item">
+                                    <div class="why-us-item-icon">
+                                        <h2><i class="bi bi-check-circle"></i></h2>
+                                    </div>
+                                    <div class="why-us-item-desc">
+                                        <h3>Proven Track Record of Success</h3>
+                                        <p>
+                                            Our success is measured by yours. With a proven track record of successful placements
+                                            and satisfied clients, we consistently deliver quality IT talent to businesses of all
+                                            sizes, from growing startups to established enterprises.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="why-us-item">
+                                    <div class="why-us-item-icon">
+                                        <h2><i class="bi bi-check-circle"></i></h2>
+                                    </div>
+                                    <div class="why-us-item-desc">
+                                        <h3>Rigorous Candidate Vetting Process</h3>
+                                        <p>
+                                            Our rigorous vetting process goes beyond technical skills to assess cultural fit and
+                                            values, ensuring every candidate is qualified, compatible, and ready to integrate
+                                            seamlessly into your team.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-12 col-12">
+                                <div class="why-us-item">
+                                    <div class="why-us-item-icon">
+                                        <h2><i class="bi bi-check-circle"></i></h2>
+                                    </div>
+                                    <div class="why-us-item-desc">
+                                        <h3>Long-Term Relationship Focus</h3>
+                                        <p>
+                                            At HillView Consulting Solutions, we focus on building lasting partnerships, not just
+                                            filling positions. We work alongside you as a strategic talent partner, supporting your
+                                            growth and the long-term success of your IT initiatives.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+@if (data6 != null)
+{
+    var items = data6.Items.ToList();
+
+    <section class="team-section">
+        <div class="team-div-box">
+            <div class="team-cointainer container">
+                <div class="about-head">
+                    <div class="home-head">
+                        <h3>@data6.SubHeading</h3>
+                        <h2>@data6.Heading</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="team-carousel-container-box">
+                <div class="team-carousel-container container">
+
+                    <div class="team-items">
+                        <div class="owl-carousel owl-theme team-carousel">
+                            @foreach (var item in items)
+                            {
+                                <div class="item">
+                                    <div class="team-item">
+                                        <div class="team-row row">
+                                            <div class="col-lg-6 col-12 team-item-img">
+                                                <div class="team-img">
+                                                    <img src="/Content/Uploads/@item.Images[0].ImageUrl" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-12 team-item-desc">
+                                                <div class="team-desc">
+                                                    <h3>@item.Title</h3>
+                                                    <h2>@item.Heading</h2>
+                                                    <p>
+                                                        @item.Description
+                                                    </p>
+                                                    <div class="team-item-btns">
+                                                        <a class="@item.Buttons[0].Url">@item.Buttons[0].Title <i class="bi bi-arrow-up-right"></i></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div class="item">
-                            <div class="team-item">
-                                <div class="team-row row">
-                                    <div class="col-lg-6 col-12 team-item-img">
-                                        <div class="team-img">
-                                            <img src="~/Content/Images/Teams/team1.png" />
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-12 team-item-desc">
-                                        <div class="team-desc">
-                                            <h3>Vice precident</h3>
-                                            <h2>Abhishek Raina</h2>
-                                            <p>
-                                                With over 12 years of IT sales and service experience,
-                                                I am a seasoned advisor and sales leader who helps companies build
-                                                and scale their engineering and IT teams. I have a proven track record
-                                                of delivering exceptional customer service, generating new business opportunities,
-                                                and managing key accounts across various domains and geographies.
-                                            </p>
-                                            <div class="team-item-btns">
-                                                <a class="">Linkedin  Profile <i class="bi bi-arrow-up-right"></i></a>
+                            }
+
+                            @*<div class="item">
+                                    <div class="team-item">
+                                        <div class="team-row row">
+                                            <div class="col-lg-6 col-12 team-item-img">
+                                                <div class="team-img">
+                                                    <img src="~/Content/Images/Teams/team1.png" />
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6 col-12 team-item-desc">
+                                                <div class="team-desc">
+                                                    <h3>Vice precident</h3>
+                                                    <h2>Abhishek Raina</h2>
+                                                    <p>
+                                                        With over 12 years of IT sales and service experience,
+                                                        I am a seasoned advisor and sales leader who helps companies build
+                                                        and scale their engineering and IT teams. I have a proven track record
+                                                        of delivering exceptional customer service, generating new business opportunities,
+                                                        and managing key accounts across various domains and geographies.
+                                                    </p>
+                                                    <div class="team-item-btns">
+                                                        <a class="">Linkedin  Profile <i class="bi bi-arrow-up-right"></i></a>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div>*@
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-@Html.Action("milestones", "Home")
+}
 
-@Html.Action("aitalent", "Home")
+
+@{
+    var milestones = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 7).ToList();
+}
+
+@Html.Action("milestones", "Home",
+    new { sections = milestones })
+
+@{
+    var aitalent = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 8).ToList();
+}
+@Html.Action("aitalent", "Home", new { sections = aitalent })
 
 <script src="~/Scripts/owl.carousel.min.js"></script>
 <script>

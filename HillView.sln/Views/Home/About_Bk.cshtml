@@ -1,0 +1,452 @@
+﻿@{
+    ViewBag.Title = "About";
+}
+
+<link href="~/Content/css/otherbanner.css" rel="stylesheet" />
+<link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />
+
+<style>
+    .banner-text-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .banner-text {
+        max-width: 900px;
+        text-align: center;
+        position: absolute;
+    }
+
+        .banner-text small {
+            color: var(--primary)
+        }
+
+    .adv-box .home-head {
+        display: none;
+    }
+
+    .home-head {
+        max-width: 800px;
+    }
+
+    .about-head {
+        display: flex;
+        justify-content: center;
+    }
+
+    *:has(> .why-us),
+    *:has(> .adv-img) {
+        display: none !important;
+    }
+
+    .about-head, .milestomes-head {
+        display: flex;
+        justify-content: center;
+    }
+
+    .why-us-items-box {
+        padding: 2.5rem;
+        border: 1px solid var(--secondary);
+        border-radius: 25px;
+        margin-bottom: 5rem;
+        background: var(--lightbg);
+    }
+
+    .why-us-item {
+        display: flex;
+        padding: 1rem 1.5rem 1rem 0;
+    }
+
+    .why-us-item-icon {
+        padding-right: 1rem;
+    }
+
+        .why-us-item-icon .bi-check-circle {
+            color: var(--primary);
+        }
+
+    .why-us-item-desc h3 {
+        font-weight: 600;
+    }
+
+    .why-us-item-desc p {
+        margin: 0
+    }
+
+    .team-item {
+        padding: 5rem 0;
+    }
+
+    .team-desc {
+        padding-left: 5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .team-carousel-container-box {
+        background: var(--lightbg);
+    }
+
+    .team-item-desc {
+        display: flex;
+    }
+
+    .team-desc h3 {
+        color: var(--secondary);
+    }
+
+    .team-desc h1 {
+        font-weight: 600;
+    }
+
+    .team-desc p {
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
+
+    .team-desc a {
+        color: var(--secondary);
+    }
+
+    .team-item-btns .btn-secondary {
+        margin-right: 1rem;
+    }
+
+    @@media screen and (min-width: 1024px) and (max-width: 1339px) {
+        .about-desc-row {
+            padding-top: 2rem;
+        }
+
+        *:has(> .adv-img) {
+            display: block !important;
+            width: 50% !important;
+        }
+
+        .team-desc {
+            padding-left: 1rem;
+        }
+    }
+    @@media screen and (min-width: 600px) and (max-width: 1023px) {
+        .banner-text {
+            max-width: 675px;
+        }
+
+        h2 {
+            font-size: 21px;
+        }
+
+        .about-desc-row {
+            padding-top: 2rem;
+        }
+
+        *:has(> .adv-img) {
+            display: block !important;
+            width: 50% !important;
+        }
+
+        .why-us-items-box {
+            margin-bottom: 0rem;
+        }
+        .team-desc{
+            padding: 2rem 1rem;
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .banner-text {
+            max-width: 400px;
+            text-align: left;
+        }
+
+        .why-us-items-box {
+            padding: 2.5rem 1rem;
+            margin: 0 1rem;
+        }
+
+        .why-us-item {
+            padding : 1rem 0;
+        }
+
+        .team-desc {
+            padding: 2rem 1rem;
+        }
+    }
+
+    @@media (max-width: 430px) {
+        .banner-text {
+            max-width: 350px;
+        }
+    }
+
+    @@media (max-width: 380px) {
+        .banner-text {
+            max-width: 340px;
+        }
+    }
+}
+</style>
+
+
+
+<section class="banner">
+    <div class="orb-scene">
+        <img class="orb orb-1" src="~/Content/Images/rest.png" alt="">
+        <img class="orb orb-2" src="~/Content/images/rest.png" alt="">
+
+
+        <div class="banner-text-box">
+            <div class="banner-text">
+
+                <small>About Us</small>
+                <h2>
+                    Empowering growth through strategic talent partnerships.<br /> Connecting top-tier IT professionals with leading organizations for mutual success.
+                </h2>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="about-desc-section">
+    <div class="about-desc-container container">
+        <div class="about-desc-row row ">
+            <div class="about-desc-box col-lg-6 col-md-8 col-12 ">
+                <div class="about-desc">
+                    <p>
+                        We are well-versed in a variety of technology stacks and have a team of experienced
+                        individuals to help our customers scale their IT and Engineering teams. We have been
+                        working closely with our Customers to access the best talent pool at a very competitive
+                        cost. We use this expertise to help customers have the flexibility to scale up and
+                        scale down as per the business need.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+@Html.Action("advantages", "Home")
+
+<section class="why-us-section">
+    <div class="why-us-container container">
+        <div class="why-us-box">
+            <div class="why-us-head about-head">
+                <div class="home-head">
+                    <h3>Why only Us?  </h3>
+                    <h2>Discover how our expertise, help businesses hire exceptional technology talent faster</h2>
+                </div>
+            </div>
+            <div class="why-us-items-box">
+                <div class="why-us-items-row row">
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="why-us-item">
+                            <div class="why-us-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="why-us-item-desc">
+                                <h3>Expertise in IT Talent Acquisition</h3>
+                                <p>
+                                    We bring deep expertise across diverse technology stacks, helping businesses access top
+                                    IT and engineering talent at competitive costs. Our flexible solutions make it easy to
+                                    scale teams up or down, adapting seamlessly to evolving business needs.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="why-us-item">
+                            <div class="why-us-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="why-us-item-desc">
+                                <h3>Agile and Responsive Service</h3>
+                                <p>
+                                    In the fast-paced IT landscape, timing matters. Our agile approach enables us to respond
+                                    quickly to urgent hiring needs and changing project demands, delivering the right talent
+                                    when you need it most.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="why-us-item">
+                            <div class="why-us-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="why-us-item-desc">
+                                <h3>Customized Solutions for Your Needs</h3>
+                                <p>
+                                    Every business has unique needs. We provide tailored IT staffing solutions, from direct
+                                    hiring and contract staffing to consulting, designed to align with your goals and scale
+                                    with your business.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="why-us-item">
+                            <div class="why-us-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="why-us-item-desc">
+                                <h3>Proven Track Record of Success</h3>
+                                <p>
+                                    Our success is measured by yours. With a proven track record of successful placements
+                                    and satisfied clients, we consistently deliver quality IT talent to businesses of all
+                                    sizes, from growing startups to established enterprises.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="why-us-item">
+                            <div class="why-us-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="why-us-item-desc">
+                                <h3>Rigorous Candidate Vetting Process</h3>
+                                <p>
+                                    Our rigorous vetting process goes beyond technical skills to assess cultural fit and
+                                    values, ensuring every candidate is qualified, compatible, and ready to integrate
+                                    seamlessly into your team.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="why-us-item">
+                            <div class="why-us-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="why-us-item-desc">
+                                <h3>Long-Term Relationship Focus</h3>
+                                <p>
+                                    At HillView Consulting Solutions, we focus on building lasting partnerships, not just
+                                    filling positions. We work alongside you as a strategic talent partner, supporting your
+                                    growth and the long-term success of your IT initiatives.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="team-section">
+    <div class="team-div-box">
+        <div class="team-cointainer container">
+            <div class="about-head">
+                <div class="home-head">
+                    <h3>Innovative team</h3>
+                    <h2>Meet the Minds Behind HillView</h2>
+                </div>
+            </div>
+        </div>
+        <div class="team-carousel-container-box">
+            <div class="team-carousel-container container">
+
+                <div class="team-items">
+                    <div class="owl-carousel owl-theme team-carousel">
+                        <div class="item">
+                            <div class="team-item">
+                                <div class="team-row row">
+                                    <div class="col-lg-6 col-12 team-item-img">
+                                        <div class="team-img">
+                                            <img src="~/Content/Images/Teams/team1.png" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12 team-item-desc">
+                                        <div class="team-desc">
+                                            <h3>Vice precident</h3>
+                                            <h2>Abhishek Raina</h2>
+                                            <p>
+                                                With over 12 years of IT sales and service experience,
+                                                I am a seasoned advisor and sales leader who helps companies build
+                                                and scale their engineering and IT teams. I have a proven track record
+                                                of delivering exceptional customer service, generating new business opportunities,
+                                                and managing key accounts across various domains and geographies.
+                                            </p>
+                                            <div class="team-item-btns">
+                                                <a class="">Linkedin  Profile <i class="bi bi-arrow-up-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="item">
+                            <div class="team-item">
+                                <div class="team-row row">
+                                    <div class="col-lg-6 col-12 team-item-img">
+                                        <div class="team-img">
+                                            <img src="~/Content/Images/Teams/team1.png" />
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-12 team-item-desc">
+                                        <div class="team-desc">
+                                            <h3>Vice precident</h3>
+                                            <h2>Abhishek Raina</h2>
+                                            <p>
+                                                With over 12 years of IT sales and service experience,
+                                                I am a seasoned advisor and sales leader who helps companies build
+                                                and scale their engineering and IT teams. I have a proven track record
+                                                of delivering exceptional customer service, generating new business opportunities,
+                                                and managing key accounts across various domains and geographies.
+                                            </p>
+                                            <div class="team-item-btns">
+                                                <a class="">Linkedin  Profile <i class="bi bi-arrow-up-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@*@Html.Action("milestones", "Home")
+
+@Html.Action("aitalent", "Home")*@
+
+<script src="~/Scripts/owl.carousel.min.js"></script>
+<script>
+    $('.team-carousel').owlCarousel({
+        loop: true,
+        margin: 20,
+        nav: false,
+        dots: true,
+        autoplay: true,
+        autoplayTimeout: 7000,
+        autoplayHoverPause: true,
+        slideBy: 1,
+
+        responsive: {
+            0: {
+                items: 1,
+            },
+            600: {
+                items: 1,
+            },
+            1000: {
+                items: 1,
+            }
+        }
+    });
+</script>

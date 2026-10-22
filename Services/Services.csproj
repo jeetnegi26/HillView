@@ -44,6 +44,7 @@
     </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.9\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
@@ -74,6 +75,7 @@
     <Compile Include="Admin\AdminMenuService.cs" />
     <Compile Include="Admin\ButtonService.cs" />
     <Compile Include="Admin\ImageService.cs" />
+    <Compile Include="EmailService.cs" />
     <Compile Include="LogErrorService.cs" />
     <Compile Include="Admin\PageSectionService.cs" />
     <Compile Include="Admin\PageService.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="Admin\SectionTypeService.cs" />
     <Compile Include="Admin\TestimonialService.cs" />
     <Compile Include="Admin\WebInfoService.cs" />
+    <Compile Include="User\ContactService.cs" />
     <Compile Include="User\UIPageService.cs" />
   </ItemGroup>
   <ItemGroup>

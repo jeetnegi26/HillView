@@ -72,66 +72,72 @@
             margin: 30px 0;
         }
     }
-
 </style>
 
+@model List<DTOs.UISectionVM>
 
-
-<section class="milestones-section">
-    <div class="milestones-box">
-        <div class="milestomes-head">
-            <div class="home-head">
-                <h3>Our Journey In Numbers</h3>
-                <h2>To delivering exceptional talent, building lasting partnerships</h2>
+@if (Model != null && Model.Count > 0)
+{
+    <section class="milestones-section">
+        <div class="milestones-box">
+            <div class="milestomes-head">
+                <div class="home-head">
+                    <h3>@Model[0].Title</h3>
+                    <h2>@Model[0].Heading</h2>
+                </div>
             </div>
+            <div class="milestonesitems">
+                @{ 
+                    var items = Model[0].Items.ToList();
+                }
+                <div class="milestone-item">
+                    <h2 class="milestone-number"
+                        data-target="1.67"
+                        data-decimals="2"
+                        data-suffix="x">
+                        0
+                    </h2>
+                    <h3>@items[0].Heading</h3>
+                    <p>@items[0].Description</p>
+                </div>
+
+                <div class="milestone-item">
+                    <h2 class="milestone-number"
+                        data-target="150"
+                        data-decimals="0"
+                        data-suffix="+">
+                        0
+                    </h2>
+                    <h3>@items[1].Heading</h3>
+                    <p>@items[1].Description</p>
+                </div>
+
+                <div class="milestone-item">
+                    <h2 class="milestone-number"
+                        data-target="19"
+                        data-decimals="0"
+                        data-suffix="%">
+                        0
+                    </h2>
+                    <h3>@items[2].Heading</h3>
+                    <p>@items[2].Description</p>
+                </div>
+
+            </div>
+
+            <div class="milestones-divider"></div>
+            <div class="milestones-button">
+                <a href="@Model[0].Buttons[0].Url" class="btn btn-secondary">
+                    @Model[0].Buttons[0].Title
+                </a>
+            </div>
+
         </div>
-        <div class="milestonesitems">
+    </section>
+}
 
-            <div class="milestone-item">
-                <h2 class="milestone-number"
-                    data-target="1.67"
-                    data-decimals="2"
-                    data-suffix="x">
-                    0
-                </h2>
-                <h3>Successful Placements</h3>
-                <p>Another way to grow fast</p>
-            </div>
 
-            <div class="milestone-item">
-                <h2 class="milestone-number"
-                    data-target="150"
-                    data-decimals="0"
-                    data-suffix="+">
-                    0
-                </h2>
-                <h3>Happy Clients</h3>
-                <p>On your website</p>
-            </div>
 
-            <div class="milestone-item">
-                <h2 class="milestone-number"
-                    data-target="19"
-                    data-decimals="0"
-                    data-suffix="%">
-                    0
-                </h2>
-                <h3>Years of Industry Experience</h3>
-                <p>From your sales</p>
-            </div>
-
-        </div>
-
-        <div class="milestones-divider"></div>
-
-        <div class="milestones-button">
-            <a href="/About" class="btn btn-secondary">
-                Know more about us
-            </a>
-        </div>
-
-    </div>
-</section>
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

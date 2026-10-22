@@ -1,5 +1,15 @@
-﻿@{
+﻿@model DTOs.UIPageVM
+@using System.Linq
+@using DTOs
+
+@{
     ViewBag.Title = "Contact";
+
+    var data = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+    var images = data?.Images?.Where(x => x != null).ToList();
+    var buttons = data?.Buttons?.Where(x => x != null).ToList();
+
+    var data2 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 2);
 }
 
 <link href="~/Content/css/otherbanner.css" rel="stylesheet" />
@@ -22,8 +32,8 @@
             color: var(--primary)
         }
 
-    .contact-box{
-        padding-bottom:3rem;
+    .contact-box {
+        padding-bottom: 3rem;
     }
 
     .contact-form {
@@ -132,13 +142,13 @@
         padding-right: 1rem;
     }
 
-    @@media screen and (min-width: 1024px) and (max-width: 1339px){
+    @@media screen and (min-width: 1024px) and (max-width: 1339px) {
         .contact-box {
             padding: 3rem;
         }
     }
 
-    @@media screen and (min-width: 600px) and (max-width: 1023px){
+    @@media screen and (min-width: 600px) and (max-width: 1023px) {
         .contact-box {
             padding: 3rem;
         }
@@ -153,7 +163,6 @@
         .contact-form-box, .contact-desc {
             padding: 0 0rem;
         }
-
     }
 
     @@media (max-width: 430px) {
@@ -167,82 +176,124 @@
             max-width: 340px;
         }
     }
-
 </style>
 
-<section class="banner">
-    <div class="orb-scene">
-        <img class="orb orb-1" src="~/Content/Images/rest.png" alt="">
-        <img class="orb orb-2" src="~/Content/images/rest.png" alt="">
+@if (data != null)
+{
+    <section class="banner">
+        <div class="orb-scene">
+            @if (images != null && images.Count > 0 && !string.IsNullOrWhiteSpace(images[0].ImageUrl))
+            {
+                <img class="orb orb-1" src="@Url.Content("~/content/uploads/" + images[0].ImageUrl)" alt="@(images[0].AltText ?? "")" />
+            }
+            @if (images != null && images.Count > 1 && !string.IsNullOrWhiteSpace(images[1].ImageUrl))
+            {
+                <img class="orb orb-2" src="@Url.Content("~/content/uploads/" + images[1].ImageUrl)" alt="@(images[1].AltText ?? "")" />
+            }
 
-
-        <div class="banner-text-box">
-            <div class="banner-text">
-
-                <small>Contact Us</small>
-                <h2>
-                    Ready to Build Your Team?
-                </h2>
-                <p>
-                    Have a hiring requirement or looking for your next career opportunity? Get in touch with HillView Consulting Solutions
-                </p>
+            <div class="banner-text-box">
+                <div class="banner-text">
+                    <small>@data.Title</small>
+                    <h2>
+                        Ready to Build Your Team?
+                    </h2>
+                    <h2>
+                        @data.Description
+                    </h2>
+                </div>
             </div>
         </div>
-    </div>
-</section>
-
+    </section>
+}
 <section class="contact-section">
     <div class="contact-box">
         <div class="contact-container container">
             <div class="contact-items-box">
                 <div class="contact-row row">
-                    <div class="col-lg-6 col-md-12 col-12 contact-left-item">
-                        <div class="contact-desc">
-                            <h1>Get in touch with us!</h1>
-                            <p class="cont-desc-text">
-                                Whether you’re looking for exceptional IT talent or exploring your next career opportunity,
-                                HillView Consulting Solutions is here to help. Get in touch with our team and let’s find the right solution for you.
-                            </p>
-                            <p class="tel d-flex"><i class="bi bi-telephone"></i><span>925-215-8582</span></p>
-                            <p class="email d-flex"><i class="bi bi-envelope"></i><span>hr@hillviewconsulting.com / team@hillviewconsulting.com</span></p>
-                            <p class="geo d-flex"><i class="bi bi-geo-alt"></i><span>6200 Stoneridge Mall Rd. Suite 300 Pleasanton, CA 94588</span></p>
-                            <p class="time d-flex"><i class="bi bi-clock"></i><span>Mon - Fri: 8:00 AM to 5:00 PM PST</span></p>
+                    @if (data2 != null)
+                    {
+                        <div class="col-lg-6 col-md-12 col-12 contact-left-item">
+                            <div class="contact-desc">
+                                <h1>@data2.Heading</h1>
+                                <p class="cont-desc-text">
+                                    @data2.Description
+                                </p>
+
+                                @Html.Action("ContactInfo", "Home")
+                            </div>
                         </div>
-                    </div>
+                    }
+
                     <div class="col-lg-6 col-md-12 col-12 contact-left-item">
                         <div class="contact-form-box">
-                            <form class="contact-form" action="#" method="post">
+                            <!--<form class="contact-form" action="#" method="post">-->
+                            <!-- Three inputs in one line -->
+                            <!--<div class="contact-form-items">
+        <div class="form-group">
+            <label for="fullName" class="form-label">Full name</label>
+            <input type="text" class="form-control" id="fullName" name="fullName" required>
+        </div>
 
-                                <!-- Three inputs in one line -->
+        <div class="form-group">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone" class="form-label">Phone</label>
+            <input type="tel" class="form-control" id="phone" name="phone">
+        </div>-->
+                            <!-- Message on the next line -->
+                            <!--<div class="mb-3 form-group">
+                <label for="message" class="form-label">Message</label>
+                <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+            </div>
+        </div>
+
+
+
+        <button type="submit" class="btn btn-secondary">
+            Submit
+        </button>
+
+    </form>-->
+                            <form id="contactForm" class="contact-form" method="post">
+                                @Html.AntiForgeryToken()
+
                                 <div class="contact-form-items">
                                     <div class="form-group">
-                                        <label for="fullName" class="form-label">Full name</label>
-                                        <input type="text" class="form-control" id="fullName" name="fullName" required>
+                                        <label for="FullName" class="form-label">Full name</label>
+                                        <input type="text" class="form-control" id="FullName" name="FullName"
+                                               maxlength="250" required>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="email" class="form-label">Email address</label>
-                                        <input type="email" class="form-control" id="email" name="email" required>
+                                        <label for="Email" class="form-label">Email address</label>
+                                        <input type="email" class="form-control" id="Email" name="Email"
+                                               maxlength="250" required>
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="phone" class="form-label">Phone</label>
-                                        <input type="tel" class="form-control" id="phone" name="phone">
+                                        <label for="Phone" class="form-label">Phone</label>
+                                        <input type="tel" class="form-control" id="Phone" name="Phone"
+                                               maxlength="20" pattern="[0-9+()\-\s]*">
                                     </div>
 
-                                    <!-- Message on the next line -->
                                     <div class="mb-3 form-group">
-                                        <label for="message" class="form-label">Message</label>
-                                        <textarea class="form-control" id="message" name="message" rows="4" required></textarea>
+                                        <label for="Message" class="form-label">Message</label>
+                                        <textarea class="form-control" id="Message" name="Message" rows="4"
+                                                  maxlength="4000" required></textarea>
+                                    </div>
+
+                                    @* Honeypot: hidden from people, bots fill it in *@
+                                    <div style="position:absolute; left:-9999px;" aria-hidden="true">
+                                        <label for="Website">Leave this field empty</label>
+                                        <input type="text" id="Website" name="Website" tabindex="-1" autocomplete="off">
                                     </div>
                                 </div>
 
-
-
-                                <button type="submit" class="btn btn-secondary">
-                                    Submit
-                                </button>
-
+                                <button type="submit" class="btn btn-secondary">Submit</button>
+                                <div id="contactStatus" class="mt-3" role="status"></div>
                             </form>
                         </div>
                     </div>
@@ -252,4 +303,47 @@
     </div>
 </section>
 
-@Html.Action("aitalent", "Home")
+
+@{
+    var aitalent = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 3).ToList();
+}
+@Html.Action("aitalent", "Home", new { sections = aitalent })
+
+<script>
+    $(function () {
+        $("#contactForm").on("submit", function (e) {
+            e.preventDefault();
+
+            var $form = $(this);
+            var $button = $form.find("button[type='submit']");
+            var $status = $("#contactStatus");
+
+            $status.removeClass("text-success text-danger").text("");
+            $button.prop("disabled", true);
+
+            $.ajax({
+                url: '@Url.Action("SubmitContact", "Home")',
+                type: "POST",
+                data: $form.serialize(),
+                success: function (response) {
+                    if (response && response.success) {
+                        $form[0].reset();
+                        $status.addClass("text-success");
+                    } else {
+                        $status.addClass("text-danger");
+                    }
+                    $status.text(response && response.message
+                        ? response.message
+                        : "Something went wrong. Please try again.");
+                },
+                error: function () {
+                    $status.addClass("text-danger")
+                           .text("Unable to send your message. Please try again.");
+                },
+                complete: function () {
+                    $button.prop("disabled", false);
+                }
+            });
+        });
+    });
+</script>

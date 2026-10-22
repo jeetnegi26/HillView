@@ -48,8 +48,7 @@
                             (SelectList)ViewBag.Sections,
                             "-- Select Section --",
                             new { @class = "form-select", id = "SectionId" })
-                        @Html.ValidationMessageFor(
-                            m => m.SectionId, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(m => m.SectionId, "", new { @class = "text-danger" })
                     </div>
 
                     <div class="col-md-6 mb-3">
@@ -157,7 +156,9 @@
                     $("#imagePreviewContainer").hide();
                 }
             }
-
+            if ($("#SectionItemId").val()) {
+                $("#SectionId").val("");
+            }
             // Display the existing image while editing.
             showImage(uploadedImageUrl);
 
