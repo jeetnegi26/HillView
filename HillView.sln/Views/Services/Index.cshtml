@@ -1,6 +1,26 @@
-﻿
+﻿@model DTOs.UIPageVM
+@using System.Linq
+@using DTOs
 @{
-    ViewBag.Title = "Services";
+    ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+
+    var data = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+
+    var images = data?.Images?
+        .Where(x => x != null)
+        .ToList();
+
+    var buttons = data?.Buttons?
+        .Where(x => x != null)
+        .ToList();
+
+
+    var data2 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 2);
+    var data3 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 3);
+    var data4 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 4);
+    var data5 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 5);
+    var data6 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 6);
+
 }
 
 <link href="~/Content/css/otherbanner.css" rel="stylesheet" />
@@ -88,23 +108,24 @@
             font-weight: 600;
         }
 
-.additional-section {
-    width: 100%;
-    padding: 2rem 0 5rem;;
-}
+    .additional-section {
+        width: 100%;
+        padding: 2rem 0 5rem;
+        ;
+    }
 
 
-.additional-section .additional-row {
-    display: grid;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-    gap: 14px 14px;
-    margin: 0;
-}
+        .additional-section .additional-row {
+            display: grid;
+            grid-template-columns: repeat(12, minmax(0, 1fr));
+            gap: 14px 14px;
+            margin: 0;
+        }
 
-.additional-section .additional-row > div {
-    min-width: 0;
-    padding: 0;
-}
+            .additional-section .additional-row > div {
+                min-width: 0;
+                padding: 0;
+            }
 
     .additional-card {
         background: var(--gradient1);
@@ -118,289 +139,295 @@
         box-sizing: border-box;
     }
 
-.additional-section h3 {
-    font-weight: 500;
-    margin: 0 0 10px;
-}
+    .additional-section h3 {
+        font-weight: 500;
+        margin: 0 0 10px;
+    }
 
-.additional-section h2 {
-    line-height: 1.2;
-    font-weight: 600;
-    margin: 0 0 10px;
-}
+    .additional-section h2 {
+        line-height: 1.2;
+        font-weight: 600;
+        margin: 0 0 10px;
+    }
 
-.additional-section p {
-    line-height: 1.4;
-    font-size: 14px;
-    margin: 0;
-}
-
-.additional-section .additional-intro {
-    grid-column: 1 / 8;
-    grid-row: 1;
-}
-
-.additional-section .additional-image-one {
-    grid-column: 1 / 5;
-    grid-row: 2;
-}
-
-.additional-section .additional-advantage-one {
-    grid-column: 8 / 13;
-    grid-row: 1 / 3;
-    padding-left: 0;
-}
-
-.additional-section .additional-consulting {
-    grid-column: 1 / 7;
-    grid-row: 3;
-    margin-left: 4px;
-}
-
-.additional-section .additional-image-two {
-    grid-column: 5 / 8;
-    grid-row: 2;
-}
-
-.additional-section .additional-advantage-two {
-    grid-column: 7 / 13;
-    grid-row: 3;
-    margin-left: 0;
-}
-
-.additional-section .additional-image {
-    min-height: 189px;
-    overflow: hidden;
-    border-radius: 12px;
-}
-
-.additional-section .additional-image img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    min-height: 189px;
-    object-fit: cover;
-    border-radius: inherit;
-}
-
-.additional-section .additional-intro .additional-card {
-    min-height: 207px;
-}
-
-.additional-section .additional-advantage-one .additional-card {
-    min-height: 407px;
-}
-
-.additional-section .additional-consulting .additional-card,
-.additional-section .additional-advantage-two .additional-card {
-    min-height: 284px;
-}
-
-.additional-section .additional-advantage ul {
-    list-style: none;
-    padding: 0;
-    margin: 22px 0 0;
-}
-
-.additional-section .additional-advantage li {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.additional-section .additional-advantage li span {
-    flex: 0 0 12px;
-    width: 12px;
-    height: 12px;
-    line-height: 12px;
-    text-align: center;
-    border-radius: 50%;
-    font-weight: 700;
-    margin-top: 2px;
-}
-
-.additional-section .additional-advantage li p {
-    flex: 1;
-}
-
-.additional-section .additional-best {
-    margin-top: 22px;
-    padding-top: 13px;
-    border-top: 1px solid var(--primary);
-}
-
-.additional-section .additional-advantage-two ul {
-    margin-top: 22px;
-}
-
-/* Tablet */
-@@media (max-width: 991px) {
-    .additional-section .additional-row {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 14px;
+    .additional-section p {
+        line-height: 1.4;
+        font-size: 14px;
+        margin: 0;
     }
 
     .additional-section .additional-intro {
-        grid-column: 1 / 2;
+        grid-column: 1 / 8;
         grid-row: 1;
     }
 
     .additional-section .additional-image-one {
-        grid-column: 1 / 2;
+        grid-column: 1 / 5;
         grid-row: 2;
     }
 
     .additional-section .additional-advantage-one {
-        grid-column: 2 / 3;
+        grid-column: 8 / 13;
         grid-row: 1 / 3;
+        padding-left: 0;
     }
 
     .additional-section .additional-consulting {
-        grid-column: 1 / 2;
+        grid-column: 1 / 7;
+        grid-row: 3;
+        margin-left: 4px;
+    }
+
+    .additional-section .additional-image-two {
+        grid-column: 5 / 8;
+        grid-row: 2;
+    }
+
+    .additional-section .additional-advantage-two {
+        grid-column: 7 / 13;
         grid-row: 3;
         margin-left: 0;
     }
 
-    .additional-section .additional-image-two {
-        grid-column: 1 / 2;
-        grid-row: 4;
+    .additional-section .additional-image {
+        min-height: 189px;
+        overflow: hidden;
+        border-radius: 12px;
     }
 
-    .additional-section .additional-advantage-two {
-        grid-column: 2 / 3;
-        grid-row: 3 / 5;
-    }
-
-    .additional-section .additional-card {
-        padding: 22px;
-    }
-}
-
-/* Mobile: stack in the exact reference order */
-@@media (max-width: 800px) {
-    .additional-section {
-        padding: 10px 0;
-    }
-
-    .additional-section .additional-row {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-    }
-
-    .additional-section .additional-intro {
-        order: 1;
-    }
-
-    .additional-section .additional-image-one {
-        order: 2;
-    }
-
-    .additional-section .additional-advantage-one {
-        order: 3;
-    }
-
-    .additional-section .additional-consulting {
-        order: 4;
-    }
-
-    .additional-section .additional-image-two {
-        order: 5;
-    }
-
-    .additional-section .additional-advantage-two {
-        order: 6;
-    }
-
-    .additional-section .additional-card {
-        min-height: 0 !important;
-        padding: 18px;
-        border-radius: 9px;
-    }
-
-    .additional-section .additional-intro .additional-card {
-        min-height: 0;
-    }
-
-    .additional-section h3 {
-        margin-bottom: 8px;
-    }
-
-        .additional-section h2 {
-            line-height: 1.2;
-            margin-bottom: 8px;
-            font-size: 24px;
+        .additional-section .additional-image img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            min-height: 189px;
+            object-fit: cover;
+            border-radius: inherit;
         }
 
-    .additional-section p {
-        font-size: 11px;
-        line-height: 1.4;
+    .additional-section .additional-intro .additional-card {
+        min-height: 207px;
     }
 
-    .additional-section .additional-image {
-        width: 100%;
-        height: auto;
-        min-height: 0;
-        aspect-ratio: 1.55 / 1;
-        border-radius: 9px;
+    .additional-section .additional-advantage-one .additional-card {
+        min-height: 407px;
     }
 
-    .additional-section .additional-image img {
-        width: 100%;
-        height: 100%;
-        min-height: 0;
-        object-fit: cover;
+    .additional-section .additional-consulting .additional-card,
+    .additional-section .additional-advantage-two .additional-card {
+        min-height: 284px;
     }
 
     .additional-section .additional-advantage ul {
-        margin-top: 15px;
+        list-style: none;
+        padding: 0;
+        margin: 22px 0 0;
     }
 
     .additional-section .additional-advantage li {
-        gap: 8px;
-        margin-bottom: 8px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 10px;
     }
 
-    .additional-section .additional-advantage li span {
-        flex-basis: 10px;
-        width: 10px;
-        height: 10px;
-        line-height: 10px;
-        font-size: 8px;
-    }
+        .additional-section .additional-advantage li span {
+            flex: 0 0 12px;
+            width: 12px;
+            height: 12px;
+            line-height: 12px;
+            text-align: center;
+            border-radius: 50%;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .additional-section .additional-advantage li p {
+            flex: 1;
+        }
 
     .additional-section .additional-best {
-        margin-top: 17px;
-        padding-top: 12px;
+        margin-top: 22px;
+        padding-top: 13px;
+        border-top: 1px solid var(--primary);
     }
-}
 
-    .additional-card .name{
+    .additional-section .additional-advantage-two ul {
+        margin-top: 22px;
+    }
+
+    /* Tablet */
+    @@media (max-width: 991px) {
+        .additional-section .additional-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .additional-section .additional-intro {
+            grid-column: 1 / 2;
+            grid-row: 1;
+        }
+
+        .additional-section .additional-image-one {
+            grid-column: 1 / 2;
+            grid-row: 2;
+        }
+
+        .additional-section .additional-advantage-one {
+            grid-column: 2 / 3;
+            grid-row: 1 / 3;
+        }
+
+        .additional-section .additional-consulting {
+            grid-column: 1 / 2;
+            grid-row: 3;
+            margin-left: 0;
+        }
+
+        .additional-section .additional-image-two {
+            grid-column: 1 / 2;
+            grid-row: 4;
+        }
+
+        .additional-section .additional-advantage-two {
+            grid-column: 2 / 3;
+            grid-row: 3 / 5;
+        }
+
+        .additional-section .additional-card {
+            padding: 22px;
+        }
+    }
+
+    /* Mobile: stack in the exact reference order */
+    @@media (max-width: 800px) {
+        .additional-section {
+            padding: 10px 0;
+        }
+
+            .additional-section .additional-row {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .additional-section .additional-intro {
+                order: 1;
+            }
+
+            .additional-section .additional-image-one {
+                order: 2;
+            }
+
+            .additional-section .additional-advantage-one {
+                order: 3;
+            }
+
+            .additional-section .additional-consulting {
+                order: 4;
+            }
+
+            .additional-section .additional-image-two {
+                order: 5;
+            }
+
+            .additional-section .additional-advantage-two {
+                order: 6;
+            }
+
+            .additional-section .additional-card {
+                min-height: 0 !important;
+                padding: 18px;
+                border-radius: 9px;
+            }
+
+            .additional-section .additional-intro .additional-card {
+                min-height: 0;
+            }
+
+            .additional-section h3 {
+                margin-bottom: 8px;
+            }
+
+            .additional-section h2 {
+                line-height: 1.2;
+                margin-bottom: 8px;
+                font-size: 24px;
+            }
+
+            .additional-section p {
+                font-size: 11px;
+                line-height: 1.4;
+            }
+
+            .additional-section .additional-image {
+                width: 100%;
+                height: auto;
+                min-height: 0;
+                aspect-ratio: 1.55 / 1;
+                border-radius: 9px;
+            }
+
+                .additional-section .additional-image img {
+                    width: 100%;
+                    height: 100%;
+                    min-height: 0;
+                    object-fit: cover;
+                }
+
+            .additional-section .additional-advantage ul {
+                margin-top: 15px;
+            }
+
+            .additional-section .additional-advantage li {
+                gap: 8px;
+                margin-bottom: 8px;
+            }
+
+                .additional-section .additional-advantage li span {
+                    flex-basis: 10px;
+                    width: 10px;
+                    height: 10px;
+                    line-height: 10px;
+                    font-size: 8px;
+                }
+
+            .additional-section .additional-best {
+                margin-top: 17px;
+                padding-top: 12px;
+            }
+    }
+
+    .additional-card .name {
         color: var(--primary)
     }
 
     .bi-check-circle-fill {
         color: #A4FFA2;
     }
+
     .areas-items-box {
         background: var(--lightbg);
         padding-bottom: 5rem;
     }
-    .areas-items{
-        padding:3rem 0
+
+    .areas-items {
+        padding: 3rem 0
     }
-    .areas-item{
+
+    .areas-item {
         padding: 1rem 0.5rem;
     }
+
     .areas-item-icon img {
         width: 10%;
         padding-bottom: 10px;
     }
+
     .areas-item h3 {
         font-size: 18px;
         font-weight: 500
     }
+
     .areas-item p {
         font-size: 14px;
     }
@@ -448,163 +475,166 @@
     }
 </style>
 
-<section class="banner">
-    <div class="orb-scene">
-        <img class="orb orb-1" src="~/Content/Images/rest.png" alt="">
-        <img class="orb orb-2" src="~/Content/images/rest.png" alt="">
+@if (data != null)
+{
+    <section class="banner">
+        <div class="orb-scene">
+            @if (images != null && images.Count > 0 &&
+                 !string.IsNullOrWhiteSpace(images[0].ImageUrl))
+            {
+                <img class="orb orb-1"
+                     src="@Url.Content("~/content/uploads/" + images[0].ImageUrl)"
+                     alt="@(images[0].AltText ?? "")" />
+            }
+
+            @if (images != null && images.Count > 1 &&
+                 !string.IsNullOrWhiteSpace(images[1].ImageUrl))
+            {
+                <img class="orb orb-2"
+                     src="@Url.Content("~/content/uploads/" + images[1].ImageUrl)"
+                     alt="@(images[1].AltText ?? "")" />
+            }
 
 
-        <div class="banner-text-box">
-            <div class="banner-text">
 
-                <small>Our Services</small>
-                <h2>
-                    Solutions Built Around Your Hiring Needs
-                </h2>
-                <p>
-                    We are well-versed in a variety of technology stacks and have a team of experienced individuals to
-                    help our customers scale their IT and Engineering teams. We have been working closely with our
-                    Customers to access the best talent pool at a very competitive cost.
-                </p>
+            <div class="banner-text-box">
+                <div class="banner-text">
+
+                    <small>@data.SubHeading</small>
+                    <h2>
+                        @data.Heading
+                    </h2>
+                    <p>
+                        @data.Description
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
 
-<section class="services-section">
-    <div class="services-box">
-        <div class="services-container container">
-            <div class="services-items">
-                <div class="services-row row">
-                    <div class="col-lg-6 h6 col-md-12 col-12 services-col">
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/hire.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Direct Hire Services</h3>
-                                    <p>
-                                        Our direct hire services streamline your talent acquisition process by identifying, vetting,
-                                        and securing permanent IT professionals. We leverage a rigorous screening process to match
-                                        candidates not only based on technical expertise but also cultural fit, ensuring a lasting
-                                        impact on your organization.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 h6 col-md-12 col-12 services-col">
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/augument.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Staff Augmentation</h3>
-                                    <p>
-                                        Elevate your technology strategies with our IT consulting services. Our seasoned consultants bring industry
-                                        insights and technical acumen to guide your organization through complex IT challenges. From system upgrades
-                                        to digital transformation, we offer tailored consulting services to align your IT initiatives with business
-                                        objectives.
-                                    </p>
+@if (data2 != null)
+{
+    var items = data2?.Items?.Where(x => x != null).ToList();
+    <section class="services-section">
+        <div class="services-box">
+            <div class="services-container container">
+                <div class="services-items">
+                    <div class="services-row row">
+                        @foreach (var item in items)
+                        {
+                            <div class="col-lg-6 h6 col-md-12 col-12 services-col">
+                                <div class="service-item">
+                                    <div class="d-flex">
+                                        <div class="ser-icon">
+                                            <img src="@Url.Content("~/content/uploads/" + item.Images[0].ImageUrl)" />
+                                        </div>
+                                        <div class="ser-desc">
+                                            <h3>@item.Heading</h3>
+                                            <p>
+                                                @item.Description
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 h6 col-md-12 col-12 services-col">
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/staff.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>Contract Staffing Solutions</h3>
-                                    <p>
-                                        Enhance your team's capabilities with our staff augmentation services. We seamlessly integrate
-                                        skilled IT professionals into your existing workforce, providing on-demand expertise to address
-                                        specific project needs. This agile approach ensures your team remains adaptable and well-equipped
-                                        to tackle evolving technology requirements.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-6 h6 col-md-12 col-12 services-col">
-                        <div class="service-item">
-                            <div class="d-flex">
-                                <div class="ser-icon">
-                                    <img src="~/Content/Images/Services/consult.svg" />
-                                </div>
-                                <div class="ser-desc">
-                                    <h3>IT Consulting Services</h3>
-                                    <p>
-                                        When flexibility is paramount, our contract staffing solutions provide skilled IT professionals
-                                        for short-term projects or temporary needs. Whether you require specialized expertise or additional
-                                        resources to meet project deadlines, our contract staffing services offer a scalable and efficient
-                                        solution.
-                                    </p>
+                        }
+
+                        @*<div class="col-lg-6 h6 col-md-12 col-12 services-col">
+                                <div class="service-item">
+                                    <div class="d-flex">
+                                        <div class="ser-icon">
+                                            <img src="~/Content/Images/Services/augument.svg" />
+                                        </div>
+                                        <div class="ser-desc">
+                                            <h3>Staff Augmentation</h3>
+                                            <p>
+                                                Elevate your technology strategies with our IT consulting services. Our seasoned consultants bring industry
+                                                insights and technical acumen to guide your organization through complex IT challenges. From system upgrades
+                                                to digital transformation, we offer tailored consulting services to align your IT initiatives with business
+                                                objectives.
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                            <div class="col-lg-6 h6 col-md-12 col-12 services-col">
+                                <div class="service-item">
+                                    <div class="d-flex">
+                                        <div class="ser-icon">
+                                            <img src="~/Content/Images/Services/staff.svg" />
+                                        </div>
+                                        <div class="ser-desc">
+                                            <h3>Contract Staffing Solutions</h3>
+                                            <p>
+                                                Enhance your team's capabilities with our staff augmentation services. We seamlessly integrate
+                                                skilled IT professionals into your existing workforce, providing on-demand expertise to address
+                                                specific project needs. This agile approach ensures your team remains adaptable and well-equipped
+                                                to tackle evolving technology requirements.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 h6 col-md-12 col-12 services-col">
+                                <div class="service-item">
+                                    <div class="d-flex">
+                                        <div class="ser-icon">
+                                            <img src="~/Content/Images/Services/consult.svg" />
+                                        </div>
+                                        <div class="ser-desc">
+                                            <h3>IT Consulting Services</h3>
+                                            <p>
+                                                When flexibility is paramount, our contract staffing solutions provide skilled IT professionals
+                                                for short-term projects or temporary needs. Whether you require specialized expertise or additional
+                                                resources to meet project deadlines, our contract staffing services offer a scalable and efficient
+                                                solution.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>*@
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
-<section class="industries-section">
-    <div class="industries-box">
-        <div class="container industries-container">
-            <div class="home-head">
-                <h3>industriess we are offering  </h3>
-                <h2>Every search starts with understanding your industry.<br /> Tell us about yours.</h2>
-            </div>
+}
 
-            <div class="industries-item-box">
-                <div class="industries-carousel owl-carousel owl-theme">
-                    <div class="item">
-                        <div class="industries-item">
-                            <img src="~/Content/Images/Industries/in1.png" />
-                            <p>
-                                <span>Technology & IT: </span>We connect teams with software engineers, AI/ML and data science talent,
-                                Software Engineering, cloud infrastructure and DevOps specialists — skilled people who
-                                can hit the ground running, whether the need is one hire or a full build-out.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="industries-item">
-                            <img src="~/Content/Images/Industries/in2.png" />
-                            <p>
-                                <span>Healthcare & Life Sciences: </span>We place skilled professionals across clinical, technical, and specialized roles — helping organizations fill critical positions without compromising quality of care.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="industries-item">
-                            <img src="~/Content/Images/Industries/in3.png" />
-                            <p>
-                                <span>Retail & E-commerce: </span>We staff seasonal surges, operations, and fulfillment roles with reliable talent that's ready to work when demand spikes.
-                            </p>
-                        </div>
-                    </div>
-                    <div class="item">
-                        <div class="industries-item">
-                            <img src="~/Content/Images/Industries/in2.png" />
-                            <p>
-                                <span>Technology & IT: </span>We connect teams with software engineers, AI/ML and data science talent,
-                                Software Engineering, cloud infrastructure and DevOps specialists — skilled people who
-                                can hit the ground running, whether the need is one hire or a full build-out.
-                            </p>
-                        </div>
+@if (data3 != null)
+{
+    var items = data3.Items.ToList();
+    <section class="industries-section">
+        <div class="industries-box">
+            <div class="container industries-container">
+                <div class="home-head">
+                    <h3>@data3.Title</h3>
+                    <h2>@data.Heading</h2>
+                </div>
+
+                <div class="industries-item-box">
+                    <div class="industries-carousel owl-carousel owl-theme">
+                        @foreach (var item in items)
+                        {
+                            <div class="item">
+                                <div class="industries-item">
+                                    <img src="~/Content/Uploads/@item.Images[0].ImageUrl" />
+                                    <p>
+                                        <span>@item.Title </span>@item.Description
+                                    </p>
+                                </div>
+                            </div>
+                        }
+
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+}
+
+
 
 <section class="additional-section">
     <div class="additional-box">
@@ -612,89 +642,81 @@
             <div class="additional-items">
                 <div class="additional-row row">
 
-                    <!-- Staff Augmentation - Intro -->
-                    <div class="additional-intro">
-                        <div class="additional-card">
-                            <h3 class="name">Staff Augmentation</h3>
-                            <h2>Extend your team,<br>without the overhead.</h2>
-                            <p>
-                                We embed vetted, high-caliber professionals directly into your existing team — working within your tools, your cadence, and your standards. Whether engaged directly or through your MSP/VMS program, we operate within your existing framework without introducing friction.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- First Image -->
-                    <div class="additional-image additional-image-one">
-                        <img src="~/Content/Images/staffother.png" />
-                    </div>
-
-                    <!-- Staff Augmentation - Advantage -->
-                    <div class="additional-advantage additional-advantage-one">
-                        <div class="additional-card">
-                            <h3>The Advantage</h3>
-
-                            <ul>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Precision-matched talent, not just resumes</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Integration without disruption to your team or timeline</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Full compatibility with MSP and VMS programs</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Scale on demand, without long-term commitment</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Value tied to work delivered, not a fixed retainer</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>A partner invested in the outcome, not just a vendor</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Continuity protected, even if a placement needs to change</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Pricing built on transparency, not markup</p></li>
-                            </ul>
-
-                            <div class="additional-best">
+                    @if (data4 != null)
+                    {
+                        var items = data4.Items.ToList();
+                        <!-- Staff Augmentation - Intro -->
+                        <div class="additional-intro">
+                            <div class="additional-card">
+                                <h3 class="name">@data4.SubHeading</h3>
+                                <h2>@data4.Heading</h2>
                                 <p>
-                                    <strong>Best for</strong> Closing a capability gap with precision,
-                                    absorbing a demand surge, or scaling a team as business needs
-                                    evolve — whether engaged directly or through a managed program.
+                                    @data4.Description
                                 </p>
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Consulting - Intro -->
-                    <div class="additional-consulting">
-                        <div class="additional-card">
-                            <h3 class="name">Consulting</h3>
-                            <h2>Full ownership, from scope<br>to delivery.</h2>
-                            <p>
-                                Hand off a mandate and receive a complete outcome in return.
-                                Our consulting teams assume full accountability for the engagement —
-                                scoping, building, testing, and delivering — so oversight never falls to you.
-                            </p>
-
-                            <div class="additional-best">
-                                <p>
-                                    <strong>Best for</strong> Initiatives with a defined end goal,
-                                    teams without the bandwidth to oversee delivery internally,
-                                    or engagements where cost predictability outweighs hourly flexibility.
-                                </p>
+                        <!-- First Image -->
+                        <div class="additional-image additional-image-one">
+                            <img src="~/Content/Uploads/@data4.Images[0].ImageUrl" alt="@data4.Images[0].AltText" />
+                        </div>
+                        <!-- Staff Augmentation - Advantage -->
+                        <div class="additional-advantage additional-advantage-one">
+                            <div class="additional-card">
+                                <h3>@items[0].Title</h3>
+                                <ul>
+                                    @foreach (var childItem in items[0].Children)
+                                    {
+                                        <li><i class="bi bi-check-circle-fill"></i><p>@childItem.Title</p></li>
+                                    }
+                                </ul>
+                                <div class="additional-best">
+                                    <p>
+                                        <strong>@items[1].SubHeading</strong> @items[1].Description
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    }
 
-                    <!-- Second Image -->
-                    <div class="additional-image additional-image-two">
-                        <img src="~/Content/Images/consoth.png" />
-                    </div>
+                    @if (data5 != null)
+                    {
+                        var consultantItems = data4.Items.ToList();
+                        <!-- Consulting - Intro -->
+                        <div class="additional-consulting">
+                            <div class="additional-card">
+                                <h3 class="name">@data5.SubHeading</h3>
+                                <h2>@data5.Heading</h2>
+                                <p>
+                                    @data5.Description
+                                </p>
 
-                    <!-- Consulting - Advantage -->
-                    <div class="additional-advantage additional-advantage-two">
-                        <div class="additional-card">
-                            <h3>The Advantage</h3>
-
-                            <ul>
-                                <li><i class="bi bi-check-circle-fill"></i><p>A defined outcome, not a list of deliverables</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Expertise carried from architecture through execution</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Quality built into every phase, not inspected at the end</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Governance that keeps every milestone on track</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Knowledge transfer that stays with your team, long after delivery</p></li>
-                                <li><i class="bi bi-check-circle-fill"></i><p>Cost certainty from day one</p></li>
-                            </ul>
+                                <div class="additional-best">
+                                    <p>
+                                        <strong>@consultantItems[1].SubHeading<</strong>  @consultantItems[1].Description
+                                    </p>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+
+                        <!-- Second Image -->
+                        <div class="additional-image additional-image-two">
+                            <img src="~/Content/Uploads/@data5.Images[0].ImageUrl" alt="@data4.Images[0].AltText" />
+                        </div>
+
+                        <!-- Consulting - Advantage -->
+                        <div class="additional-advantage additional-advantage-two">
+                            <div class="additional-card">
+                                <h3>@consultantItems[0].Title</h3>
+
+                                <ul>
+                                    @foreach (var childItem in consultantItems[0].Children)
+                                    {
+                                        <li><i class="bi bi-check-circle-fill"></i><p>@childItem.Title</p></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    }
 
                 </div>
             </div>
@@ -702,123 +724,45 @@
     </div>
 </section>
 
-<section class="areas-section">
-    <div class="areas-box">
-        <div class="areas-container container">
-            <div class="home-head">
-                <h3>Practice Areas </h3>
-                <h2>We envision dedicated sections for our primary practice areas </h2>
+
+@if (data6 != null)
+{
+    var items = data6.Items.ToList();
+    <section class="areas-section">
+        <div class="areas-box">
+            <div class="areas-container container">
+                <div class="home-head">
+                    <h3>@data6.Title </h3>
+                    <h2>@data6.Heading </h2>
+                </div>
             </div>
-        </div>
-        <div class="areas-items-box">
-            <div class="areas-items-container container">
-                <div class="areas-items">
-                    <div class="areas-row row">
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/Processor.svg" />
+            <div class="areas-items-box">
+                <div class="areas-items-container container">
+                    <div class="areas-items">
+                        <div class="areas-row row">
+                            @foreach (var item in items)
+                            {
+                                <div class="col-lg-4 col-md-6 col-12 areas-col">
+                                    <div class="areas-item">
+                                        <div class="areas-item-icon">
+                                            <img src="~/Content/Uploads/@item.Images[0].ImageUrl" alt="@item.Images[0].AltText"/>
+                                        </div>
+                                        <h3>@item.Title</h3>
+                                        <p>
+                                            @item.Description
+                                        </p>
+                                    </div>
                                 </div>
-                                <h3>Artificial Intelligence & Machine Learning</h3>
-                                <p>
-                                    Connect with skilled AI and ML professionals who can help turn emerging technologies into business value. HillView identifies talent across machine learning, generative AI, data science, and intelligent automation.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/image-filter-drama.svg" />
-                                </div>
-                                <h3>Software Engineering</h3>
-                                <p>
-                                    Build reliable, high-performing engineering teams with talent across modern software development environments. We connect businesses with engineers who bring the technical expertise needed to build, scale, and innovate.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/code-tags.svg" />
-                                </div>
-                                <h3>Cloud Infrastructure & DevOps</h3>
-                                <p>
-                                    Strengthen your cloud and infrastructure capabilities with experienced DevOps and cloud professionals. HillView helps businesses find talent across cloud architecture, automation, infrastructure, and platform engineering.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/cloud-print-outline.svg" />
-                                </div>
-                                <h3>Data & Analytics</h3>
-                                <p>
-                                    Turn data into meaningful business insights with the right analytical talent. We connect organisations with data engineers, data scientists, analysts, and specialists equipped to build and manage data-driven solutions.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/cogs.svg" />
-                                </div>
-                                <h3>Quality Engineering (SDET & QA Automation)</h3>
-                                <p>
-                                    Build quality into every stage of your technology lifecycle with specialised QA and automation talent. HillView helps you find SDETs and quality engineers with expertise in test automation, performance, and software quality.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/Server.svg" />
-                                </div>
-                                <h3>Product Management</h3>
-                                <p>
-                                    Bring the right expertise to every stage of your product journey. We connect organisations with product managers who combine technical understanding, customer insight, and strategic thinking to drive successful products.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/design_services.svg" />
-                                </div>
-                                <h3>User Experience & Design</h3>
-                                <p>
-                                    Create digital experiences that are intuitive, engaging, and built around your users. HillView connects businesses with UX/UI designers and product design professionals who bring creativity, research, and user-centred thinking together.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/cloud_sync.svg" />
-                                </div>
-                                <h3>Cybersecurity</h3>
-                                <p>
-                                    Protect your systems, data, and digital infrastructure with specialised cybersecurity talent. We help organisations identify professionals across security engineering, risk, compliance, cloud security, and other critical security functions.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="col-lg-4 col-md-6 col-12 areas-col">
-                            <div class="areas-item">
-                                <div class="areas-item-icon">
-                                    <img src="~/Content/Images/Practice/troubleshoot.svg" />
-                                </div>
-                                <h3>Technology Leadership & Executive Search</h3>
-                                <p>
-                                    Build leadership teams capable of driving technology strategy and long-term growth. HillView connects organisations with experienced technology leaders, from Engineering Managers and Directors to senior technology executives, aligned with their business vision.
-                                </p>
-                            </div>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
+
+}
+
 
 
 <script src="~/Scripts/owl.carousel.min.js"></script>

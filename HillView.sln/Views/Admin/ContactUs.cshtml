@@ -1,0 +1,215 @@
+@model IEnumerable<DTOs.ContactUsVM>
+
+@{
+    ViewBag.Title = "Contact Us";
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+
+    bool? filter = ViewBag.StatusFilter as bool?;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2>Contact Us</h2>
+            <p class="text-muted mb-0">
+                Messages submitted from the website contact form.
+            </p>
+        </div>
+
+        @* Status filter buttons: All / Active (true) / Inactive (false) *@
+        <div class="btn-group" role="group" aria-label="Status filter">
+            <a href="@Url.Action("ContactUs", "Admin")"
+               class="btn @(filter == null ? "btn-primary" : "btn-outline-primary")">
+                All
+            </a>
+            <a href="@Url.Action("ContactUs", "Admin", new { status = true })"
+               class="btn @(filter == true ? "btn-success" : "btn-outline-success")">
+                Active
+            </a>
+            <a href="@Url.Action("ContactUs", "Admin", new { status = false })"
+               class="btn @(filter == false ? "btn-secondary" : "btn-outline-secondary")">
+                Inactive
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Received</th>
+                            <th class="text-end" style="width: 220px;">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.FullName</td>
+                                    <td>
+                                        <a href="mailto:@item.Email">@item.Email</a>
+                                    </td>
+                                    <td>
+                                        @(string.IsNullOrWhiteSpace(item.Phone) ? "-" : item.Phone)
+                                    </td>
+                                    <td style="max-width: 280px;">
+                                        @{
+                                            var msg = item.Message ?? "";
+                                            var preview = msg.Length > 70 ? msg.Substring(0, 70) + "..." : msg;
+                                        }
+                                        @preview
+                                    </td>
+                                    <td>
+                                        @if (item.Status)
+                                        {
+                                            <span class="badge bg-success">Active</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+                                    </td>
+                                    <td class="text-end">
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-info view-contact-btn"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#contactModal"
+                                                data-name="@item.FullName"
+                                                data-email="@item.Email"
+                                                data-phone="@item.Phone"
+                                                data-message="@item.Message"
+                                                data-date="@item.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")"
+                                                data-ip="@item.UserHostAdd">
+                                            View
+                                        </button>
+
+                                        @using (Html.BeginForm(
+                                            "ChangeContactStatus",
+                                            "Admin",
+                                            FormMethod.Post,
+                                            new { @class = "d-inline change-status-form" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <input type="hidden" name="newStatus" value="@((!item.Status).ToString().ToLower())" />
+                                            <input type="hidden" name="filter" value="@(filter.HasValue ? filter.Value.ToString().ToLower() : "")" />
+
+                                            if (item.Status)
+                                            {
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    Mark Inactive
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    Mark Active
+                                                </button>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="7" class="text-center text-muted py-4">
+                                    No contact messages found.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Details modal *@
+<div class="modal fade" id="contactModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Contact Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3">Name</dt>
+                    <dd class="col-sm-9" id="cm-name"></dd>
+
+                    <dt class="col-sm-3">Email</dt>
+                    <dd class="col-sm-9" id="cm-email"></dd>
+
+                    <dt class="col-sm-3">Phone</dt>
+                    <dd class="col-sm-9" id="cm-phone"></dd>
+
+                    <dt class="col-sm-3">Received</dt>
+                    <dd class="col-sm-9" id="cm-date"></dd>
+
+                    <dt class="col-sm-3">IP Address</dt>
+                    <dd class="col-sm-9" id="cm-ip"></dd>
+
+                    <dt class="col-sm-3">Message</dt>
+                    <dd class="col-sm-9" id="cm-message" style="white-space: pre-wrap;"></dd>
+                </dl>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(document).ready(function () {
+            // Fill the details modal. .text() keeps user input HTML-safe.
+            $(".view-contact-btn").on("click", function () {
+                var b = $(this);
+                $("#cm-name").text(b.data("name"));
+                $("#cm-email").text(b.data("email"));
+                $("#cm-phone").text(b.data("phone") || "-");
+                $("#cm-date").text(b.data("date"));
+                $("#cm-ip").text(b.data("ip") || "-");
+                $("#cm-message").text(b.data("message"));
+            });
+
+            $(".change-status-form").on("submit", function (e) {
+                if (!confirm("Are you sure you want to change the status of this contact?")) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+}

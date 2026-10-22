@@ -1,0 +1,476 @@
+﻿
+@{
+    ViewBag.Title = "Jobs";
+}
+
+<link href="~/Content/css/otherbanner.css" rel="stylesheet" />
+
+
+<style>
+    .banner-text-box {
+        flex-direction: column;
+    }
+
+    .banner-text-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .banner-text {
+        padding-top: 10rem;
+        text-align: center;
+        position: initial;
+    }
+
+        .banner-text small {
+            color: var(--primary)
+        }
+
+    .job-usp-box{
+        padding-top:3rem;
+    }
+
+    .jobs-usp-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+    }
+    
+    .jobs-usp-col {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .jobs-usp-item {
+        height: 100%;
+        box-sizing: border-box;
+        border: 1px solid var(--primary);
+        padding:2rem;
+        border-radius: 25px;
+    }
+
+        .jobs-usp-item p{
+            margin:0 ;
+        }
+
+        @@media (max-width: 767px) {
+            .jobs-usp-row {
+            grid-template-columns: 1fr;
+        }
+    }
+    .jobs-usp-item h3 {
+        font-weight:600;
+        padding-bottom:1rem;
+    }
+
+    .journey-section{
+        padding:3rem 0 5rem;
+    }
+
+    .journey-items-box {
+        padding-top: 2.5rem;
+    }
+
+    .journey-item {
+        display: flex;
+        padding: 1rem 1.5rem 1rem 0;
+    }
+
+    .journey-item-icon {
+        padding-right: 1rem;
+    }
+
+        .journey-item-icon .bi-check-circle {
+            color: var(--primary);
+        }
+
+    .journney-img{
+        padding: 3rem 0;
+    }
+
+    .journey-item-desc h3 {
+        font-weight: 600;
+    }
+
+    .journey-head{
+        font-weight: 500;
+    }
+
+    .journey-item-desc p {
+        margin: 0
+    }
+
+    .jobs-items-box{
+        padding-bottom: 5rem;
+    }
+
+    .job-item {
+        padding: 1.3rem 2rem;
+        margin-bottom: 1.5rem;
+        border: 1px solid var(--secondary);
+        border-radius: 25px;
+        background: var(--gradient1);
+    }
+
+    .time {
+        color: var(--text);
+        font-size: 12px;
+        opacity: 0.8;
+    }
+
+    .designation {
+        padding-top: 1rem;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+
+    .job-location {
+        color: var(--primary);
+        font-size: 14px;
+    }
+
+    .job-desc {
+        font-size: 14px;
+    }
+
+    @@media screen and (min-width: 1024px) and (max-width: 1339px) {
+        .jobs-usp-row {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+            .jobs-usp-row > :nth-child(3) {
+                grid-column: 1 / -1;
+            }
+    }
+
+
+    @@media screen and (min-width: 600px) and (max-width: 1023px) {
+        .jobs-usp-row {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .orb-scene {
+            height: 120vh;
+        }
+
+        .banner-text {
+            padding-top: 20rem;
+        }
+
+        .journey-item {
+            padding: 1rem 0;
+        }
+    }
+
+    @@media (max-width: 600px){
+        .jobs-usp-row {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .orb-scene {
+            height: 160vh;
+        }
+
+        .banner-text {
+            padding-top: 46rem;
+        }
+    }
+
+    @@media (max-width: 430px) {
+        .orb-scene {
+            height: 200vh;
+        }
+
+        .banner-text {
+            padding-top: 58rem;
+        }
+    }
+
+    @@media (max-width: 380px) {
+        .orb-scene {
+            height: 270vh;
+        }
+
+        .banner-text {
+            padding-top: 80rem;
+        }
+    }
+</style>
+
+<section class="banner">
+    <div class="orb-scene">
+        <img class="orb orb-1" src="~/Content/Images/rest.png" alt="">
+        <img class="orb orb-2" src="~/Content/images/rest.png" alt="">
+
+
+        <div class="banner-text-box">
+            <div class="banner-text">
+
+                <small>Contact Us</small>
+                <h2>
+                    Ready to Build Your Team?
+                </h2>
+                <p>
+                    Have a hiring requirement or looking for your next career opportunity? Get in touch with HillView Consulting Solutions
+                </p>
+            </div>
+            <div class="job-usp-box">
+                <div class="job-usp-container container">
+                    <div class="jobs-usp-items-box">
+                        <div class="jobs-usp-row row">
+                            <div class="jobs-usp-col col-xl-4 col-lg-4 col-md-4 col-12">
+                                <div class="jobs-usp-item">
+                                    <h3>
+                                        Your Success Is Our Priority
+                                    </h3>
+                                    <p>
+                                        At Hillview Consulting Solutions, our relationship with you doesn’t end when you accept an assignment. 
+                                        In many ways, that’s where it begins. Our Candidate First Program is designed to provide dedicated support
+                                        throughout your entire journey with us — from onboarding and your first day on assignment to ongoing project
+                                        support and a smooth transition when your assignment is completed.
+                                        Because when our consultants feel supported, informed, and valued, they’re better positioned to succeed.
+
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="jobs-usp-col col-xl-4 col-lg-4 col-md-4 col-12">
+                                <div class="jobs-usp-item">
+                                    <h3>
+                                        Support Beyond Placement
+                                    </h3>
+                                    <p>
+                                        Starting a new assignment can come with questions, new processes, and new expectations.
+                                        Our dedicated Candidate First team helps make the transition easier by serving as a consistent
+                                        point of support throughout your engagement. We stay connected with you to make sure you have
+                                        the information, resources, and assistance you need to focus on what matters most: doing great
+                                        work and successfully delivering your project.
+
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="jobs-usp-col col-xl-4 col-lg-4 col-md-4 col-12">
+                                <div class="jobs-usp-item">
+                                    <h3>
+                                        More Than an Opportunity. A Partnership.
+                                    </h3>
+                                    <p>
+                                        We believe great staffing relationships are built on more than matching skills with opportunities.
+                                        They’re built on communication, trust, and consistent support.
+                                        That’s why Candidate First is more than a program — it’s our commitment to the consultants who
+                                        represent us every day. Before. During. After. We’re with you throughout the journey.
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="journey-section">
+    <div class="journey-container container">
+        <div class="journey-box">
+            <div class="journney-img">
+                <img src="~/Content/Images/journey.png" />
+            </div>
+            <div class="journey-head">
+                <h1>
+                    Your Journey With Us
+                </h1>
+            </div>
+            <div class="journey-items-box">
+                <div class="journey-items-row row">
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="journey-item">
+                            <div class="journey-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="journey-item-desc">
+                                <h3>Seamless Onboarding</h3>
+                                <p>
+                                    We help you navigate the onboarding process, understand requirements, complete necessary documentation, and prepare for a successful start.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="journey-item">
+                            <div class="journey-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="journey-item-desc">
+                                <h3>First-Day Readiness</h3>
+                                <p>
+                                    From assignment details to expectations and logistics, we work to make sure you have the information you need before your first day.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="journey-item">
+                            <div class="journey-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="journey-item-desc">
+                                <h3>Ongoing Check-Ins</h3>
+                                <p>
+                                    Once your assignment begins, we don’t disappear. Our team stays in regular contact to understand how things are going and identify where we can provide support.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="journey-item">
+                            <div class="journey-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="journey-item-desc">
+                                <h3>Dedicated Consultant Support</h3>
+                                <p>
+                                    Questions or concerns during your assignment? You have a team you can reach out to. We help connect you with the right resources and work with you to address issues that may arise during your engagement.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="journey-item">
+                            <div class="journey-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="journey-item-desc">
+                                <h3>Assignment Success</h3>
+                                <p>
+                                    Our goal is more than simply placing you on a project. We want to help create an environment where you can perform at your best, build strong relationships, and successfully deliver on your assignment.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 col-12">
+                        <div class="journey-item">
+                            <div class="journey-item-icon">
+                                <h2><i class="bi bi-check-circle"></i></h2>
+                            </div>
+                            <div class="journey-item-desc">
+                                <h3>Smooth Offboarding</h3>
+                                <p>
+                                    When an assignment comes to an end, our team helps coordinate the offboarding process and supports you through the transition.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="jobs-section">
+    <div class="jobs-container container">
+        <div class="jobs-box">
+            <div class="jobs-head">
+                <div class="home-head">
+                    <h3>Jobs we are offering</h3>
+                    <h2>Browse the latest openings<br /> across top companies</h2>
+                    <p>Explore exciting IT roles with leading organizations and take<br /> the next step in your career with confidence.</p>
+                </div>
+            </div>
+            <div class="jobs-items-box">
+                <div class="jobs-items-row row">
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="job-item">
+                            <small class="time">1 hour ago</small>
+                            <h3 class="designation">Senior Sourcing Manager</h3>
+                            <p class="job-location">Denver Metropolitan Area</p>
+                            <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                            <a class="btn btn-secondary">Apply now</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

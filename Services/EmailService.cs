@@ -64,8 +64,18 @@ namespace Services
                 message.Body = htmlBody;
 
                 // Host and port come from <system.net><mailSettings> in Web.config
-                using (var client = new SmtpClient())
+                // Host and credentials set in code, for this test only
+                System.Net.ServicePointManager.SecurityProtocol |=
+                    System.Net.SecurityProtocolType.Tls12;
+
+                using (var client = new SmtpClient("smtp.gmail.com", 587))
                 {
+                    client.EnableSsl = true;
+                    client.UseDefaultCredentials = false;
+                    client.Credentials = new System.Net.NetworkCredential(
+                        "ed68608@gmail.com", "zajbbxwkzobeuwao");
+                    client.DeliveryMethod = SmtpDeliveryMethod.Network;
+
                     await client.SendMailAsync(message);
                 }
             }

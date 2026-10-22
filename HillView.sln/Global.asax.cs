@@ -40,13 +40,15 @@ namespace HillView.sln
             container.RegisterType<TestimonialService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
             container.RegisterType<UIPageService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
             container.RegisterType<UIPageService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
-            container.RegisterType<ContactService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
-            container.RegisterType<EmailService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
+            container.RegisterType<ContactService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>(), new ResolvedParameter<EmailService>()));
+            container.RegisterType<ContactUsService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
 
 
             container.RegisterType<AdminController>();
             container.RegisterType<AccountController>();
             container.RegisterType<HomeController>();
+            container.RegisterType<JobsController>();
+            container.RegisterType<ServicesController>();
 
             DependencyResolver.SetResolver(new UnityDependencyResolver(container));
         }

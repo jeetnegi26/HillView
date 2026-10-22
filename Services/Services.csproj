@@ -74,6 +74,7 @@
     <Compile Include="Admin\AccountService.cs" />
     <Compile Include="Admin\AdminMenuService.cs" />
     <Compile Include="Admin\ButtonService.cs" />
+    <Compile Include="Admin\ContactUsService.cs" />
     <Compile Include="Admin\ImageService.cs" />
     <Compile Include="EmailService.cs" />
     <Compile Include="LogErrorService.cs" />

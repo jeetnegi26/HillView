@@ -68,6 +68,7 @@
     <Compile Include="Admin\Base.cs" />
     <Compile Include="Admin\ButtonVM.cs" />
     <Compile Include="Admin\ChangePasswordModel.cs" />
+    <Compile Include="Admin\ContactUsVM.cs" />
     <Compile Include="ConstantVM.cs" />
     <Compile Include="Admin\Image.cs" />
     <Compile Include="Admin\ImageVM.cs" />

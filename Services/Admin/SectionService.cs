@@ -33,7 +33,7 @@ namespace Services
                         Description, InternalName, BackgroundColor,
                         CssClass, SettingsJson, Status, CreatedAt, UpdatedAt
                     FROM dbo.Sections
-                    ORDER BY CreatedAt DESC, Title;", connection))
+                    ORDER BY CreatedAt DESC;", connection))
                 {
                     await connection.OpenAsync();
 

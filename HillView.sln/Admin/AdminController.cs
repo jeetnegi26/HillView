@@ -30,10 +30,12 @@ namespace HillView.sln.Admin
         private readonly PageSectionService _pageSectionService;
         private readonly AdminMenuService _adminMenuService;
         private readonly TestimonialService _testimonialService;
+        private readonly ContactUsService _contactUsService;
 
         public AdminController(WebInfoService webService, LogErrorService logErrorService, ImageService imageService, WebInfoService webInfoService, 
             PageService pageService, SectionTypeService sectionTypeService, SectionService sectionService, SectionItemService sectionItemService,
-            ButtonService buttonService, PageSectionService pageSectionService, AdminMenuService adminMenuService, TestimonialService testimonialService
+            ButtonService buttonService, PageSectionService pageSectionService, AdminMenuService adminMenuService, TestimonialService testimonialService,
+            ContactUsService contactUsService
           )
         {
             _webService = webService;
@@ -48,6 +50,7 @@ namespace HillView.sln.Admin
             _adminMenuService = adminMenuService;
             _pageSectionService = pageSectionService;
             _testimonialService = testimonialService;
+            _contactUsService = contactUsService;
         }
 
         #region Home
@@ -3740,6 +3743,78 @@ namespace HillView.sln.Admin
             }
             return Json(new { Result = result });
         }
+        #endregion
+
+        #region Contact Us
+
+        // status: null = all, true = active, false = inactive
+        [HttpGet]
+        public async Task<ActionResult> ContactUs(bool? status)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+
+            try
+            {
+                var contacts = await _contactUsService.GetContactsAsync(status, ip);
+
+                ViewBag.StatusFilter = status;
+
+                return View(contacts);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/ContactUs",
+                    "GET",
+                    0,
+                    ip,
+                    "ContactUs");
+
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangeContactStatus(Guid id, bool newStatus, bool? filter)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+
+            try
+            {
+                if (id == Guid.Empty)
+                {
+                    TempData["ErrorMessage"] = "Invalid contact ID.";
+                    return RedirectToAction("ContactUs", new { status = filter });
+                }
+
+                bool updated = await _contactUsService.SetStatusAsync(id, newStatus, ip);
+
+                if (updated)
+                    TempData["SuccessMessage"] = newStatus
+                        ? "Contact marked as active."
+                        : "Contact marked as inactive.";
+                else
+                    TempData["ErrorMessage"] = "Contact not found.";
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex,
+                    "Admin/ContactUs",
+                    "POST",
+                    0,
+                    ip,
+                    "ChangeContactStatus");
+
+                TempData["ErrorMessage"] = "Unable to change the status. Please try again.";
+            }
+
+            // Return to the same filtered list the admin was viewing.
+            return RedirectToAction("ContactUs", new { status = filter });
+        }
+
         #endregion
 
         #region Upload Logo Image

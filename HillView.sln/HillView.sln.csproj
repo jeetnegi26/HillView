@@ -898,6 +898,9 @@
     <Content Include="Views\Home\About_Bk.cshtml" />
     <Content Include="Views\Home\Contact_bk.cshtml" />
     <Content Include="Views\Home\partial\_ContactInfo.cshtml" />
+    <Content Include="Views\Jobs\Index_bk.cshtml" />
+    <Content Include="Views\Services\Index_bk.cshtml" />
+    <Content Include="Views\Admin\ContactUs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">

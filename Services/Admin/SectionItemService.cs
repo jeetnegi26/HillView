@@ -36,7 +36,7 @@ namespace Services
                            DisplayOrder, Status, CreatedAt, UpdatedAt
                     FROM SectionItems
                     WHERE ParentSectionItemId IS NULL
-                    ORDER BY DisplayOrder, CreatedAt DESC;", connection))
+                    ORDER BY CreatedAt DESC;", connection))
                 {
                     await connection.OpenAsync();
 
