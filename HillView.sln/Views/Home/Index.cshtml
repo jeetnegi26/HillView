@@ -390,6 +390,10 @@
     }
 
     @@media screen and (min-width: 600px) and (max-width: 1023px) {
+        .banner-text {
+            max-width: 712px;
+        }
+        
         .ser-img-box {
             padding: 0 1REM;
             ;
@@ -485,7 +489,7 @@
                  !string.IsNullOrWhiteSpace(images[0].ImageUrl))
             {
                 <img class="orb orb-1"
-                     src="@Url.Content("~/content/uploads/" + images[0].ImageUrl)"
+                     src="@Url.Content("~/content/uploads/" + images[1].ImageUrl)"
                      alt="@(images[0].AltText ?? "")" />
             }
 
@@ -493,7 +497,7 @@
                  !string.IsNullOrWhiteSpace(images[1].ImageUrl))
             {
                 <img class="orb orb-2"
-                     src="@Url.Content("~/content/uploads/" + images[1].ImageUrl)"
+                     src="@Url.Content("~/content/uploads/" + images[0].ImageUrl)"
                      alt="@(images[1].AltText ?? "")" />
             }
 
