@@ -1,0 +1,197 @@
+﻿
+
+@model DTOs.LayoutDataVM
+
+<footer>
+    <div class="container">
+        <div class="row footer-box justify-content-around">
+
+            <!-- Brand logo and contact information -->
+            <div class="col-xl-3 col-lg-5 col-md-12 col-12 footer-info">
+
+                @if (Model != null && !string.IsNullOrWhiteSpace(Model.Logo))
+                {
+                    <img src="@Url.Content("~/Content/logo/" + Model.Logo)"
+                         alt="@(Model.BrandName ?? "Hill View")" />
+
+                    <span>@Model.BrandName</span>
+                }
+                else if (Model != null && !string.IsNullOrWhiteSpace(Model.BrandName))
+                {
+                    <span>@Model.BrandName</span>
+                }
+
+                @*<div class="d-flex footer-tel">
+                        @if (!string.IsNullOrWhiteSpace(Model?.Phone))
+                        {
+                            <a href="tel:@Model.Phone">
+                                <i class="bi bi-telephone"></i>&nbsp;@Model.Phone
+                            </a>
+                        }
+
+                        @if (!string.IsNullOrWhiteSpace(Model?.TollFree))
+                        {
+                            <a href="tel:@Model.TollFree">
+                                / Toll Free - @Model.TollFree
+                            </a>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(Model?.Email))
+                    {
+                        <div id="emailBrandInfo" class="emailFooter">
+                            <a href="mailto:@Model.Email">
+                                <i class="bi bi-envelope"></i>&nbsp;@Model.Email
+                            </a>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrWhiteSpace(Model?.Address))
+                    {
+                        <div class="address2-footer my-3">
+                            <a href="#" class="eng">
+                                <i class="bi bi-geo-alt"></i>&nbsp;@Model.Address
+                            </a>
+                        </div>
+                    }
+
+                    <div class="social-icons" id="footerSocialMedia">
+                        @if (Model?.SocialLinks != null)
+                        {
+                            foreach (var social in Model.SocialLinks.OrderBy(x => x.DisplayOrder))
+                            {
+                                if (!string.IsNullOrWhiteSpace(social.Url))
+                                {
+                                    <a href="@social.Url"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                       aria-label="@social.Name">
+                                        <i class="@social.Icon"></i>
+                                    </a>
+                                }
+                            }
+                        }
+                    </div>*@
+            </div>
+
+            <!-- Company links -->
+            <div class="col-xl-2 col-lg-2 col-md-6 col-12 footer-links">
+                <h5 class="eng">COMPANY</h5>
+
+                <ul class="eng">
+                    @if (Model?.Navigation != null)
+                    {
+                        foreach (var item in Model.Navigation)
+                        {
+                            <li>
+                                <a href="@Url.Content("~/" + item.Slug)">
+                                    @item.Title
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <!-- Brands links -->
+            <div class="col-xl-2 col-lg-3 col-md-6 col-12 footer-links">
+                <h5 class="eng">BRANDS</h5>
+
+                <ul class="eng" id="serviceTitleEng">
+                    @if (Model?.FooterLinks != null)
+                    {
+                        foreach (var link in Model.FooterLinks
+                            .Where(x => string.Equals(x.GroupName, "Brands",
+                                StringComparison.OrdinalIgnoreCase))
+                            .OrderBy(x => x.DisplayOrder))
+                        {
+                            <li>
+                                <a href="@link.Url">@link.Name</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <!-- Help links -->
+            <div class="col-xl-2 col-lg-4 col-md-6 col-12 footer-help">
+                <h5 class="eng">HELP</h5>
+
+                <ul class="eng">
+                    @if (Model?.FooterLinks != null)
+                    {
+                        foreach (var link in Model.FooterLinks
+                            .Where(x => string.Equals(x.GroupName, "Help",
+                                StringComparison.OrdinalIgnoreCase))
+                            .OrderBy(x => x.DisplayOrder))
+                        {
+                            <li>
+                                <a href="@link.Url">@link.Name</a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <!-- Newsletter: original structure preserved -->
+            <div class="col-xl-3 col-lg-6 col-md-6 col-12 footer-news">
+                <h5 class="eng">NEWSLETTER</h5>
+
+                <form>
+                    <div class="mb-3">
+                        <div class="mb-2">
+                            <input type="email"
+                                   class="form-control newsletter-input mb-1"
+                                   id="exampleInputEmail1"
+                                   aria-describedby="emailHelp"
+                                   placeholder="Enter your email address" />
+
+                            <label class="error d-none text-danger"
+                                   id="errorEmail">
+                                *Enter email address
+                            </label>
+                        </div>
+
+                        <button type="button"
+                                class="btn newsletter-submit"
+                                id="newsletterSubmit">
+                            <span class="spinner-border spinner-border-sm d-none"
+                                  role="status"
+                                  aria-hidden="true"></span>
+                            <label class="eng">Subscribe Now</label>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Copyright -->
+        <div class="copyright-box">
+            <div class="social-icons">
+                @if (Model?.SocialLinks != null)
+                {
+                    foreach (var social in Model.SocialLinks.OrderBy(x => x.DisplayOrder))
+                    {
+                        if (!string.IsNullOrWhiteSpace(social.Url))
+                        {
+                            <a href="@social.Url"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               aria-label="@social.Name">
+                                <i class="@social.Icon"></i>
+                            </a>
+                        }
+                    }
+                }
+            </div>
+
+            <p class="eng">
+                @(string.IsNullOrWhiteSpace(Model?.Copyright)
+                    ? ""
+                    : "© " + Model.Copyright)
+            </p>
+        </div>
+
+    </div>
+</footer>

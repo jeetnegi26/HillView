@@ -257,6 +257,19 @@ footer img {
     box-shadow: 0px 11px 20px -20px rgba(0,0,0,0.45);
 }
 
+.footer-row{
+    border-bottom: 1px solid var(--primary);
+}
+
+.copyright{
+    padding: 2rem 0 1rem;
+    text-align: center
+}
+
+.social-icons{
+    padding-bottom: 2rem;
+}
+
 @media screen and (min-width: 1100px) {
     .navbar-logo {
         width: 10%;
@@ -268,8 +281,6 @@ footer img {
     .navbar-icon {
         display: none;
     }
-
-
 
     .nav-items {
         padding-left: 4.5rem;
@@ -621,12 +632,7 @@ footer {
     width: 100%;
 }
 
-.social-icons {
-    position: absolute;
-    left: 0;
-    display: flex;
-    gap: 3px; /* Adjust spacing between icons */
-}
+
 
 .copyright-box p {
     text-align: center;

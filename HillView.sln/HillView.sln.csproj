@@ -723,6 +723,7 @@
     <Content Include="Content\css\bootstrap\bootstrap-grid.css" />
     <Content Include="Content\css\bootstrap\bootstrap-icons.css" />
     <Content Include="Content\css\bootstrap\bootstrap.min.css" />
+    <Content Include="Content\css\CustomAnimate.css" />
     <Content Include="Content\css\fonts.css" />
     <Content Include="Content\css\otherbanner.css" />
     <Content Include="Content\css\owl.carousel.min.css" />
@@ -901,6 +902,7 @@
     <Content Include="Views\Jobs\Index_bk.cshtml" />
     <Content Include="Views\Services\Index_bk.cshtml" />
     <Content Include="Views\Admin\ContactUs.cshtml" />
+    <Content Include="Views\Shared\Admin\_Footerbkp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">

@@ -28,6 +28,9 @@
 <link href="~/Content/css/banner.css" rel="stylesheet" />
 <link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />
 
+<link href="~/Content/css/animate.css" rel="stylesheet" />
+<link href="~/Content/css/CustomAnimate.css" rel="stylesheet" />
+
 <style>
     .ai-icon {
         width: 27%;
@@ -576,7 +579,7 @@
             <div class="home-services-container container">
                 <div class="home-services-row row">
 
-                    <div class="col-lg-6 col-md-12 col-12 ser-desc-box">
+                    <div class="col-lg-6 col-md-12 col-12 ser-desc-box animated fadeInLeft">
                         <div class="home-head">
                             @if (!string.IsNullOrWhiteSpace(dataService.SubHeading))
                             {
@@ -594,7 +597,7 @@
                                 {
                                     var iconUrl = item.Images?.FirstOrDefault()?.ImageUrl;
 
-                                    <div class="service-item">
+                                    <div class="service-item animated fadeInDown">
                                         <div class="d-flex">
                                             @if (!string.IsNullOrWhiteSpace(iconUrl))
                                             {
@@ -614,7 +617,7 @@
                     </div>
                     @if (!string.IsNullOrWhiteSpace(mainImageUrl))
                     {
-                        <div class="col-lg-6 col-md-12 col-12 ser-img-box">
+                        <div class="col-lg-6 col-md-12 col-12 ser-img-box animated fadeInRight">
                             <img src="/Content/Uploads/@mainImageUrl" alt="@dataService.Heading" />
                         </div>
                     }
@@ -643,7 +646,7 @@
                         @foreach (var item in candidateItems)
                         {
                             <div class="col-lg-6 col-md-6 col-12 candidate-col-box">
-                                <div class="candidate-item d-flex">
+                                <div class="candidate-item d-flex animated fadeIn">
                                     <div class="candidate-icon">
                                         <i class="bi bi-check-circle"></i>
                                     </div>

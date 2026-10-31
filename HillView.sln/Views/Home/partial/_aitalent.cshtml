@@ -1,4 +1,6 @@
-﻿
+﻿<link href="~/Content/css/animate.css" rel="stylesheet" />
+
+
 <style>
     .ai-talent-section {
         width: 100%;
@@ -96,6 +98,14 @@
             animation: none;
         }
     }
+
+    .ai-talent-heading {
+        animation-delay: 0s;
+    }
+
+    .ai-talent-content{
+        animation-delay: 0.5s;
+    }
 </style>
 
 @*<section class="ai-talent-section">
@@ -136,14 +146,14 @@
 <section class="ai-talent-section">
     <div class="ai-talent-container container">
 
-        <div class="ai-talent-heading">
+        <div class="ai-talent-heading animated slideInLeft">
             <span class="waving-hand" aria-hidden="true">👋</span>
             <h1>
                 @Model[0].Heading
             </h1>
         </div>
 
-        <div class="ai-talent-content">
+        <div class="ai-talent-content animated slideInRight">
             <p>
                 @Model[0].Description
             </p>
