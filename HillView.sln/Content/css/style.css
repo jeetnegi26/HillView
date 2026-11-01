@@ -286,6 +286,8 @@ footer img {
         padding-left: 4.5rem;
     }
 
+        
+
     .nav-boxx {
         display: block !important;
     }
@@ -333,6 +335,13 @@ footer img {
     .navbar-logo {
         width: 18%;
     }
+        .navbar-logo img {
+            margin-top: -23px;
+        }
+
+    
+
+
 }
 
 .navbar-icon span {
@@ -506,7 +515,7 @@ footer img {
 
         .navbar-menu nav.active ul li .nav-link {
             color: var(--text);
-            font-size: 24px;
+            font-size: 18px;
         }
 }
 
@@ -720,10 +729,52 @@ footer {
     }
 
     .navbar-icon {
-        padding-top: 0rem;
+        padding-top: 1rem;
     }
 
     h2 {
         font-size: 25px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+
+    /* Keep navbar above mobile menu */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 10001;
+        background: transparent;
+    }
+
+    /* Keep logo visible */
+    .navbar-logo {
+        position: relative;
+        z-index: 10002;
+    }
+
+        .navbar-logo img {
+            position: relative;
+            z-index: 10002;
+        }
+
+    /* Mobile menu background */
+    .navbar-menu nav.active {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        z-index: 9999;
+        background: var(--bg);
+        padding-top: 80px;
+    }
+
+    /* Keep hamburger above menu */
+    .navbar-icon {
+        position: relative;
+        z-index: 10003;
     }
 }

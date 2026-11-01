@@ -410,6 +410,12 @@
             setTimeout(() => {
                 preloader.style.transform = "translateY(-100%)";
             }, 3000);
+
+
+            $(".navbar-icon").click(function () {
+                $(this).toggleClass("active");
+                $(".nav-items").toggleClass("active");  
+            });
         });
 
     </script>
