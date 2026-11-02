@@ -207,198 +207,19 @@
     </style>
 </head>
 <body>
+    <div class="shatter_wrap transform">
+        <div class="animation_text">
+            <h2>
+                <span><img src="~/Content/logo/logo.svg" alt="Logo" /></span>
+            </h2>
+        </div>
+    </div>
     @{ Html.RenderAction("SharedData", "Layout"); }
 
-    <!--<div style="z-index: 10;" class="navbar">-->
-    @*<div class="container nav-boxx">
-            <div class="row">
-
-                <div class="col-lg-12 col-md-4 col-4 navbar-menu nav justify-content-between">
-
-                    <div class="navbar-logo">
-                        <a href="/Home/Index">
-                            @if (data != null && !string.IsNullOrWhiteSpace(data.Logo))
-                            {
-                                <img src="@Url.Content("~/Content/Uploads/" + data.Logo)"
-                                     alt="@(data.BrandName ?? "Hill View")" />
-                            }
-                            else
-                            {
-                                <span>@(data != null ? data.BrandName : "Hill View")</span>
-                            }
-                        </a>
-                    </div>
-
-                    <nav class="nav-items">
-                        <ul class="mbl-ul">
-                            <li class="eng"><a class="nav-link" href="/">Home</a></li>
-                            <li class="eng"><a class="nav-link" href="@Url.Action("About","Home")">About</a></li>
-                            <li class="eng"><a class="nav-link" href="@Url.Action("Index", "Brands", new{id="#top" })">Brands</a></li>
-                            <li class="eng"><a class="nav-link" href="@Url.Action("Contact","Home")">Contact</a></li>
-                            <li class="eng"><a class="nav-link" href="/Projects">Projects</a></li>
-
-                            <li class="quote-btn d-lg-none d-md-block d-block">
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary dropdown-toggle quote-a" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <span class="eng">Get A Quote</span>
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li>
-                                            <a class="dropdown-item" href="/Logistics">
-                                                <span class="eng">Logistics</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="/Warehouse">
-                                                <span class="eng">Warehouse</span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a class="dropdown-item" href="/Home/ServiceForm">
-                                                <span class="eng">Connect</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
-                        </ul>
-                    </nav>
-
-                    <div class="quote-btn  d-lg-flex d-md-none d-none align-items-center">
-                        <div class="dropdown lang-dropdown-box ms-auto px-2">
-                            <button class="btn btn-secondary dropdown-toggle lang-dropdown" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                En
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item" href="#" id="" data-value="En" onclick="setLanguage(this)">English</a></li>
-                                <li><a class="dropdown-item" href="#" id="" data-value="Ar" onclick="setLanguage(this)">Arabic</a></li>
-                            </ul>
-                        </div>
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-secondary dropdown-toggle quote-a" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="eng">Get A Quote</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-end">
-                                <li>
-                                    <a class="dropdown-item" href="/Logistics">
-                                        <span class="eng">Logistics</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="/Warehouse">
-                                        <span class="eng">Warehouse</span>
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="/Home/ServiceForm">
-                                        <span class="eng">Connect</span>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="d-lg-none d-md-flex d-flex">
-                        <div class="d-lg-none d-md-flex d-flex px-2 pt-1 mobile-nav-right">
-                            <div class="dropdown ms-auto px-1">
-                                <button class="btn btn-secondary dropdown-toggle lang-dropdown" type="button" id="dropdownMenuButtonMbl" data-bs-toggle="dropdown" aria-expanded="false">
-                                    En
-                                </button>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButtonMbl">
-                                    <li><a class="dropdown-item" href="#" id="" data-value="En" onclick="setLanguage(this)">English</a></li>
-                                    <li><a class="dropdown-item" href="#" id="" data-value="Ar" onclick="setLanguage(this)">Arabic</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="navbar-icon">
-                            <span></span>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>*@
-    <!--</div>-->
     <div class="body">
         @RenderBody()
     </div>
     @{ Html.RenderAction("Footer", "Layout"); }
-    @*<footer>
-            <div class="container">
-                <div class="row footer-box justify-content-around">
-                    <div class="col-xl-3 col-lg-5 col-md-12 col-12 footer-info">
-                        <img src="~/Content/Images/logo.svg" />
-
-                        <div class="d-flex footer-tel">
-                            <a href="" id="telephoneFooter"><i class="bi bi-telephone"></i> </a>
-                            <a href="tel:+966559199073"><i class="bi bi-telephone"></i> +966 55 919 9073</a>
-                            <a href="tel:9200 12913"> / Toll Free - 9200 12913</a>
-                            <a href="" id="tollFreeFooter"> </a>
-                        </div>
-                        <div id="emailBrandInfo" class="emailFooter">
-                            <a href="mailto:info@gsclogistics.com.sa"><i class="bi bi-envelope"></i> </a>
-                        </div>
-                        <a href="#" class="eng" id="footerAddress"></a>
-                        <div class="address2-footer my-3">
-                            <a href="#" class="eng" id="footerAddress2"></a>
-                        </div>
-                        <a href="" id="footerAddress"><i class="bi bi-geo-alt"></i> Narjis Building, Abubacker Siddiq Road, Thummamah, Riyadh, Saudi Arabia.</a>
-                        <div class="social-icons" id="footerSocialMedia">
-
-                        </div>
-                    </div>
-                    <div class="col-xl-2 col-lg-2 col-md-6 col-12 footer-links">
-                        <h5 class="eng">COMPANY</h5>
-
-                        <ul class="eng">
-                            <li><a href="/">Home</a></li>
-                            <li><a href="@Url.Action("About","Home")">About</a></li>
-                            <li><a href="@Url.Action("Contact","Home")">Contact</a></li>
-                            <li><a href="/Projects">Projects</a></li>
-                        </ul>
-
-                    </div>
-                    <div class="col-xl-2 col-lg-3 col-md-6 col-12 footer-links">
-                        <h5 class="eng">BRANDS</h5>
-                        <ul class="eng" id="serviceTitleEng">
-                            <li><a href="/Home/Services?Id=1">Logistics</a></li>
-                        </ul>
-                    </div>
-
-                    <div class="col-xl-2 col-lg-4 col-md-6 col-12 footer-help">
-                        <h5 class="eng">HELP</h5>
-
-                        <ul class="eng">
-                            <li><a class="layoutWhatsapp" href="">Customer Support</a></li>
-                            <li><a href="/Home/PrivacyPolicy">Terms & Conditions</a></li>
-                            <li><a href="/Home/PrivacyPolicy">Privacy Policy</a></li>
-                            <li><a href="" target="_blank" class="companyProfile_File" download="CompanyProfile.pdf">Company Profile</a></li>
-                        </ul>
-
-                    </div>
-                    <div class="col-xl-3 col-lg-6 col-md-6 col-12 footer-news">
-                        <h5 class="eng">NEWSLETTER</h5>
-                        <form>
-                            <div class="mb-3">
-                                <div class="mb-2">
-                                    <input type="email" class="form-control newsletter-input mb-1" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter your email address">
-                                    <label class="error d-none text-danger" id="errorEmail">*Enter email address</label>
-                                </div>
-                                <button type="button" class="btn newsletter-submit" id="newsletterSubmit">
-                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-                                    <label class="eng">Subscribe Now</label>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="copyright-box">
-                    <div class="social-icons" id="footerSocialMedia">
-
-                    </div>
-                    <p class="eng">© Copyright 2024, All Rights Reserved by GSC</p>
-                </div>
-            </div>
-        </footer>*@
     <div class="sticky-button">
         <a class="layoutWhatsapp fixed-button" href="">
             <img class="whatsapp-svg" src="~/Content/Images/whatsapp.svg" />
@@ -406,15 +227,17 @@
     </div>
     <script>
         $("document").ready(function () {
-            const preloader = document.querySelector(".transform");
-            setTimeout(() => {
-                preloader.style.transform = "translateY(-100%)";
-            }, 3000);
-
+            var preloader = document.querySelector(".transform");
+            if (preloader) {
+                setTimeout(function () {
+                    preloader.style.transform = "translateY(-100%)";
+                    setTimeout(function () { preloader.style.display = "none"; }, 1000);
+                }, 3000);
+            }
 
             $(".navbar-icon").click(function () {
                 $(this).toggleClass("active");
-                $(".nav-items").toggleClass("active");  
+                $(".nav-items").toggleClass("active");
             });
         });
 
