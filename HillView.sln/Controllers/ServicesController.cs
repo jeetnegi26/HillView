@@ -25,6 +25,7 @@ namespace HillView.sln.Controllers
             _uiPageService = uiPageService;
         }
         // GET: Services
+        [Route("our-services")]
         public async Task<ActionResult> Index()
         {
             try

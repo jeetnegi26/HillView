@@ -323,7 +323,7 @@
 
 
 @{
-    var aitalent = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 3).ToList();
+    var aitalent = Model != null ? Model.Sections.Where(x => x != null && x.DisplayOrder == 3).ToList() : new List<UISectionVM>();
 }
 @Html.Action("aitalent", "Home", new { sections = aitalent })
 

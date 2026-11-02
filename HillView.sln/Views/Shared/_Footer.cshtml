@@ -22,7 +22,7 @@
 
                 <div class="footer-links-items">
                     <ul class="eng d-lg-flex d-md-flex d-block justify-content-center m-0">
-                        @if (Model?.Navigation != null)
+                        @if (Model.Navigation != null)
                         {
                             foreach (var item in Model.Navigation)
                             {
@@ -56,7 +56,7 @@
 
         <div class="copyright">
             <p class="eng m-0">
-                @(string.IsNullOrWhiteSpace(Model?.Copyright) ? "" : "© " + Model.Copyright)
+                @(string.IsNullOrWhiteSpace(Model.Copyright) ? "" : "© " + Model.Copyright)
             </p>
         </div>
 

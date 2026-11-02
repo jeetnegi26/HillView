@@ -537,7 +537,7 @@
 
 @if (data2 != null)
 {
-    var items = data2?.Items?.Where(x => x != null).ToList();
+    var items = data2.Items != null ? data2.Items.Where(x => x != null).ToList() :  null;
     <section class="services-section">
         <div class="services-box">
             <div class="services-container container">

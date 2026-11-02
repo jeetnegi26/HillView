@@ -591,10 +591,10 @@
 }
 
 @{
-    var advantageSections = Model?.Sections?
+    var advantageSections = Model != null ? Model.Sections != null ? Model.Sections
         .Where(x => x != null &&
                     (x.DisplayOrder == 2 || x.DisplayOrder == 3))
-        .ToList();
+        .ToList() : new List<UISectionVM>() : new List<UISectionVM>();
 }
 
 @Html.Action("advantages", "Home",
@@ -602,10 +602,8 @@
 
 @if (dataService != null)
 {
-    var serviceItems = dataService.Items?.Where(i => i != null).ToList()
-                       ?? new List<UISectionItemVM>();
-
-    var mainImageUrl = dataService.Images?.FirstOrDefault()?.ImageUrl;
+    var serviceItems = dataService.Items != null ? dataService.Items.Where(i => i != null).ToList() : new List<UISectionItemVM>();
+    var mainImageUrl = dataService.Images != null ? dataService.Images.FirstOrDefault().ImageUrl : null;
 
     <section class="home-services-section">
         <div class="home-services-box">
@@ -628,7 +626,7 @@
                             <div class="ser-items">
                                 @foreach (var item in serviceItems)
                                 {
-                                    var iconUrl = item.Images?.FirstOrDefault()?.ImageUrl;
+                                    var iconUrl = item.Images != null ? item.Images.FirstOrDefault().ImageUrl : null;
 
                                     <div class="service-item animated fadeInDown">
                                         <div class="d-flex">
@@ -663,8 +661,7 @@
 
 @if (data5 != null)
 {
-    var candidateItems = data5.Items?.Where(i => i != null).ToList()
-                   ?? new List<UISectionItemVM>();
+    var candidateItems = data5.Items != null ? data5.Items.Where(i => i != null).ToList() : new List<UISectionItemVM>();
     <section class="candidate-section">
         <div class="candidate-box">
             <div class="container candidate-container">
@@ -833,7 +830,7 @@
 <div class="mile-faq-bg">
     @*@Html.Action("milestones", "Home")*@
     @{
-        var milestones = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 9).ToList();
+        var milestones = Model != null && Model.Sections != null ? Model.Sections.Where(x => x != null && x.DisplayOrder == 9).ToList() : new List<UISectionVM>();
     }
 
     @Html.Action("milestones", "Home",
@@ -919,7 +916,7 @@
 
 
 @{
-    var aitalent = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 11).ToList();
+    var aitalent = Model != null && Model.Sections != null ? Model.Sections.Where(x => x != null && x.DisplayOrder == 11).ToList() : new List<UISectionVM>();
 }
 @Html.Action("aitalent", "Home", new { sections = aitalent })
 

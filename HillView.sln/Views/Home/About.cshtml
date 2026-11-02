@@ -266,7 +266,7 @@
 }
 
 @{
-    var advantageSections = Model?.Sections?.Where(x => x != null && (x.DisplayOrder == 3 || x.DisplayOrder == 4)).ToList();
+    var advantageSections = Model != null && Model.Sections != null ? Model.Sections.Where(x => x != null && (x.DisplayOrder == 3 || x.DisplayOrder == 4)).ToList() : new List<UISectionVM>();
 }
 
 @Html.Action("advantages", "Home",
@@ -476,14 +476,14 @@
 
 
 @{
-    var milestones = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 7).ToList();
+    var milestones = Model != null ? Model.Sections.Where(x => x != null && x.DisplayOrder == 7).ToList() : new List<UISectionVM>();
 }
 
 @Html.Action("milestones", "Home",
     new { sections = milestones })
 
 @{
-    var aitalent = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 8).ToList();
+    var aitalent = Model != null ? Model.Sections.Where(x => x != null && x.DisplayOrder == 8).ToList() : new List<UISectionVM>();
 }
 @Html.Action("aitalent", "Home", new { sections = aitalent })
 
