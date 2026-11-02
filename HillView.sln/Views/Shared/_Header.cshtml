@@ -39,12 +39,22 @@
                 </nav>
 
                 <div class="quote-btn d-lg-flex d-md-none d-none align-items-center">
-                    <div class="why-us-nav">
-                        <a class="btn btn-secondary">Why Us?</a>
-                    </div>
-                    <div class="contact-nav">
-                        <a class="btn btn-primary mx-1">Contact Us</a>
-                    </div>
+                    @if (Model.HeaderLinks != null)
+                    {
+                        if (Model.HeaderLinks.Count > 0)
+                        {
+                            <div class="why-us-nav">
+                                <a class="btn btn-secondary" href="@Model.HeaderLinks[0].Url">@Model.HeaderLinks[0].Name</a>
+                            </div>
+                        }
+
+                        if (Model.HeaderLinks.Count > 1)
+                        {
+                            <div class="contact-nav">
+                                <a class="btn btn-primary mx-1" href="@Model.HeaderLinks[1].Url">@Model.HeaderLinks[1].Name</a>
+                            </div>
+                        }
+                    }
                 </div>
 
                 <div class="d-lg-none d-md-flex d-flex ">

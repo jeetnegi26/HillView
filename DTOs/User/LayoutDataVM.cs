@@ -19,12 +19,16 @@ namespace DTOs
             = new List<LayoutNavVM>();
 
         // Footer link groups
-        public List<LayoutFooterLinkVM> FooterLinks { get; set; }
-            = new List<LayoutFooterLinkVM>();
+        public List<LayoutLinkBtnVM> FooterLinks { get; set; }
+            = new List<LayoutLinkBtnVM>();
 
         // Social media links
         public List<LayoutSocialLinkVM> SocialLinks { get; set; }
             = new List<LayoutSocialLinkVM>();
+
+        // Header link groups
+        public List<LayoutLinkBtnVM> HeaderLinks { get; set; }
+            = new List<LayoutLinkBtnVM>();
     }
 
     public class LayoutNavVM
@@ -33,7 +37,7 @@ namespace DTOs
         public string Slug { get; set; }
     }
 
-    public class LayoutFooterLinkVM
+    public class LayoutLinkBtnVM
     {
         public string Name { get; set; }
         public string Url { get; set; }

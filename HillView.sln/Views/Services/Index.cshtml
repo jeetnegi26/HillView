@@ -1,28 +1,50 @@
 ﻿@model DTOs.UIPageVM
 @using System.Linq
 @using DTOs
+@*@{
+        ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+
+        var data = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+
+        var images = data?.Images?
+            .Where(x => x != null)
+            .ToList();
+
+        var buttons = data?.Buttons?
+            .Where(x => x != null)
+            .ToList();
+
+
+        var data2 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 2);
+        var data3 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 3);
+        var data4 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 4);
+        var data5 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 5);
+        var data6 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 6);
+
+    }*@
+
 @{
     ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
 
-    var data = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+    var sections = (Model != null && Model.Sections != null)
+        ? Model.Sections.Where(x => x != null).ToList()
+        : null;
 
-    var images = data?.Images?
-        .Where(x => x != null)
-        .ToList();
+    var data = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 1) : null;
+    var data2 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 2) : null;
+    var data3 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 3) : null;
+    var data4 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 4) : null;
+    var data5 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 5) : null;
+    var data6 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 6) : null;
 
-    var buttons = data?.Buttons?
-        .Where(x => x != null)
-        .ToList();
+    var images = (data != null && data.Images != null)
+        ? data.Images.Where(x => x != null).ToList()
+        : null;
 
-
-    var data2 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 2);
-    var data3 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 3);
-    var data4 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 4);
-    var data5 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 5);
-    var data6 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 6);
-
+    var buttons = (data != null && data.Buttons != null)
+        ? data.Buttons.Where(x => x != null).ToList()
+        : null;
 }
-
 <link href="~/Content/css/otherbanner.css" rel="stylesheet" />
 <link href="~/Content/css/owl.carousel.min.css" rel="stylesheet" />
 
@@ -745,7 +767,7 @@
                                 <div class="col-lg-4 col-md-6 col-12 areas-col">
                                     <div class="areas-item">
                                         <div class="areas-item-icon">
-                                            <img src="~/Content/Uploads/@item.Images[0].ImageUrl" alt="@item.Images[0].AltText"/>
+                                            <img src="~/Content/Uploads/@item.Images[0].ImageUrl" alt="@item.Images[0].AltText" />
                                         </div>
                                         <h3>@item.Title</h3>
                                         <p>

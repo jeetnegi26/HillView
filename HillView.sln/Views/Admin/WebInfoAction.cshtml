@@ -31,22 +31,40 @@
             <div class="card-body">
                 <form id="key-create">
                     <div class="row">
+                        @*<div class="form-group col-md-4">
+            <label class="form-label">Info Type</label>
+            <div class="">
+                <input class="d-none" name="Id" value="@Model.Id" />
+                @if (Model != null && Model.Id > 0)
+                {
+                    <input class="d-none" name="Type" value="@Model.Type" />
+                }
+            <select id="key-type-dd" class="form-control" name="Type" style="-webkit-appearance: listbox !important" @(Model.Id > 0 ? "disabled" : "")>
+                <option value="" disabled selected>Select Info Type</option>
+                <option value="BrandName" @(Model.Type == "BrandName" ? "selected" : "")>BrandName</option>
+                <option value="BrandInfo" @(Model.Type == "BrandInfo" ? "selected" : "")>BrandInfo</option>
+                <option value="BrandLogo" @(Model.Type == "BrandLogo" ? "selected" : "")>BrandLogo </option>
+                <option value="DefaultKeys" @(Model.Type == "DefaultKeys" ? "selected" : "")>DefaultKeys</option>
+                <option value="SocialLink" @(Model.Type == "SocialLink" ? "selected" : "")> Social Link </option>
+                <option value="FooterLink" @(Model.Type == "FooterLink" ? "selected" : "")> Footer Link  </option>
+                <option value="HeaderLink" @(Model.Type == "HeaderLink" ? "selected" : "")> Header Link  </option>
+
+            </select>
+            </div>
+        </div>*@
                         <div class="form-group col-md-4">
                             <label class="form-label">Info Type</label>
                             <div class="">
                                 <input class="d-none" name="Id" value="@Model.Id" />
-                                @if (Model != null && Model.Id > 0)
-                                {
-                                    <input class="d-none" name="Type" value="@Model.Type" />
-                                }
-                                <select id="key-type-dd" class="form-control" name="Type" style="-webkit-appearance: listbox !important" @(Model.Id > 0 ? "disabled" : "")>
-                                    <option value="" disabled selected>Select Info Type</option>
+                                <select id="key-type-dd" class="form-control" name="Type" style="-webkit-appearance: listbox !important">
+                                    <option value="" disabled @(string.IsNullOrEmpty(Model.Type) ? "selected" : "")>Select Info Type</option>
                                     <option value="BrandName" @(Model.Type == "BrandName" ? "selected" : "")>BrandName</option>
                                     <option value="BrandInfo" @(Model.Type == "BrandInfo" ? "selected" : "")>BrandInfo</option>
-                                    <option value="BrandLogo" @(Model.Type == "BrandLogo" ? "selected" : "")>BrandLogo </option>
+                                    <option value="BrandLogo" @(Model.Type == "BrandLogo" ? "selected" : "")>BrandLogo</option>
                                     <option value="DefaultKeys" @(Model.Type == "DefaultKeys" ? "selected" : "")>DefaultKeys</option>
-                                    <option value="FooterLink" @(Model.Type == "FooterLink" ? "selected" : "")> Footer Link  </option>
-                                    <option value="SocialLink" @(Model.Type == "SocialLink" ? "selected" : "")> Social Link </option>
+                                    <option value="SocialLink" @(Model.Type == "SocialLink" ? "selected" : "")>Social Link</option>
+                                    <option value="FooterLink" @(Model.Type == "FooterLink" ? "selected" : "")>Footer Link</option>
+                                    <option value="HeaderLink" @(Model.Type == "HeaderLink" ? "selected" : "")>Header Link</option>
                                 </select>
                             </div>
                         </div>
@@ -131,7 +149,38 @@
     // Initialize the partial view
     let id = '@Model.Id';
     let type = '@Model.Type';
-    $(".infoFooter").toggle(type === "FooterLink");
+
+
+
+    function applyTypeLayout(type) {
+        $(".infoFooter").hide();
+
+        if (type === "BrandLogo") {
+            $(".infoDesc, .infoValue").hide();
+            $(".infoEmpty, .infoImage").show();
+        } else {
+            $(".infoValue, .infoDesc").show();
+            $(".infoImage, .infoEmpty").hide();
+
+            if (type === "FooterLink" || type === "HeaderLink") {
+                $(".infoFooter").show();
+            }
+        }
+    }
+
+    // Initial state
+    applyTypeLayout('@Model.Type');
+
+    // Change key type
+    $("#key-add-container")
+        .off("change", "#key-type-dd")
+        .on("change", "#key-type-dd", function () {
+            applyTypeLayout($(this).val());
+        });
+
+
+
+    $(".infoFooter").toggle(type === "FooterLink" || type === "HeaderLink");
 
     if (id !== "" && id !== "0" && type === "BrandLogo") {
         $(".infoDesc").hide();
@@ -164,7 +213,7 @@
                 $(".infoImage").hide();
                 $(".infoEmpty").hide();
 
-                if (type === "FooterLink") {
+                if (type === "FooterLink" || type === "HeaderLink") {
                     $(".infoFooter").show();
                 }
             }
@@ -276,71 +325,6 @@ $("#key-add-container")
                 $saveButton.prop("disabled", false).text(originalText);
             });
         });
-
-
-            @*$("#key-close").click(function () {
-        $("#key-add-container").hide();
-    });
-    $('#key-create').validate({
-        rules: {
-            Name: {
-                required: true,
-            },
-        },
-        messages: {
-            Name: {
-                required: '* Info Name is required',
-            },
-        }
-    });
-    var fileUpload = document.getElementById("fileUpload-container");
-    var fileInput = fileUpload.querySelector("input[type='file']");
-    $("#Keycreate").click(function (e) {
-        const form = document.getElementById('key-create');
-        const formData = new FormData(form);
-        if (fileInput) {
-            if (fileInput.files.length > 0) {
-                for (let i = 0; i < fileInput.files.length; i++) {
-                    formData.append('File', fileInput.files[i]);  // Append each file
-                }
-            }
-        }
-         $.ajax({
-            type: 'Post',
-            url: '@Url.Action("WebInfoAction", "Admin")',
-             data: formData,
-             processData: false,
-             contentType: false,
-         })
-             .done(function (response) {
-                 if (response.Result.Success == true) {
-                     Swal.fire({
-                         position: 'top-end',
-                         icon: 'success',
-                         title: 'Action on web info, successfully completed.',
-                         showConfirmButton: false,
-                         timer: 1500
-                     })
-                     setTimeout(function () {// wait for 5 secs(2)
-                         window.location.reload(); // then reload the page.(3)
-                     }, 1550);
-                 }
-                 else {
-                     Swal.fire({
-                         icon: 'error',
-                         title: 'Oops...',
-                         text: response.Result.Message,
-                     });
-                 }
-                })
-                .fail(function (XMLHttpRequest, textStatus, errorThrown) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: 'Something went wrong!',
-                    });
-         });
-     });*@
 
     //File upload
     const uploadedFile = [];

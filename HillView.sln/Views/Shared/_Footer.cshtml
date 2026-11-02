@@ -5,16 +5,17 @@
 
         <div class="footer-row d-flex justify-content-between">
             <div class="footer-col footer-logo d-flex align-items-center">
-
-                @if (Model != null && !string.IsNullOrWhiteSpace(Model.Logo))
-                {
-                    <img src="@Url.Content("~/Content/logo/" + Model.Logo)"
-                         alt="@(Model.BrandName ?? "Hill View")" />
-                }
-                else if (Model != null && !string.IsNullOrWhiteSpace(Model.BrandName))
-                {
-                    <span>@Model.BrandName</span>
-                }
+                <a href="/">
+                    @if (Model != null && !string.IsNullOrWhiteSpace(Model.Logo))
+                    {
+                        <img src="@Url.Content("~/Content/logo/" + Model.Logo)"
+                             alt="@(Model.BrandName ?? "Hill View")" />
+                    }
+                    else if (Model != null && !string.IsNullOrWhiteSpace(Model.BrandName))
+                    {
+                        <span>@Model.BrandName</span>
+                    }
+                </a>
             </div>
 
             <div class="footer-col footer-links d-flex align-items-center">
@@ -38,9 +39,17 @@
             </div>
 
             <div class="footer-col footer-contact d-flex align-items-center">
-                <div class="footer-contact-btn-box">
-                    <a class="btn btn-primary">Contact Us</a>
-                </div>
+
+
+                @if (Model.FooterLinks != null)
+                {
+                    if (Model.FooterLinks.Count > 0)
+                    {
+                        <div class="footer-contact-btn-box">
+                            <a class="btn btn-primary" href="@Model.FooterLinks[0].Url">@Model.FooterLinks[0].Name</a>
+                        </div>
+                    }
+                }
             </div>
 
         </div>
@@ -51,11 +60,20 @@
             </p>
         </div>
 
-        <div class="social-icons text-center ">
-            <a class="px-2"><i class="bi bi-twitter-x"></i></a>
-            <a class="px-2"><i class="bi bi-linkedin"></i></a>
-            <a class="px-2"><i class="bi bi-instagram"></i></a>
-        </div>
+        @if (Model.SocialLinks != null)
+        {
+                <div class="social-icons text-center ">
+                    @foreach (var item in Model.SocialLinks)
+                    {
+                        <a class="px-2"><i class="@item.Icon"></i></a>
+                    }
+                    @*<a class="px-2"><i class="bi bi-twitter-x"></i></a>
+                    <a class="px-2"><i class="bi bi-linkedin"></i></a>
+                    <a class="px-2"><i class="bi bi-instagram"></i></a>*@
+                </div>
+            }
 
-    </div>
+
+
+            </div>
 </footer>

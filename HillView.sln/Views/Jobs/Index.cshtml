@@ -1,22 +1,42 @@
 ﻿@model DTOs.UIPageVM
 @using System.Linq
 @using DTOs
+@*@{
+        ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+
+        var data = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+
+        var images = data?.Images?
+            .Where(x => x != null)
+            .ToList();
+
+        var buttons = data?.Buttons?
+            .Where(x => x != null)
+            .ToList();
+
+        var data2 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 2);
+        var data3 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 3);
+
+    }*@
+
 @{
     ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
 
-    var data = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+    var sections = (Model != null && Model.Sections != null)
+        ? Model.Sections.Where(x => x != null).ToList()
+        : null;
 
-    var images = data?.Images?
-        .Where(x => x != null)
-        .ToList();
+    var data = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 1) : null;
+    var data2 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 2) : null;
+    var data3 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 3) : null;
 
-    var buttons = data?.Buttons?
-        .Where(x => x != null)
-        .ToList();
+    var images = (data != null && data.Images != null)
+        ? data.Images.Where(x => x != null).ToList()
+        : null;
 
-    var data2 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 2);
-    var data3 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 3);
-
+    var buttons = (data != null && data.Buttons != null)
+        ? data.Buttons.Where(x => x != null).ToList()
+        : null;
 }
 
 <link href="~/Content/css/otherbanner.css" rel="stylesheet" />
@@ -412,14 +432,14 @@
                         <iframe src="https://widgets.sociablekit.com/linkedin-page-jobs/iframe/25725265" frameborder="0" width="100%" height="1000px"></iframe>
 
                         @*<div class="col-lg-4 col-md-6 col-12">
-            <div class="job-item">
-                <small class="time">1 hour ago</small>
-                <h3 class="designation">Senior Sourcing Manager</h3>
-                <p class="job-location">Denver Metropolitan Area</p>
-                <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
-                <a class="btn btn-secondary">Apply now</a>
-            </div>
-        </div>*@
+                                <div class="job-item">
+                                    <small class="time">1 hour ago</small>
+                                    <h3 class="designation">Senior Sourcing Manager</h3>
+                                    <p class="job-location">Denver Metropolitan Area</p>
+                                    <p class="job-desc">I have been using [Your Email Marketing Software Name] for over a year now, and I must say it has transformed the way</p>
+                                    <a class="btn btn-secondary">Apply now</a>
+                                </div>
+                            </div>*@
 
                     </div>
                 </div>
