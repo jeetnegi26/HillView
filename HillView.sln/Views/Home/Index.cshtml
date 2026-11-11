@@ -925,6 +925,7 @@
 <script src="~/Scripts/owl.carousel.min.js"></script>
 
 <script>
+
     $('.job-carousel').owlCarousel({
         loop: true,
         margin: 20,
@@ -1023,42 +1024,61 @@
 
         function checkAnimations() {
 
+            var isDesktop = window.innerWidth >= 1024;
+
+            // Desktop: Trigger all 5 advantage cards together
+            if (isDesktop) {
+
+                var firstCard = $('.advantages-grid .adv-sec').first();
+
+                if (firstCard.length) {
+
+                    var windowHeight = $(window).height();
+                    var scrollTop = $(window).scrollTop();
+
+                    var elementTop = firstCard.offset().top;
+                    var elementHeight = firstCard.outerHeight();
+
+                    if (elementTop + (elementHeight * 0.5) < scrollTop + windowHeight &&
+                        elementTop + elementHeight * 0.5 > scrollTop) {
+
+                        $('.advantages-grid .adv-sec').addClass('is-visible');
+                    }
+                }
+            }
+
+            // Existing scroll-based animation for everything else
             $('.animated, .roi-point-animate, .success-point').each(function () {
 
                 var element = $(this);
-                var windowHeight = $(window).height();
 
+                // Skip advantage cards on desktop
+                if (isDesktop &&
+                    element.closest('.advantages-grid').length &&
+                    element.hasClass('adv-sec')) {
+                    return;
+                }
+
+                var windowHeight = $(window).height();
                 var elementTop = element.offset().top;
                 var elementHeight = element.outerHeight();
-
                 var scrollTop = $(window).scrollTop();
 
                 var elementVisible = elementTop + (elementHeight * 0.5);
                 var screenVisible = scrollTop + windowHeight;
 
-                // Trigger when element is 50% visible
                 if (elementVisible < screenVisible &&
                     elementTop + elementHeight * 0.5 > scrollTop) {
 
                     element.addClass('is-visible');
-
                 }
-
             });
         }
 
-        // Check on page load
         checkAnimations();
 
-        // Check while scrolling
-        $(window).on('scroll', function () {
-            checkAnimations();
-        });
-
-        // Check on window resize
-        $(window).on('resize', function () {
-            checkAnimations();
-        });
+        $(window).on('scroll', checkAnimations);
+        $(window).on('resize', checkAnimations);
 
     });
 
