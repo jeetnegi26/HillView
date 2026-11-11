@@ -41,7 +41,7 @@ namespace Services
         FROM dbo.[Key]
         WHERE Type IN (
             'BrandName', 'BrandLogo', 'BrandInfo',
-            'FooterLink', 'SocialMedia'
+            'FooterLink', 'SocialLink', 'HeaderLink'
         )
         ORDER BY DisplayOrder, Id;
 
@@ -129,7 +129,7 @@ namespace Services
                                     break;
 
                                 case "FooterLink":
-                                    data.FooterLinks.Add(new LayoutFooterLinkVM
+                                    data.FooterLinks.Add(new LayoutLinkBtnVM
                                     {
                                         Name = name,
                                         Url = description,
@@ -138,12 +138,21 @@ namespace Services
                                     });
                                     break;
 
-                                case "SocialMedia":
+                                case "SocialLink":
                                     data.SocialLinks.Add(new LayoutSocialLinkVM
                                     {
                                         Name = name,
                                         Url = description,
                                         Icon = svg,
+                                        DisplayOrder = displayOrder
+                                    });
+                                    break;
+
+                                case "HeaderLink":
+                                    data.HeaderLinks.Add(new LayoutLinkBtnVM
+                                    {
+                                        Name = name,
+                                        Url = description,
                                         DisplayOrder = displayOrder
                                     });
                                     break;
@@ -300,16 +309,13 @@ namespace Services
                 _logErrorService.LogError(ex, "Admin/WebInfoAction", "POST", 0, userHostAdd, "sp_UpInsertWebInfo");
             }
 
-            if (key.Type == "BrandLogo")
+            if (result.Success)
             {
-                if (result.Success)
-                {
-                    ClearLayoutDataCache();
+                ClearLayoutDataCache();
 
-                    if (key.Type == "BrandLogo")
-                    {
-                        ClearBrandLogoCache();
-                    }
+                if (key.Type == "BrandLogo")
+                {
+                    ClearBrandLogoCache();
                 }
             }
 

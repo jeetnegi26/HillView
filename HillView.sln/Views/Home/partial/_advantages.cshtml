@@ -390,7 +390,7 @@
 
                             @if (mainSection != null)
                             {
-                                var sectionItems = mainSection.Items?
+                                var sectionItems = mainSection.Items
                                     .Where(x => x != null)
                                     .ToList();
 
@@ -419,7 +419,7 @@
 
                                                 <div>
                                                     @{
-                                                        var children = item0.Children?
+                                                        var children = item0.Children
                                                             .Where(x => x != null)
                                                             .ToList();
                                                     }
@@ -435,10 +435,9 @@
                                                                 }
 
                                                                 @{
-                                                                    var image = child.Images?
-                                                                        .FirstOrDefault(x =>
-                                                                            x != null &&
-                                                                            !string.IsNullOrWhiteSpace(x.ImageUrl));
+                                                                    var image = child.Images != null ? child.Images.FirstOrDefault(x =>
+                                                                        x != null &&
+                                                                        !string.IsNullOrWhiteSpace(x.ImageUrl)) : null;
                                                                 }
 
                                                                 @if (image != null)
@@ -473,9 +472,7 @@
                                                 </div>
 
                                                 @{
-                                                    var children2 = item1.Children?
-                                                        .Where(x => x != null)
-                                                        .ToList();
+                                                    var children2 = item1.Children != null ? item1.Children.Where(x => x != null).ToList() : null;
                                                 }
 
                                                 @if (children2 != null && children2.Count > 0)
@@ -510,9 +507,7 @@
                                     {
                         <div class="col-xl-4 col-lg-6 col-md-6 col-12">
                             @{
-                                var compImage = item2.Images?
-                                    .FirstOrDefault(x => x != null &&
-                                                         !string.IsNullOrWhiteSpace(x.ImageUrl));
+                                var compImage = item2.Images != null ? item2.Images.FirstOrDefault(x => x != null && !string.IsNullOrWhiteSpace(x.ImageUrl)) : null;
                             }
                             <div class="comp adv-sec animated fadeInUp" @if (compImage != null) { @: style="background-image: url('@Url.Content("~/Content/Uploads/" + compImage.ImageUrl)');"
                                  }>
@@ -555,9 +550,7 @@
 
                                         <div>
                                             @{
-                                                var whyItems = whySection.Items?
-                                                    .Where(x => x != null)
-                                                    .ToList();
+                                                var whyItems = whySection.Items != null ? whySection.Items.Where(x => x != null).ToList() : null;
                                             }
 
                                             @if (whyItems != null)
@@ -576,9 +569,7 @@
 
                                 <div class="col-xl-7 col-lg-12 col-md-12 col-12">
                                     @{
-                                        var advImage = whySection.Images?
-                                            .FirstOrDefault(x => x != null &&
-                                                                 !string.IsNullOrWhiteSpace(x.ImageUrl));
+                                        var advImage = whySection.Images != null ? whySection.Images.FirstOrDefault(x => x != null && !string.IsNullOrWhiteSpace(x.ImageUrl)) : null;
                                     }
 
                                     <div class="adv-img adv-sec animated fadeInUp"

@@ -1,26 +1,51 @@
 ﻿@model DTOs.UIPageVM
 @using System.Linq
 @using DTOs
+@*@{
+        ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+
+        var data = Model?.Sections?
+        .FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+
+        var images = data?.Images?
+            .Where(x => x != null)
+            .ToList();
+
+        var buttons = data?.Buttons?
+            .Where(x => x != null)
+            .ToList();
+
+        var dataService = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 4);
+        var data5 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 5);
+        var data6 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 6);
+        var data8 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 8);
+
+        var data10 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 10);
+
+        var reviews = Model.Testimonials.ToList();
+    }*@
+
 @{
     ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
 
-    var data = Model?.Sections?
-    .FirstOrDefault(x => x != null && x.DisplayOrder == 1);
+    var sections = (Model != null && Model.Sections != null)
+        ? Model.Sections.Where(x => x != null).ToList()
+        : null;
 
-    var images = data?.Images?
-        .Where(x => x != null)
-        .ToList();
+    var data = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 1) : null;
+    var dataService = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 4) : null;
+    var data5 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 5) : null;
+    var data6 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 6) : null;
+    var data8 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 8) : null;
+    var data10 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 10) : null;
 
-    var buttons = data?.Buttons?
-        .Where(x => x != null)
-        .ToList();
+    var images = (data != null && data.Images != null)
+        ? data.Images.Where(x => x != null).ToList()
+        : null;
 
-    var dataService = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 4);
-    var data5 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 5);
-    var data6 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 6);
-    var data8 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 8);
-
-    var data10 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 10);
+    var buttons = (data != null && data.Buttons != null)
+        ? data.Buttons.Where(x => x != null).ToList()
+        : null;
 
     var reviews = Model.Testimonials.ToList();
 }
@@ -396,7 +421,7 @@
         .banner-text {
             max-width: 712px;
         }
-        
+
         .ser-img-box {
             padding: 0 1REM;
             ;
@@ -468,7 +493,7 @@
             padding: 4px 0 22px;
         }
 
-        .home-jobs-item-box{
+        .home-jobs-item-box {
             padding: 0;
         }
 
@@ -566,10 +591,10 @@
 }
 
 @{
-    var advantageSections = Model?.Sections?
+    var advantageSections = Model != null ? Model.Sections != null ? Model.Sections
         .Where(x => x != null &&
                     (x.DisplayOrder == 2 || x.DisplayOrder == 3))
-        .ToList();
+        .ToList() : new List<UISectionVM>() : new List<UISectionVM>();
 }
 
 @Html.Action("advantages", "Home",
@@ -577,10 +602,8 @@
 
 @if (dataService != null)
 {
-    var serviceItems = dataService.Items?.Where(i => i != null).ToList()
-                       ?? new List<UISectionItemVM>();
-
-    var mainImageUrl = dataService.Images?.FirstOrDefault()?.ImageUrl;
+    var serviceItems = dataService.Items != null ? dataService.Items.Where(i => i != null).ToList() : new List<UISectionItemVM>();
+    var mainImageUrl = dataService.Images != null ? dataService.Images.FirstOrDefault().ImageUrl : null;
 
     <section class="home-services-section">
         <div class="home-services-box">
@@ -603,7 +626,7 @@
                             <div class="ser-items">
                                 @foreach (var item in serviceItems)
                                 {
-                                    var iconUrl = item.Images?.FirstOrDefault()?.ImageUrl;
+                                    var iconUrl = item.Images != null ? item.Images.FirstOrDefault().ImageUrl : null;
 
                                     <div class="service-item animated fadeInDown">
                                         <div class="d-flex">
@@ -638,8 +661,7 @@
 
 @if (data5 != null)
 {
-    var candidateItems = data5.Items?.Where(i => i != null).ToList()
-                   ?? new List<UISectionItemVM>();
+    var candidateItems = data5.Items != null ? data5.Items.Where(i => i != null).ToList() : new List<UISectionItemVM>();
     <section class="candidate-section">
         <div class="candidate-box">
             <div class="container candidate-container">
@@ -808,7 +830,7 @@
 <div class="mile-faq-bg">
     @*@Html.Action("milestones", "Home")*@
     @{
-        var milestones = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 9).ToList();
+        var milestones = Model != null && Model.Sections != null ? Model.Sections.Where(x => x != null && x.DisplayOrder == 9).ToList() : new List<UISectionVM>();
     }
 
     @Html.Action("milestones", "Home",
@@ -834,7 +856,7 @@
                         <div class="faq-item">
                             <button class="faq-question" aria-expanded="false">
                                 <span>@item.Title</span>
-                                <span class="faq-icon" aria-hidden="true">?</span>
+                                <span class="faq-icon" aria-hidden="true">→</span>
                             </button>
                             <div class="faq-answer">
                                 <p>
@@ -894,9 +916,9 @@
 
 
 @{
-    var aitalent = Model?.Sections?.Where(x => x != null && x.DisplayOrder == 11).ToList();
+    var aitalent = Model != null && Model.Sections != null ? Model.Sections.Where(x => x != null && x.DisplayOrder == 11).ToList() : new List<UISectionVM>();
 }
-@Html.Action("aitalent", "Home",  new { sections = aitalent })
+@Html.Action("aitalent", "Home", new { sections = aitalent })
 
 @*@Html.Action("aitalent", "Home")*@
 
