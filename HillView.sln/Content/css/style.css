@@ -321,7 +321,7 @@ footer img {
 @media screen and (max-width: 770px) {
 
     footer img {
-        width: 10%;
+        width: 76%;
     }
 
     .sticky-button {
@@ -517,6 +517,8 @@ footer img {
             color: var(--text);
             font-size: 18px;
         }
+
+
 }
 
 /*footer {
@@ -584,9 +586,6 @@ footer img {
 /*----------------------footer-------------------*/
 
 footer {
-    -webkit-box-shadow: -1px -2px 20px -9px rgba(204,204,204,1);
-    -moz-box-shadow: -1px -2px 20px -9px rgba(204,204,204,1);
-    box-shadow: -1px -2px 20px -9px rgba(204,204,204,1);
     padding-top: 2rem;
 }
 
@@ -730,6 +729,22 @@ footer {
 
     .navbar-icon {
         padding-top: 1rem;
+    }
+
+    footer img {
+        width: 28%;
+    }
+
+    .footer-logo{
+        justify-content:center
+    }
+    .footer-links {
+        justify-content: center;
+        text-align: center;
+        padding-bottom: 1rem;
+    }
+    .footer-contact {
+        display: none !important;
     }
 
     h2 {

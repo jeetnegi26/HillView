@@ -491,4 +491,47 @@
             }
         }
     });
+
+    $(document).ready(function () {
+
+        function checkAnimations() {
+
+            $('.animated, .roi-point-animate, .success-point').each(function () {
+
+                var element = $(this);
+                var windowHeight = $(window).height();
+
+                var elementTop = element.offset().top;
+                var elementHeight = element.outerHeight();
+
+                var scrollTop = $(window).scrollTop();
+
+                var elementVisible = elementTop + (elementHeight * 0.5);
+                var screenVisible = scrollTop + windowHeight;
+
+                // Trigger when element is 50% visible
+                if (elementVisible < screenVisible &&
+                    elementTop + elementHeight * 0.5 > scrollTop) {
+
+                    element.addClass('is-visible');
+
+                }
+
+            });
+        }
+
+        // Check on page load
+        checkAnimations();
+
+        // Check while scrolling
+        $(window).on('scroll', function () {
+            checkAnimations();
+        });
+
+        // Check on window resize
+        $(window).on('resize', function () {
+            checkAnimations();
+        });
+
+    });
 </script>

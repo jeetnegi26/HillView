@@ -25,6 +25,14 @@
 
 
 <style>
+    .linkedin-jobs-iframe {
+        width: 100%;
+        height: 1200px; /* Adjust based on content */
+        border: none;
+        display: block;
+        overflow: hidden;
+    }
+
     .banner-text-box {
         flex-direction: column;
     }
@@ -409,7 +417,10 @@
                 <div class="jobs-items-box">
                     <div class="jobs-items-row row">
 
-                        <iframe src="https://widgets.sociablekit.com/linkedin-page-jobs/iframe/25725265" frameborder="0" width="100%" height="1000px"></iframe>
+                        @*<iframe src="https://widgets.sociablekit.com/linkedin-page-jobs/iframe/25725265" frameborder="0" width="100%" height="100%" scrolling="no" class="linkedin-jobs-iframe">></iframe>*@
+
+                        <div class="sk-ww-linkedin-page-jobs" data-embed-id="25725265"></div>
+                        <script src="https://widgets.sociablekit.com/linkedin-page-jobs/widget.js" defer></script>
 
                         @*<div class="col-lg-4 col-md-6 col-12">
             <div class="job-item">
