@@ -52,7 +52,6 @@ namespace HillView.sln.Admin
             _testimonialService = testimonialService;
             _contactUsService = contactUsService;
         }
-
         #region Home
         // GET: Admin
         [Route("admin/dashboard")]
@@ -60,6 +59,9 @@ namespace HillView.sln.Admin
         {
             return View();
         }
+        #endregion
+
+        #region Sidebar
         [HttpGet]
         public async Task<JsonResult> GetSidebarLogo()
         {
@@ -97,6 +99,9 @@ namespace HillView.sln.Admin
                     new AdminSidebarVM());
             }
         }
+        #endregion
+
+        #region Menu Management
         public async Task<ActionResult> MenuManagement()
         {
             try
@@ -262,7 +267,6 @@ namespace HillView.sln.Admin
                     new HandleErrorInfo(ex, "Admin", "EditMenuItem"));
             }
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteMenuItem(Guid id)
