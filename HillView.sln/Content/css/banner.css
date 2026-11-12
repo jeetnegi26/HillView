@@ -25,6 +25,7 @@
 .orb {
     position: absolute;
     object-fit: contain;
+    animation-delay:3s;
     animation-duration: 3.5s;
     animation-fill-mode: forwards;
     /* IMPORTANT */
