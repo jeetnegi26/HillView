@@ -196,6 +196,7 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\CaseStudyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
@@ -737,6 +738,8 @@
     <Content Include="Content\icons\tabler-icons\tabler-icons.css" />
     <Content Include="Content\Images\ai-icon.svg" />
     <Content Include="Content\Images\case-study\casestudy1.png" />
+    <Content Include="Content\Images\CaseStudy\banner-study.png" />
+    <Content Include="Content\Images\CaseStudy\casestudy1.png" />
     <Content Include="Content\Images\consoth.png" />
     <Content Include="Content\Images\Home\adv-img.png" />
     <Content Include="Content\Images\Home\alarm_on.svg" />
@@ -906,6 +909,8 @@
     <Content Include="Views\Shared\Admin\_Footerbkp.cshtml" />
     <Content Include="Views\Admin\BlogAction.cshtml" />
     <Content Include="Views\Admin\Blogs.cshtml" />
+    <Content Include="Views\CaseStudy\Index.cshtml" />
+    <Content Include="Views\CaseStudy\Study.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">

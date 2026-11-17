@@ -1,0 +1,221 @@
+﻿@model DTOs.UIPageVM
+@using System.Linq
+@using DTOs
+@{
+    ViewBag.Title = "Index";
+}
+
+@{
+    ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+
+    var sections = (Model != null && Model.Sections != null)
+        ? Model.Sections.Where(x => x != null).ToList()
+        : null;
+
+    var data = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 1) : null;
+
+    var images = (data != null && data.Images != null)
+        ? data.Images.Where(x => x != null).ToList()
+        : null;
+
+    var buttons = (data != null && data.Buttons != null)
+        ? data.Buttons.Where(x => x != null).ToList()
+        : null;
+}
+
+<link href="~/Content/css/otherbanner.css" rel="stylesheet" />
+<link href="~/Content/css/CustomAnimate.css" rel="stylesheet" />
+
+<style>
+    .banner-text-box {
+        flex-direction: column;
+    }
+
+    .banner-text-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .banner-text {
+        padding-top: 10rem;
+        text-align: center;
+        position: initial;
+    }
+
+        .banner-text small {
+            color: var(--primary)
+        }
+
+    .study-item{
+        padding-bottom:2rem;
+    }
+
+    .study-item imgs {
+        border-radius: 25px;
+    }
+
+    .study-item h2{
+        padding-top: 10px;
+        font-weight: 500;
+        font-size: 24px;
+    }
+
+    .study-item a {
+        cursor: pointer;
+        color: var(--primary) !important;
+        opacity: 0.8;
+        transition: opacity 0.3s ease, color 0.3s ease;
+    }
+    .study-item a:hover {
+        opacity: 1;
+    }
+
+    .study-item p {
+        font-size: 13px;
+    }
+
+    @@media (max-width: 380px) {
+        .orb-scene {
+            height: 270vh;
+        }
+
+        .banner-text {
+            padding-top: 80rem;
+        }
+    }
+</style>
+
+@if (data != null)
+{
+    var items = data.Items.ToList();
+    <section class="banner">
+        <div class="orb-scene">
+            @if (images != null && images.Count > 0 &&
+                 !string.IsNullOrWhiteSpace(images[0].ImageUrl))
+            {
+                <img class="orb orb-1"
+                     src="@Url.Content("~/content/uploads/" + images[0].ImageUrl)"
+                     alt="@(images[0].AltText ?? "")" />
+            }
+
+            @if (images != null && images.Count > 1 &&
+                 !string.IsNullOrWhiteSpace(images[1].ImageUrl))
+            {
+                <img class="orb orb-2"
+                     src="@Url.Content("~/content/uploads/" + images[1].ImageUrl)"
+                     alt="@(images[1].AltText ?? "")" />
+            }
+
+
+
+
+            <div class="banner-text-box">
+                <div class="banner-text">
+
+                    <small>@data.SubHeading</small>
+                    <h2>
+                        @data.Heading
+                    </h2>
+                    <p>
+                        @data.Description
+                    </p>
+                </div>
+                <div class="job-usp-box">
+                    <div class="job-usp-container container">
+                        <div class="jobs-usp-items-box">
+                            <div class="jobs-usp-row row">
+                                @foreach (var item in items)
+                                {
+                                    <div class="jobs-usp-col col-xl-4 col-lg-4 col-md-4 col-12">
+                                        <div class="jobs-usp-item">
+                                            <h3>
+                                                @item.Title
+                                            </h3>
+                                            <p>
+                                                @item.Description
+
+                                            </p>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<section class="study-section">
+    <div class="study-box">
+        <div class="study-container container">
+            <div class="study-row row">
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="study-item">
+                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                        <p>
+                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                        </p>
+                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="study-item">
+                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                        <p>
+                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                        </p>
+                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="study-item">
+                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                        <p>
+                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                        </p>
+                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="study-item">
+                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                        <p>
+                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                        </p>
+                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="study-item">
+                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                        <p>
+                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                        </p>
+                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-12">
+                    <div class="study-item">
+                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                        <p>
+                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                        </p>
+                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
