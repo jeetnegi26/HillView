@@ -1,0 +1,125 @@
+@model DTOs.Blogs
+
+@{
+    bool isEdit = Model.Id > 0;
+    ViewBag.Title = isEdit ? "Edit Blog" : "Add Blog";
+    Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
+}
+
+<div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+        <h6 class="m-0 font-weight-bold text-primary text-uppercase">@ViewBag.Title</h6>
+        <a href="@Url.Action("Blogs", "Admin")" class="btn btn-outline-dark">Back to list</a>
+    </div>
+
+    <div class="card-body">
+        @using (Html.BeginForm("BlogAction", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "blog-form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.Id)
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="mb-3 form-group">
+                        @Html.LabelFor(m => m.Title)<span class="text-danger"> *</span>
+                        @Html.TextBoxFor(m => m.Title, new { @class = "form-control", maxlength = 250 })
+                        @Html.ValidationMessageFor(m => m.Title, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3 form-group">
+                        @Html.LabelFor(m => m.Heading)
+                        @Html.TextBoxFor(m => m.Heading, new { @class = "form-control", maxlength = 250 })
+                        @Html.ValidationMessageFor(m => m.Heading, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3 form-group">
+                        @Html.LabelFor(m => m.SubHeading)
+                        @Html.TextBoxFor(m => m.SubHeading, new { @class = "form-control", maxlength = 500 })
+                        @Html.ValidationMessageFor(m => m.SubHeading, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="mb-3 form-group">
+                        @Html.LabelFor(m => m.Description)
+                        @* If you use TinyMCE / CKEditor elsewhere in the admin, initialise it on #Description *@
+                        @Html.TextAreaFor(m => m.Description, 14, 80, new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="mb-3 form-group">
+                        <label for="RewriteUrl">URL Slug</label>
+                        @Html.TextBoxFor(m => m.RewriteUrl, new { @class = "form-control", maxlength = 300, placeholder = "auto-generated from title" })
+                        <small class="text-muted">Leave blank to generate it from the title.</small>
+                    </div>
+
+                    <div class="mb-3 form-group">
+                        @Html.LabelFor(m => m.Type)
+                        @Html.TextBoxFor(m => m.Type, new { @class = "form-control", maxlength = 100 })
+                    </div>
+
+                    <div class="mb-3 form-group">
+                        @Html.LabelFor(m => m.PublishedOn)
+                        @Html.TextBoxFor(m => m.PublishedOn, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
+                    </div>
+
+                    <div class="mb-3 form-group">
+                        <label for="coverFile">Cover Image</label>
+                        @if (!string.IsNullOrEmpty(Model.CoverImage))
+                        {
+                            <div class="mb-2">
+                                <img id="cover-preview" src="@Url.Content("~/Content/Uploads/" + Model.CoverImage)"
+                                     alt="Cover" class="img-fluid border rounded" style="max-height:180px" />
+                            </div>
+                            <div class="form-check mb-2">
+                                <input type="checkbox" class="form-check-input" id="removeCover" name="removeCover" value="true" />
+                                <label class="form-check-label" for="removeCover">Remove current cover image</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="mb-2"><img id="cover-preview" class="img-fluid border rounded d-none" style="max-height:180px" alt="Preview" /></div>
+                        }
+                        <input type="file" class="form-control" id="coverFile" name="coverFile" accept=".jpg,.jpeg,.png,.webp,.gif" />
+                        <small class="text-muted">JPG, PNG, WebP or GIF, up to 5 MB.</small>
+                    </div>
+
+                    <div class="form-check mb-3">
+                        @Html.CheckBoxFor(m => m.Status, new { @class = "form-check-input" })
+                        <label class="form-check-label" for="Status">Active</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary" id="save-btn">@(isEdit ? "Update Blog" : "Save Blog")</button>
+                <a href="@Url.Action("Blogs", "Admin")" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts {
+<script>
+    $(function () {
+        // Preview the newly chosen cover image
+        $('#coverFile').on('change', function () {
+            const file = this.files && this.files[0];
+            const img = $('#cover-preview');
+            if (!file) return;
+            if (file.size > 5 * 1024 * 1024) {
+                Swal.fire({ icon: 'error', title: 'Too large', text: 'Maximum cover image size is 5 MB.' });
+                this.value = '';
+                return;
+            }
+            img.attr('src', URL.createObjectURL(file)).removeClass('d-none');
+            $('#removeCover').prop('checked', false);
+        });
+
+        // Stop double submits
+        $('#blog-form').on('submit', function () {
+            $('#save-btn').prop('disabled', true).text('Saving...');
+        });
+    });
+</script>
+}

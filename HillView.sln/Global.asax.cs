@@ -1,6 +1,7 @@
 ﻿using HillView.sln.Admin;
 using HillView.sln.Controllers;
 using Services;
+using Services.Admin;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -42,6 +43,7 @@ namespace HillView.sln
             container.RegisterType<UIPageService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
             container.RegisterType<ContactService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>(), new ResolvedParameter<EmailService>()));
             container.RegisterType<ContactUsService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
+            container.RegisterType<BlogService>(new InjectionConstructor(connection_string, new ResolvedParameter<LogErrorService>()));
 
 
             container.RegisterType<AdminController>();

@@ -28,7 +28,7 @@ namespace DTOs
 
         [StringLength(100)]
         [Display(Name = "Image Type")]
-        public string ImageType { get; set; }
+        public string ImageType { get; set; }  //If images are for Blogs and any other main module then add the id in this
 
         [Display(Name = "Display Order")]
         [Range(0, int.MaxValue,

@@ -2,6 +2,7 @@
 using HillView.sln.App_Start;
 using HillView.sln.Controllers;
 using Services;
+using Services.Admin;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -31,11 +32,12 @@ namespace HillView.sln.Admin
         private readonly AdminMenuService _adminMenuService;
         private readonly TestimonialService _testimonialService;
         private readonly ContactUsService _contactUsService;
+        private readonly BlogService _blogService;
 
         public AdminController(WebInfoService webService, LogErrorService logErrorService, ImageService imageService, WebInfoService webInfoService, 
             PageService pageService, SectionTypeService sectionTypeService, SectionService sectionService, SectionItemService sectionItemService,
             ButtonService buttonService, PageSectionService pageSectionService, AdminMenuService adminMenuService, TestimonialService testimonialService,
-            ContactUsService contactUsService
+            ContactUsService contactUsService, BlogService blogService
           )
         {
             _webService = webService;
@@ -51,6 +53,7 @@ namespace HillView.sln.Admin
             _pageSectionService = pageSectionService;
             _testimonialService = testimonialService;
             _contactUsService = contactUsService;
+            _blogService = blogService;
         }
         #region Home
         // GET: Admin
@@ -3868,6 +3871,339 @@ namespace HillView.sln.Admin
                 result.Data = new { Success = false, Message = "Oops! The images could not be saved on the server. " + ex.Message };
             }
             return result;
+        }
+        #endregion
+
+        #region Blogs
+        // The page itself loads no data; the table asks BlogsData for one page at a time.
+        [HttpGet]
+        public ActionResult Blogs()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<JsonResult> BlogsData(
+            int draw, int start, int length,
+            string search, string sortBy, string sortDir, string status)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+
+            try
+            {
+                bool? statusFilter =
+                    status == "active" ? (bool?)true :
+                    status == "inactive" ? (bool?)false : null;
+
+                var page = await _blogService.GetBlogsPagedAsync(
+                    statusFilter, search, sortBy,
+                    !string.Equals(sortDir, "asc", StringComparison.OrdinalIgnoreCase),
+                    start, length, ip);
+
+                var rows = page.Items.Select(b => new
+                {
+                    id = b.Id,
+                    title = b.Title,
+                    slug = b.RewriteUrl,
+                    type = b.Type,
+                    cover = string.IsNullOrEmpty(b.CoverImage)
+                        ? null
+                        : Url.Content("~/Content/Uploads/" + b.CoverImage),
+                    status = b.Status,
+                    published = b.PublishedOn.HasValue
+                        ? b.PublishedOn.Value.ToString("MMM-dd-yyyy")
+                        : "-",
+                    updated = b.EditedOnString
+                }).ToList();
+
+                return Json(new
+                {
+                    draw = draw,
+                    recordsTotal = page.Total,
+                    recordsFiltered = page.Filtered,
+                    data = rows
+                }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, "Admin/BlogsData", "GET", 0, ip, "BlogsData");
+
+                Response.StatusCode = 500;
+
+                return Json(new
+                {
+                    draw = draw,
+                    recordsTotal = 0,
+                    recordsFiltered = 0,
+                    data = new object[0],
+                    error = "Unable to load blogs."
+                }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> BlogAction(int? id)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+
+            try
+            {
+                if (id.HasValue && id.Value > 0)
+                {
+                    var model = await _blogService.GetBlogByIdAsync(id.Value, ip);
+
+                    if (model == null)
+                    {
+                        TempData["ErrorMessage"] = "Blog not found.";
+                        return RedirectToAction("Blogs");
+                    }
+
+                    return View(model);
+                }
+
+                return View(new DTOs.Blogs { Status = true, PublishedOn = DateTime.Today });
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, "Admin/BlogAction", "GET", id ?? 0, ip, "BlogAction");
+                return View("Error");
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ValidateInput(false)]   // Description contains HTML
+        public async Task<ActionResult> BlogAction(DTOs.Blogs model, HttpPostedFileBase coverFile, bool removeCover = false)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+            string oldCover = null;
+            string newCover = null;
+
+            try
+            {
+                // For edits, trust the database (not the posted form) for the current cover image.
+                if (model.Id > 0)
+                {
+                    var existing = await _blogService.GetBlogByIdAsync(model.Id, ip);
+
+                    if (existing == null)
+                    {
+                        TempData["ErrorMessage"] = "Blog not found.";
+                        return RedirectToAction("Blogs");
+                    }
+
+                    oldCover = existing.CoverImage;
+                }
+
+                model.CoverImage = oldCover;
+
+                if (!ModelState.IsValid)
+                    return View(model);
+
+                void Rollback()
+                {
+                    if (newCover != null)
+                        DeleteUploadedFile(newCover);
+
+                    model.CoverImage = oldCover;
+                }
+
+                try
+                {
+                    if (coverFile != null && coverFile.ContentLength > 0)
+                    {
+                        newCover = await SaveBlogCoverAsync(coverFile);
+                        model.CoverImage = newCover;
+                    }
+                    else if (removeCover)
+                    {
+                        model.CoverImage = null;
+                    }
+
+                    model.UserHostAdd = ip;
+
+                    if (model.Id <= 0)
+                    {
+                        model.CreatedBy = User.Identity != null && User.Identity.IsAuthenticated
+                            ? User.Identity.Name
+                            : null;
+                    }
+
+                    int? savedId = await _blogService.SaveBlogAsync(model, ip);
+
+                    if (!savedId.HasValue)
+                    {
+                        Rollback();
+                        ModelState.AddModelError("", "The blog could not be saved. Please try again.");
+                        return View(model);
+                    }
+
+                    // Saved - now it is safe to remove the replaced / removed cover file.
+                    if (!string.IsNullOrEmpty(oldCover) && oldCover != model.CoverImage)
+                        DeleteUploadedFile(oldCover);
+
+                    TempData["SuccessMessage"] = model.Id <= 0
+                        ? "Blog added successfully."
+                        : "Blog updated successfully.";
+
+                    return RedirectToAction("Blogs");
+                }
+                catch (ArgumentException ex)   // validation: bad image, duplicate slug...
+                {
+                    Rollback();
+                    ModelState.AddModelError("", ex.Message);
+                    return View(model);
+                }
+                catch (SqlException ex) when (ex.Number == 2601 || ex.Number == 2627)
+                {
+                    Rollback();
+                    ModelState.AddModelError("", "This URL slug is already used by another blog.");
+                    return View(model);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, "Admin/BlogAction", "POST", model.Id, ip, "SaveBlog");
+
+                if (newCover != null)
+                    DeleteUploadedFile(newCover);
+
+                model.CoverImage = oldCover;
+                ModelState.AddModelError("", "An error occurred while saving the blog.");
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> BlogStatus(int id, bool status)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+
+            try
+            {
+                if (id <= 0)
+                    return Json(new { success = false, message = "Invalid blog ID." });
+
+                bool updated = await _blogService.SetStatusAsync(id, status, ip);
+
+                return Json(new
+                {
+                    success = updated,
+                    message = updated ? "Status changed successfully." : "Blog not found."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, "Admin/BlogStatus", "POST", id, ip, "BlogStatus");
+                return Json(new { success = false, message = "Unable to change the status." });
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> DeleteBlog(int id)
+        {
+            string ip = Request.UserHostAddress ?? "Unknown";
+
+            try
+            {
+                if (id <= 0)
+                    return Json(new { success = false, message = "Invalid blog ID." });
+
+                // Soft delete: the row and its cover image file are kept.
+                bool deleted = await _blogService.DeleteBlogAsync(id, ip);
+
+                return Json(new
+                {
+                    success = deleted,
+                    message = deleted ? "Blog deleted successfully." : "Blog not found."
+                });
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, "Admin/DeleteBlog", "POST", id, ip, "DeleteBlog");
+                return Json(new { success = false, message = "Unable to delete the blog." });
+            }
+        }
+
+        // ---------- cover image helpers ----------
+
+        // Validates and saves the cover image. Throws ArgumentException with a user-friendly message.
+        private async Task<string> SaveBlogCoverAsync(HttpPostedFileBase file)
+        {
+            const int maxFileSize = 5 * 1024 * 1024;
+
+            if (file.ContentLength > maxFileSize)
+                throw new ArgumentException("Maximum cover image size is 5 MB.");
+
+            string extension = Path.GetExtension(file.FileName)?.ToLowerInvariant();
+            string[] allowed = { ".jpg", ".jpeg", ".png", ".webp", ".gif" };
+
+            if (string.IsNullOrEmpty(extension) || !allowed.Contains(extension))
+                throw new ArgumentException("Only JPG, PNG, WebP and GIF images are allowed.");
+
+            // Check the real file signature, not just the extension.
+            byte[] sig = new byte[12];
+            int read = await file.InputStream.ReadAsync(sig, 0, sig.Length);
+            file.InputStream.Position = 0;
+
+            bool valid =
+                (extension == ".jpg" || extension == ".jpeg")
+                    ? read >= 3 && sig[0] == 0xFF && sig[1] == 0xD8 && sig[2] == 0xFF
+                : extension == ".png"
+                    ? read >= 8 && sig[0] == 0x89 && sig[1] == 0x50 && sig[2] == 0x4E && sig[3] == 0x47
+                      && sig[4] == 0x0D && sig[5] == 0x0A && sig[6] == 0x1A && sig[7] == 0x0A
+                : extension == ".gif"
+                    ? read >= 6 && System.Text.Encoding.ASCII.GetString(sig, 0, 4) == "GIF8"
+                : read >= 12
+                  && System.Text.Encoding.ASCII.GetString(sig, 0, 4) == "RIFF"
+                  && System.Text.Encoding.ASCII.GetString(sig, 8, 4) == "WEBP";
+
+            if (!valid)
+                throw new ArgumentException("The file contents do not match a supported image format.");
+
+            string folder = HostingEnvironment.MapPath("~/Content/Uploads/");
+
+            if (string.IsNullOrWhiteSpace(folder))
+                throw new InvalidOperationException("Unable to resolve the image upload directory.");
+
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+
+            string fileName = Guid.NewGuid().ToString("N") + extension;
+            string physicalPath = Path.Combine(folder, fileName);
+
+            await Task.Run(() => file.SaveAs(physicalPath));
+
+            return fileName;   // only the file name is stored, same as your other images
+        }
+
+        // Best-effort delete, restricted to the uploads folder.
+        private void DeleteUploadedFile(string storedName)
+        {
+            try
+            {
+                string name = Path.GetFileName((storedName ?? string.Empty).Replace('\\', '/'));
+
+                if (string.IsNullOrWhiteSpace(name))
+                    return;
+
+                string folder = Path.GetFullPath(HostingEnvironment.MapPath("~/Content/Uploads/"));
+
+                if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                    folder += Path.DirectorySeparatorChar;
+
+                string full = Path.GetFullPath(Path.Combine(folder, name));
+
+                if (full.StartsWith(folder, StringComparison.OrdinalIgnoreCase) && System.IO.File.Exists(full))
+                    System.IO.File.Delete(full);
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(ex, "Admin/DeleteUploadedFile", "POST", 0,
+                    Request.UserHostAddress, "Blog cover cleanup");
+            }
         }
         #endregion
     }

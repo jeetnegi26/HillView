@@ -66,6 +66,7 @@
     <Compile Include="Admin\AdminMenuGroupVM.cs" />
     <Compile Include="Admin\AdminMenuItemEditVM.cs" />
     <Compile Include="Admin\Base.cs" />
+    <Compile Include="Admin\BlogsVM.cs" />
     <Compile Include="Admin\ButtonVM.cs" />
     <Compile Include="Admin\ChangePasswordModel.cs" />
     <Compile Include="Admin\ContactUsVM.cs" />

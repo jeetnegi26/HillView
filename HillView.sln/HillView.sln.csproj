@@ -823,6 +823,7 @@
     <Content Include="Content\icons\tabler-icons\fonts\tabler-icons.woff" />
     <Content Include="Content\icons\tabler-icons\fonts\tabler-icons.woff2" />
     <Content Include="Content\logo\logo_webp.webp" />
+    <Content Include="Pending.txt" />
     <Content Include="Scripts\app.min.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -903,6 +904,8 @@
     <Content Include="Views\Services\Index_bk.cshtml" />
     <Content Include="Views\Admin\ContactUs.cshtml" />
     <Content Include="Views\Shared\Admin\_Footerbkp.cshtml" />
+    <Content Include="Views\Admin\BlogAction.cshtml" />
+    <Content Include="Views\Admin\Blogs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DTOs\DTOs.csproj">
