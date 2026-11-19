@@ -6,7 +6,7 @@
 <div class="product-table">
     <div class="adminpage-head">
         <div class="card shadow mb-4">
-            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between ">
                 <h6 class="m-0 font-weight-bold text-primary text-uppercase">
                     Blogs - <span id="blog-count">0</span>
                 </h6>
@@ -32,14 +32,13 @@
                 <table class="product-table table table-bordered" id="blog-table" style="width:100%">
                     <thead class="thead-dark">
                         <tr>
-                            <th>Id</th>
-                            <th>Action</th>
+                            <th>ID</th>
+                            <th>Actions</th>
                             <th>Status</th>
                             <th>Title</th>
-                            <th>Type</th>
                             <th>Cover</th>
                             <th>Published</th>
-                            <th>Updated</th>
+                            <th title="Display Order">Order</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -49,59 +48,140 @@
     </div>
 </div>
 
+
 <script>
     $(function () {
         const editUrl = '@Url.Action("BlogAction", "Admin")';
         const token = $('input[name="__RequestVerificationToken"]').val();
 
-        // Titles etc. come from the database - always escape before putting them in HTML.
+        // Escape database values before rendering HTML.
         const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g,
-            c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+            c => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[c]));
 
         const post = (url, data) =>
-            $.post(url, Object.assign({ __RequestVerificationToken: token }, data));
-        const fail = (msg) => Swal.fire({ icon: 'error', title: 'Oops...', text: msg || 'Something went wrong!' });
+            $.post(url, Object.assign({
+                __RequestVerificationToken: token
+            }, data));
 
-        // column index -> sort key understood by the server (null = not sortable)
-        const sortKeys = ['id', null, 'status', 'title', 'type', null, 'published', 'updated'];
+        const fail = (msg) => Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: msg || 'Something went wrong!'
+        });
+
+        // Column index -> sort key understood by the server.
+        // null means the column is not sortable.
+        const sortKeys = [
+            'id',           // 0 - ID
+            null,           // 1 - Actions
+            'status',       // 2 - Status
+            'title',        // 3 - Title
+            null,           // 5 - Cover Image
+            'published',    // 6 - Published On
+            'displayorder', // 7 - Display Order
+        ];
 
         const table = $('#blog-table').DataTable({
-            serverSide: true,                 // only the current page is fetched
+            serverSide: true,
             processing: true,
             pageLength: 10,
             lengthMenu: [10, 25, 50, 100],
-            order: [[6, 'desc']],             // newest published first
+
+            // Default sorting: highest DisplayOrder first.
+            order: [[7, 'desc']],
+
             columns: [
-                { data: 'id' },
+                // ID
                 {
-                    data: null, orderable: false, searchable: false,
+                    data: 'id'
+                },
+
+                // Actions
+                {
+                    data: null,
+                    orderable: false,
+                    searchable: false,
                     render: (d, t, row) =>
                         '<div class="d-flex gap-2">' +
-                        '<a class="btn btn-outline-dark" title="Edit" href="' + editUrl + '?id=' + row.id + '"><i class="bi bi-pencil-square"></i></a>' +
-                        '<button type="button" class="btn btn-outline-danger js-delete" data-id="' + row.id + '" title="Delete"><i class="bi bi-trash"></i></button>' +
+                        '<a class="btn btn-outline-dark" title="Edit" href="' +
+                        editUrl + '?id=' + row.id + '">' +
+                        '<i class="ti ti-pencil-minus"></i></a>' +
+
+                        '<button type="button" class="btn btn-outline-danger js-delete" data-id="' +
+                        row.id + '" title="Delete">' +
+                        '<i class="ti ti-trash"></i></button>' +
                         '</div>'
                 },
+
+                // Status
                 {
                     data: 'status',
                     render: (d, t, row) =>
-                        '<button type="button" class="btn btn-sm js-status ' + (row.status ? 'btn-success' : 'btn-secondary') + '"' +
-                        ' data-id="' + row.id + '" data-active="' + (row.status ? 'true' : 'false') + '" title="Click to change status">' +
-                        (row.status ? 'Active' : 'Inactive') + '</button>'
+                        '<button type="button" class="btn btn-sm js-status ' +
+                        (row.status ? 'btn-success' : 'btn-secondary') +
+                        '" data-id="' + row.id +
+                        '" data-active="' + (row.status ? 'true' : 'false') +
+                        '" title="Click to change status">' +
+                        (row.status ? 'Active' : 'Inactive') +
+                        '</button>'
                 },
+
+                // Title
                 {
                     data: 'title',
-                    render: (d, t, row) => esc(row.title) + '<div><small class="text-muted">/' + esc(row.slug) + '</small></div>'
+                    render: (d, t, row) =>
+                        esc(row.title) +
+                        '<div><small class="text-muted">/' +
+                        esc(row.slug) +
+                        '</small></div>'
                 },
-                { data: 'type', defaultContent: '', render: d => esc(d) },
+
+                // // Type
+                // {
+                //     data: 'type',
+                //     defaultContent: '',
+                //     render: d => esc(d)
+                // },
+
+                // Cover Image
                 {
-                    data: 'cover', orderable: false, searchable: false,
+                    data: 'cover',
+                    orderable: false,
+                    searchable: false,
                     render: (d, t, row) => d
-                        ? '<img src="' + esc(d) + '" alt="' + esc(row.title) + '" style="max-height:60px" loading="lazy" decoding="async" />'
+                        ? '<img src="' + esc(d) +
+                          '" alt="' + esc(row.title) +
+                          '" style="max-height:60px" loading="lazy" decoding="async" />'
                         : '<small>-</small>'
                 },
-                { data: 'published' },
-                { data: 'updated' }
+
+                // Published On
+                {
+                    data: 'published'
+                },
+
+                // Display Order
+                {
+                    data: 'displayorder',
+                    defaultContent: 0,
+                    render: function (data, type, row) {
+                        return data ?? 0;
+                    }
+                },
+
+                // // Updated
+                // {
+                //     data: 'updated'
+                // }
             ],
+
+            // Server-side AJAX
             ajax: function (dt, callback) {
                 const ord = dt.order && dt.order[0];
 
@@ -114,36 +194,63 @@
                         start: dt.start,
                         length: dt.length,
                         search: dt.search.value,
-                        sortBy: ord ? sortKeys[ord.column] : null,
+
+                        sortBy: ord
+                            ? sortKeys[ord.column]
+                            : 'displayorder',
+
                         sortDir: ord ? ord.dir : 'desc',
-                        status: $('#status-filter').val()     // Active / InActive dropdown
+
+                        status: $('#status-filter').val()
                     }
                 })
                 .done(callback)
                 .fail(function () {
-                    callback({ draw: dt.draw, recordsTotal: 0, recordsFiltered: 0, data: [] });
+                    callback({
+                        draw: dt.draw,
+                        recordsTotal: 0,
+                        recordsFiltered: 0,
+                        data: []
+                    });
+
                     fail('Unable to load blogs.');
                 });
             }
         });
 
-        // header count = rows matching the current filter/search (not only this page)
+        // Update total filtered blog count.
         table.on('xhr.dt', function (e, settings, json) {
-            if (json) $('#blog-count').text(json.recordsFiltered);
+            if (json) {
+                $('#blog-count').text(json.recordsFiltered);
+            }
         });
 
-        // if the last row of the last page was removed, step back one page
+        // Handle empty last page after deleting a blog.
         table.on('draw', function () {
             const info = table.page.info();
-            if (info.recordsDisplay > 0 && table.rows().count() === 0 && info.page > 0) {
+
+            if (
+                info.recordsDisplay > 0 &&
+                table.rows().count() === 0 &&
+                info.page > 0
+            ) {
                 table.page('previous').draw('page');
             }
         });
-        $('#status-filter').on('change', function () { table.ajax.reload(); });   // back to page 1
+
+        // Status filter.
+        $('#status-filter').on('change', function () {
+            table.ajax.reload();
+        });
+
         // ---------- Status toggle ----------
         $('#blog-table').on('click', '.js-status', async function () {
             const btn = $(this);
-            const current = btn.data('active') === true || btn.data('active') === 'true';
+
+            const current =
+                btn.data('active') === true ||
+                btn.data('active') === 'true';
+
             const newState = !current;
 
             const { isConfirmed } = await Swal.fire({
@@ -155,26 +262,44 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, change it!'
             });
+
             if (!isConfirmed) return;
 
             btn.prop('disabled', true);
+
             try {
-                const res = await post('@Url.Action("BlogStatus", "Admin")', { id: btn.data('id'), status: newState });
+                const res = await post(
+                    '@Url.Action("BlogStatus", "Admin")',
+                    {
+                        id: btn.data('id'),
+                        status: newState
+                    }
+                );
+
                 if (res && res.success) {
-                    table.ajax.reload(null, false);          // stay on the same page
-                    Swal.fire({ icon: 'success', title: 'Status changed', timer: 1200, showConfirmButton: false });
+                    table.ajax.reload(null, false);
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Status changed',
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
                 } else {
                     fail(res && res.message);
                     btn.prop('disabled', false);
                 }
-            } catch {
+            }
+            catch {
                 fail();
                 btn.prop('disabled', false);
             }
         });
+
         // ---------- Delete ----------
         $('#blog-table').on('click', '.js-delete', async function () {
             const id = $(this).data('id');
+
             const { isConfirmed } = await Swal.fire({
                 title: 'Are you sure?',
                 text: 'You want to delete this blog!',
@@ -184,17 +309,34 @@
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Yes, delete it!'
             });
+
             if (!isConfirmed) return;
 
             try {
-                const res = await post('@Url.Action("DeleteBlog", "Admin")', { id: id });
+                const res = await post(
+                    '@Url.Action("DeleteBlog", "Admin")',
+                    {
+                        id: id
+                    }
+                );
+
                 if (res && res.success) {
                     table.ajax.reload(null, false);
-                    Swal.fire({ icon: 'success', title: 'Deleted', timer: 1200, showConfirmButton: false });
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted',
+                        timer: 1200,
+                        showConfirmButton: false
+                    });
                 } else {
                     fail(res && res.message);
                 }
-            } catch { fail(); }
+            }
+            catch {
+                fail();
+            }
         });
+
     });
 </script>

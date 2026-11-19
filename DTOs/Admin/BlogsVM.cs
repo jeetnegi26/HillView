@@ -35,6 +35,6 @@ namespace DTOs
         [DataType(DataType.Date)]
         public DateTime? PublishedOn { get; set; }
 
-        public List<ImageVM> Images { get; set; }
+        public int DisplayOrder { get; set; }
     }
 }

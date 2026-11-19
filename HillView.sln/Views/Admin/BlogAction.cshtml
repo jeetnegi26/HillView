@@ -6,8 +6,15 @@
     Layout = "~/Views/Shared/Admin/_AdminLayoutPage.cshtml";
 }
 
+<style>
+    .ck-editor__editable {
+        min-height: 250px;
+    }
+</style>
+
+
 <div class="card shadow mb-4">
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between mt-3">
         <h6 class="m-0 font-weight-bold text-primary text-uppercase">@ViewBag.Title</h6>
         <a href="@Url.Action("Blogs", "Admin")" class="btn btn-outline-dark">Back to list</a>
     </div>
@@ -38,12 +45,23 @@
                         @Html.TextBoxFor(m => m.SubHeading, new { @class = "form-control", maxlength = 500 })
                         @Html.ValidationMessageFor(m => m.SubHeading, "", new { @class = "text-danger" })
                     </div>
-
                     <div class="mb-3 form-group">
                         @Html.LabelFor(m => m.Description)
-                        @* If you use TinyMCE / CKEditor elsewhere in the admin, initialise it on #Description *@
-                        @Html.TextAreaFor(m => m.Description, 14, 80, new { @class = "form-control" })
+                        @Html.TextAreaFor(m => m.Description, new
+                        {
+                            @class = "form-control",
+                            id = "Description"
+                        })
+                        @Html.ValidationMessageFor(m => m.Description, "", new
+                        {
+                            @class = "text-danger"
+                        })
                     </div>
+                    <!--<div class="mb-3 form-group">
+                    @Html.LabelFor(m => m.Description)-->
+                    @* If you use TinyMCE / CKEditor elsewhere in the admin, initialise it on #Description *@
+                    <!--@Html.TextAreaFor(m => m.Description, 14, 80, new { @class = "form-control" })
+                    </div>-->
                 </div>
 
                 <div class="col-md-4">
@@ -57,7 +75,28 @@
                         @Html.LabelFor(m => m.Type)
                         @Html.TextBoxFor(m => m.Type, new { @class = "form-control", maxlength = 100 })
                     </div>
+                    <div class="mb-3 form-group">
+                        @Html.LabelFor(m => m.DisplayOrder)
 
+                        @Html.TextBoxFor(m => m.DisplayOrder, new
+                        {
+                            @class = "form-control",
+                            type = "number",
+                            min = "1",
+                            id = "DisplayOrder",
+                            placeholder = "Enter display order"
+                        })
+
+                        @Html.ValidationMessageFor(m => m.DisplayOrder, "", new
+                        {
+                            @class = "text-danger"
+                        })
+
+                        <small class="text-muted">
+                            Higher numbers appear first.
+                            @(isEdit ? "You can change the display order." : "Next order is assigned automatically.")
+                        </small>
+                    </div>
                     <div class="mb-3 form-group">
                         @Html.LabelFor(m => m.PublishedOn)
                         @Html.TextBoxFor(m => m.PublishedOn, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control" })
@@ -99,27 +138,113 @@
     </div>
 </div>
 
+<script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+
+
 @section scripts {
-<script>
-    $(function () {
-        // Preview the newly chosen cover image
-        $('#coverFile').on('change', function () {
-            const file = this.files && this.files[0];
-            const img = $('#cover-preview');
-            if (!file) return;
-            if (file.size > 5 * 1024 * 1024) {
-                Swal.fire({ icon: 'error', title: 'Too large', text: 'Maximum cover image size is 5 MB.' });
-                this.value = '';
-                return;
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+
+    <script>
+let blogEditor;
+
+        $(function () {
+    // Automatically fetch next Display Order for new blogs
+@if (!isEdit)
+{
+    <text>
+        $.ajax({
+            url: '@Url.Action("GetNextDisplayOrder", "Admin")',
+            type: 'GET',
+            success: function (response) {
+                $('#DisplayOrder').val(response);
+            },
+            error: function (xhr) {
+                console.error('Unable to fetch next Display Order:', xhr);
             }
-            img.attr('src', URL.createObjectURL(file)).removeClass('d-none');
-            $('#removeCover').prop('checked', false);
+        });
+    </text>
+}
+            // Initialize CKEditor
+            ClassicEditor
+                .create(document.querySelector('#Description'), {
+                    toolbar: [
+                        'heading',
+                        '|',
+                        'bold',
+                        'italic',
+                        'underline',
+                        'link',
+                        '|',
+                        'bulletedList',
+                        'numberedList',
+                        '|',
+                        'outdent',
+                        'indent',
+                        '|',
+                        'insertTable',
+                        'blockQuote',
+                        '|',
+                        'undo',
+                        'redo'
+                    ]
+                })
+                .then(editor => {
+                    blogEditor = editor;
+                })
+                .catch(error => {
+                    console.error('CKEditor initialization error:', error);
+                });
+
+            // Cover image preview
+            $('#coverFile').on('change', function () {
+
+                const file = this.files && this.files[0];
+                const img = $('#cover-preview');
+
+                if (!file) return;
+
+                if (file.size > 5 * 1024 * 1024) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Too large',
+                        text: 'Maximum cover image size is 5 MB.'
+                    });
+
+                    this.value = '';
+                    return;
+                }
+
+                img.attr('src', URL.createObjectURL(file))
+                   .removeClass('d-none');
+
+                $('#removeCover').prop('checked', false);
+            });
+
+            // Form submission
+            $('#blog-form').on('submit', function (e) {
+
+                if (!blogEditor) {
+                    e.preventDefault();
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Editor not ready',
+                        text: 'Please wait for the editor to load.'
+                    });
+
+                    return;
+                }
+
+                // Update textarea with CKEditor HTML
+                $('#Description').val(blogEditor.getData());
+
+                $('#save-btn')
+                    .prop('disabled', true)
+                    .text('Saving...');
+            });
         });
 
-        // Stop double submits
-        $('#blog-form').on('submit', function () {
-            $('#save-btn').prop('disabled', true).text('Saving...');
-        });
-    });
-</script>
+    </script>
 }
+

@@ -29,8 +29,22 @@ namespace Services.Admin
         }
 
         private const string ListColumns = @"
-            Id, [Type], Title, Heading, SubHeading, RewriteUrl, CoverImage,
-            PublishedOn, Status, CreatedBy, CreatedAt, UpdatedAt, UserHostAdd";
+    Id,
+    [Type],
+    Title,
+    Heading,
+    SubHeading,
+    [Description],
+    RewriteUrl,
+    CoverImage,
+    PublishedOn,
+    Status,
+    DisplayOrder,
+    CreatedBy,
+    CreatedAt,
+    UpdatedAt,
+    UserHostAdd,
+    IsDeleted";
 
         // 1. List (no Description - it can be large and the list does not show it)
         public async Task<List<Blogs>> GetBlogsAsync(string ip)
@@ -67,9 +81,7 @@ namespace Services.Admin
 
         // 1b. One page of blogs, filtered / searched / sorted in SQL Server (needs SQL Server 2012+).
         // status: null = all, true = active, false = inactive.
-        public async Task<BlogPage> GetBlogsPagedAsync(
-            bool? status, string search, string sortBy, bool descending,
-            int start, int length, string ip)
+        public async Task<BlogPage> GetBlogsPagedAsync(bool? status, string search, string sortBy, bool descending, int start, int length, string ip)
         {
             if (start < 0) start = 0;
             if (length < 1) length = 10;
@@ -79,15 +91,35 @@ namespace Services.Admin
             string orderBy;
 
             // Whitelist only - never put user text into ORDER BY.
+            // Whitelist only - never put user text into ORDER BY.
             switch ((sortBy ?? string.Empty).ToLowerInvariant())
             {
-                case "id": orderBy = "Id " + dir; break;
-                case "status": orderBy = "Status " + dir + ", Id DESC"; break;
-                case "title": orderBy = "Title " + dir + ", Id DESC"; break;
-                case "type": orderBy = "[Type] " + dir + ", Id DESC"; break;
-                case "updated": orderBy = "UpdatedAt " + dir + ", Id DESC"; break;
+                case "id":
+                    orderBy = "Id " + dir;
+                    break;
+
+                case "status":
+                    orderBy = "Status " + dir + ", DisplayOrder DESC, Id DESC";
+                    break;
+
+                case "title":
+                    orderBy = "Title " + dir + ", DisplayOrder DESC, Id DESC";
+                    break;
+
+                case "type":
+                    orderBy = "[Type] " + dir + ", DisplayOrder DESC, Id DESC";
+                    break;
+
+                case "updated":
+                    orderBy = "UpdatedAt " + dir + ", DisplayOrder DESC, Id DESC";
+                    break;
+
+                case "displayorder":
+                    orderBy = "DisplayOrder " + dir + ", Id DESC";
+                    break;
+
                 default:
-                    orderBy = "ISNULL(PublishedOn, CAST(CreatedAt AS DATE)) " + dir + ", Id DESC";
+                    orderBy = "DisplayOrder DESC, CreatedAt DESC, Id DESC";
                     break;
             }
 
@@ -233,13 +265,16 @@ namespace Services.Admin
                         if (model.Id <= 0)
                         {
                             command.CommandText = @"
-                                INSERT INTO dbo.Blogs
-                                    ([Type], Title, Heading, SubHeading, [Description], RewriteUrl,
-                                     CoverImage, PublishedOn, Status, CreatedBy, UserHostAdd)
-                                OUTPUT INSERTED.Id
-                                VALUES
-                                    (@Type, @Title, @Heading, @SubHeading, @Description, @RewriteUrl,
-                                     @CoverImage, @PublishedOn, @Status, @CreatedBy, @UserHostAdd);";
+    INSERT INTO dbo.Blogs
+        ([Type], Title, Heading, SubHeading, [Description], RewriteUrl,
+         CoverImage, PublishedOn, Status, DisplayOrder, CreatedBy, UserHostAdd)
+    OUTPUT INSERTED.Id
+    VALUES
+        (@Type, @Title, @Heading, @SubHeading, @Description, @RewriteUrl,
+         @CoverImage, @PublishedOn, @Status,
+         (SELECT ISNULL(MAX(DisplayOrder), 0) + 1
+          FROM dbo.Blogs WHERE IsDeleted = 0),
+         @CreatedBy, @UserHostAdd);";
 
                             command.Parameters.Add("@CreatedBy", SqlDbType.NVarChar, 100).Value = DbValue(model.CreatedBy);
                             command.Parameters.Add("@UserHostAdd", SqlDbType.NVarChar, 50).Value = DbValue(model.UserHostAdd ?? ip);
@@ -247,20 +282,21 @@ namespace Services.Admin
                         else
                         {
                             command.CommandText = @"
-                                UPDATE dbo.Blogs
-                                SET [Type] = @Type,
-                                    Title = @Title,
-                                    Heading = @Heading,
-                                    SubHeading = @SubHeading,
-                                    [Description] = @Description,
-                                    RewriteUrl = @RewriteUrl,
-                                    CoverImage = @CoverImage,
-                                    PublishedOn = @PublishedOn,
-                                    Status = @Status,
-                                    UpdatedAt = SYSUTCDATETIME()
-                                WHERE Id = @Id AND IsDeleted = 0;
+    UPDATE dbo.Blogs
+    SET [Type] = @Type,
+        Title = @Title,
+        Heading = @Heading,
+        SubHeading = @SubHeading,
+        [Description] = @Description,
+        RewriteUrl = @RewriteUrl,
+        CoverImage = @CoverImage,
+        PublishedOn = @PublishedOn,
+        Status = @Status,
+        DisplayOrder = @DisplayOrder,
+        UpdatedAt = SYSUTCDATETIME()
+    WHERE Id = @Id AND IsDeleted = 0;
 
-                                SELECT CASE WHEN @@ROWCOUNT > 0 THEN @Id ELSE NULL END;";
+    SELECT CASE WHEN @@ROWCOUNT > 0 THEN @Id ELSE NULL END;";
 
                             command.Parameters.Add("@Id", SqlDbType.Int).Value = model.Id;
                         }
@@ -276,6 +312,7 @@ namespace Services.Admin
                         command.Parameters.Add("@PublishedOn", SqlDbType.Date).Value =
                             model.PublishedOn.HasValue ? (object)model.PublishedOn.Value.Date : DBNull.Value;
                         command.Parameters.Add("@Status", SqlDbType.Bit).Value = model.Status;
+                        command.Parameters.Add("@DisplayOrder", SqlDbType.Int).Value = model.DisplayOrder;
 
                         var result = await command.ExecuteScalarAsync();
 
@@ -404,8 +441,168 @@ namespace Services.Admin
                 CreatedAt = createdAt,
                 UpdatedAt = updatedAt,
                 CreatedOnString = createdAt.ToString("MMM-dd-yyyy"),
-                EditedOnString = updatedAt.ToString("MMM-dd-yyyy HH:mm")
+                EditedOnString = updatedAt.ToString("MMM-dd-yyyy HH:mm"),
+                DisplayOrder = reader["DisplayOrder"] != DBNull.Value ? Convert.ToInt32(reader["DisplayOrder"])
+    : 0,
             };
+        }
+
+        public int GetNextDisplayOrder()
+        {
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                string query = @"
+            SELECT ISNULL(MAX(DisplayOrder), 0) + 1
+            FROM dbo.Blogs
+            WHERE IsDeleted = 0";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    return Convert.ToInt32(cmd.ExecuteScalar());
+                }
+            }
+        }
+
+        public async Task<List<DTOs.Blogs>> GetCaseStudiesPagedAsync(int page, int pageSize, string ip)
+        {
+            var blogs = new List<DTOs.Blogs>();
+
+            page = Math.Max(page, 1);
+            pageSize = 20;
+
+            int offset = (page - 1) * pageSize;
+
+            using (SqlConnection con = new SqlConnection(_connectionString))
+            {
+                await con.OpenAsync();
+
+                string query = @"
+            SELECT
+                Id,
+                Title,
+                Description,
+                CoverImage,
+                RewriteUrl,
+                PublishedOn,
+                DisplayOrder
+            FROM dbo.Blogs
+            WHERE Status = 1
+              AND IsDeleted = 0
+            ORDER BY DisplayOrder DESC, PublishedOn DESC, Id DESC
+            OFFSET @Offset ROWS
+            FETCH NEXT @PageSize ROWS ONLY;";
+
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@Offset", offset);
+                    cmd.Parameters.AddWithValue("@PageSize", pageSize);
+
+                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            blogs.Add(new DTOs.Blogs
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                Title = reader["Title"]?.ToString(),
+                                Description = reader["Description"]?.ToString(),
+                                CoverImage = reader["CoverImage"]?.ToString(),
+                                RewriteUrl = reader["RewriteUrl"]?.ToString(),
+                                PublishedOn = reader["PublishedOn"] == DBNull.Value
+                                    ? (DateTime?)null
+                                    : Convert.ToDateTime(reader["PublishedOn"]),
+                                DisplayOrder = Convert.ToInt32(reader["DisplayOrder"])
+                            });
+                        }
+                    }
+                }
+            }
+            return blogs;
+        }
+
+        public async Task<Blogs> GetCaseStudyBySlugAsync(string slug, string ip)
+        {
+            try
+            {
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(@"
+            SELECT " + ListColumns + @", [Description]
+            FROM dbo.Blogs
+            WHERE RewriteUrl = @Slug
+              AND Status = 1
+              AND IsDeleted = 0;", connection))
+                {
+                    command.Parameters.Add("@Slug", SqlDbType.NVarChar, 300).Value = slug.Trim();
+
+                    await connection.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                            return Map(reader, true);
+                    }
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "CaseStudy", "GET", 0, ip, "GetCaseStudyBySlugAsync");
+
+                throw;
+            }
+        }
+
+        public async Task<List<Blogs>> GetRecentCaseStudiesAsync(
+            int currentStudyId,
+            int count,
+            string ip)
+        {
+            var studies = new List<Blogs>();
+
+            try
+            {
+                if (count < 1)
+                    count = 3;
+
+                using (var connection = new SqlConnection(_connectionString))
+                using (var command = new SqlCommand(@"
+            SELECT TOP (@Count)
+                " + ListColumns + @",
+                [Description]
+            FROM dbo.Blogs
+            WHERE Status = 1
+              AND IsDeleted = 0
+              AND Id <> @CurrentStudyId
+            ORDER BY
+                ISNULL(PublishedOn, CAST(CreatedAt AS DATE)) DESC,
+                Id DESC;", connection))
+                {
+                    command.Parameters.Add("@Count", SqlDbType.Int).Value = count;
+                    command.Parameters.Add("@CurrentStudyId", SqlDbType.Int).Value = currentStudyId;
+
+                    await connection.OpenAsync();
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            studies.Add(Map(reader, true));
+                        }
+                    }
+                }
+
+                return studies;
+            }
+            catch (Exception ex)
+            {
+                _logErrorService.LogError(
+                    ex, "CaseStudy", "GET", currentStudyId, ip, "GetRecentCaseStudiesAsync");
+
+                throw;
+            }
         }
     }
 }

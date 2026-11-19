@@ -108,9 +108,6 @@
                      alt="@(images[1].AltText ?? "")" />
             }
 
-
-
-
             <div class="banner-text-box">
                 <div class="banner-text">
 
@@ -150,6 +147,26 @@
 }
 
 <section class="study-section">
+    <div class="container">
+
+        <div class="study-row row" id="studyContainer">
+            @* Case studies will be loaded here through AJAX *@
+        </div>
+
+        <div id="studyLoader" class="text-center" style="display:none; padding:20px;">
+            <span>Loading case studies...</span>
+        </div>
+
+        <div id="studyMessage" class="text-center" style="display:none; padding:20px;">
+            No more case studies available.
+        </div>
+
+        <div id="studySentinel"></div>
+
+    </div>
+</section>
+
+@*<section class="study-section">
     <div class="study-box">
         <div class="study-container container">
             <div class="study-row row">
@@ -216,6 +233,116 @@
             </div>
         </div>
     </div>
-</section>
+</section>*@
 
 
+<script>
+    let currentPage = 1;
+    let isLoading = false;
+    let hasMore = true;
+
+    const loadCaseStudiesUrl = '@Url.Action("LoadCaseStudies", "CaseStudy")';
+
+    function loadCaseStudies() {
+        if (isLoading || !hasMore) {
+            return;
+        }
+        isLoading = true;
+        $("#studyLoader").show();
+        $.ajax({
+            url: loadCaseStudiesUrl,
+            type: "GET",
+            data: { page: currentPage },
+            success: function (response) {
+                if (response.success && response.items) {
+                    if (response.items.length > 0) {
+                        response.items.forEach(function (item) {
+                            let imagePath = item.CoverImage
+                                ? '/Content/Uploads/' + item.CoverImage
+                                : '/Content/Images/CaseStudy/casestudy1.png';
+
+                            let title = item.Title || '';
+                            let description = item.Description || '';
+
+                            // Remove HTML tags and decode HTML entities.
+                            let tempDiv = document.createElement("div");
+                            tempDiv.innerHTML = description;
+
+                            description = tempDiv.textContent || tempDiv.innerText || '';
+
+                            // Limit description to 150 characters.
+                            description = description.trim();
+
+                            if (description.length > 150) {
+                                description = description.substring(0, 150).trim() + '...';
+                            }
+                            let slug = item.RewriteUrl || '';
+
+                            let card = `
+                                <div class="study-item col-lg-4 col-md-6 mb-4">
+                                    <div class="study-card">
+                                        <img src="${escapeHtml(imagePath)}"
+                                             alt="${escapeHtml(title)}"
+                                             class="img-fluid"
+                                             loading="lazy" />
+
+                                        <div class="study-content">
+                                            <h3>${escapeHtml(title)}</h3>
+
+                                            <p>${escapeHtml(description)}</p>
+
+                                            <a href="@Url.Action("Study", "CaseStudy")?slug=${encodeURIComponent(slug)}">
+                                                Read More
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            `;
+
+                            $("#studyContainer").append(card);
+                        });
+
+                        currentPage++;
+                    }
+
+                    hasMore = response.hasMore;
+
+                    if (!hasMore) {
+                        $("#studyMessage").show();
+                    }
+                }
+            },
+            error: function () {
+                console.error("Unable to load case studies.");
+            },
+            complete: function () {
+                isLoading = false;
+                $("#studyLoader").hide();
+            }
+        });
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(value).html();
+    }
+
+    $(document).ready(function () {
+        // Load the first 20 case studies.
+        loadCaseStudies();
+        // Load the next 20 when the visitor scrolls near the bottom.
+        const sentinel = document.getElementById("studySentinel");
+        const observer = new IntersectionObserver(function (entries) {
+            if (entries[0].isIntersecting && hasMore && !isLoading) {
+                loadCaseStudies();
+            }
+
+        },
+            {
+            root: null,
+            rootMargin: "300px",
+            threshold: 0
+        });
+
+        observer.observe(sentinel);
+    });
+</script>

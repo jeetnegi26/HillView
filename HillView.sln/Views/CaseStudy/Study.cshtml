@@ -1,16 +1,17 @@
-﻿
+﻿@model DTOs.CaseStudyDetailVM
+
 @{
-    ViewBag.Title = "Study";
+    ViewBag.Title = Model.CurrentStudy.Title;
 }
 
 <style>
-    .study-container{
-        padding-top:10rem;
-        padding-bottom:3rem;
+    .study-container {
+        padding-top: 10rem;
+        padding-bottom: 3rem;
     }
 
-    .study-content h2{
-        padding-top:2rem;
+    .study-content h2 {
+        padding-top: 2rem;
         font-weight: 500;
     }
 
@@ -33,7 +34,7 @@
     .study-recent-container {
         padding: 3rem 0;
     }
-    
+
     .study-item {
         padding-bottom: 2rem;
     }
@@ -64,7 +65,7 @@
         }
 </style>
 
-<div class="study-container container">
+@*<div class="study-container container">
     <div class="study-img">
         <img src="~/Content/Images/CaseStudy/casestudy1.png" />
     </div>
@@ -94,10 +95,29 @@
             </p>
         </div>
     </div>
+</div>*@
+
+<div class="study-container container">
+    <div class="study-img">
+        <img src="@("/Content/Uploads/" + Model.CurrentStudy.CoverImage)"
+             alt="@Model.CurrentStudy.Title"
+             class="img-fluid" />
+    </div>
+
+    <div class="study-content">
+        <h2>@Model.CurrentStudy.Title</h2>
+
+        <small>
+            @(Model.CurrentStudy.PublishedOn?.ToString("dd MMM yyyy"))
+        </small>
+
+        <div class="study-desc">
+            @Html.Raw(Model.CurrentStudy.Description)
+        </div>
+    </div>
 </div>
 
-
-<section class="study-section">
+@*<section class="study-section">
     <div class="study-box">
         <div class="study-recent-container container">
             <div class="study-head">
@@ -134,9 +154,72 @@
                         <a>Read More <i class="bi bi-arrow-up-right"></i></a>
                     </div>
                 </div>
-                
+
+            </div>
+        </div>
+    </div>
+</section>*@
+
+<section class="study-section">
+    <div class="study-box">
+        <div class="study-recent-container container">
+
+            <div class="study-head">
+                <h2>Read our case-study</h2>
+            </div>
+
+            <div class="study-row row">
+
+                @if (Model.RecentStudies != null && Model.RecentStudies.Any())
+                {
+                    foreach (var item in Model.RecentStudies)
+                    {
+                        <div class="col-lg-4 col-md-6 col-12">
+                            <div class="study-item">
+
+                                <img src="@("/Content/Uploads/" + item.CoverImage)"
+                                     alt="@item.Title"
+                                     class="img-fluid"
+                                     loading="lazy" />
+
+                                <h2>@item.Title</h2>
+
+                                <p>
+                                    @Html.Raw(
+                                             System.Text.RegularExpressions.Regex.Replace(
+                                                 item.Description ?? "",
+                                                 "<.*?>",
+                                                 string.Empty
+                                             ).Length > 150
+                                             ? System.Text.RegularExpressions.Regex.Replace(
+                                                 item.Description ?? "",
+                                                 "<.*?>",
+                                                 string.Empty
+                                               ).Substring(0, 150) + "..."
+                                             : System.Text.RegularExpressions.Regex.Replace(
+                                                 item.Description ?? "",
+                                                 "<.*?>",
+                                                 string.Empty
+                                               )
+                                         )
+                                </p>
+
+                                <a href="@Url.Action("Study", "CaseStudy", new { slug = item.RewriteUrl })">
+                                    Read More <i class="bi bi-arrow-up-right"></i>
+                                </a>
+
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="col-12">
+                        <p>No other case studies are available.</p>
+                    </div>
+                }
+
             </div>
         </div>
     </div>
 </section>
-

@@ -3905,7 +3905,6 @@ namespace HillView.sln.Admin
                     id = b.Id,
                     title = b.Title,
                     slug = b.RewriteUrl,
-                    type = b.Type,
                     cover = string.IsNullOrEmpty(b.CoverImage)
                         ? null
                         : Url.Content("~/Content/Uploads/" + b.CoverImage),
@@ -3913,7 +3912,7 @@ namespace HillView.sln.Admin
                     published = b.PublishedOn.HasValue
                         ? b.PublishedOn.Value.ToString("MMM-dd-yyyy")
                         : "-",
-                    updated = b.EditedOnString
+                    displayorder = b.DisplayOrder
                 }).ToList();
 
                 return Json(new
@@ -4204,6 +4203,12 @@ namespace HillView.sln.Admin
                 _logErrorService.LogError(ex, "Admin/DeleteUploadedFile", "POST", 0,
                     Request.UserHostAddress, "Blog cover cleanup");
             }
+        }
+
+        public ActionResult GetNextDisplayOrder()
+        {
+            int nextOrder = _blogService.GetNextDisplayOrder();
+            return Json(nextOrder, JsonRequestBehavior.AllowGet);
         }
         #endregion
     }
