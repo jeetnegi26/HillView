@@ -108,7 +108,7 @@
         <h2>@Model.CurrentStudy.Title</h2>
 
         <small>
-            @(Model.CurrentStudy.PublishedOn?.ToString("dd MMM yyyy"))
+            @(Model.CurrentStudy.PublishedOn.HasValue ? Model.CurrentStudy.PublishedOn.Value.ToString("dd MMM yyyy")  : "")
         </small>
 
         <div class="study-desc">
