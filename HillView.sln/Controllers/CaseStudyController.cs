@@ -74,7 +74,7 @@ namespace HillView.sln.Controllers
                 }, JsonRequestBehavior.AllowGet);
             }
         }
-
+        [Route("CaseStudy/Study/{slug}")]
         public async Task<ActionResult> Study(string slug)
         {
             try

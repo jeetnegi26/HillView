@@ -21,10 +21,12 @@
 
 @{
     ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+    ViewBag.Description = !string.IsNullOrWhiteSpace(Model.MetaDescription) ? Model.MetaDescription : Model.MetaTitle;
+    ViewBag.Keywords = !string.IsNullOrWhiteSpace(Model.MetaKeywords) ? Model.MetaKeywords : Model.MetaTitle;
 
     var sections = (Model != null && Model.Sections != null)
-        ? Model.Sections.Where(x => x != null).ToList()
-        : null;
+? Model.Sections.Where(x => x != null).ToList()
+: null;
 
     var data = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 1) : null;
     var data2 = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 2) : null;

@@ -8,10 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title</title>
-    <meta name="keywords" content="Auto parts Dubai,Car spare parts Dubai,Dubai auto parts store,Dubai auto parts store,Car accessories Dubai,
-          Genuine car parts Dubai,Online auto parts UAE,OEM auto parts Dubai,Aftermarket car parts Dubai,Cheap car parts Dubai,Best auto parts
-          Dubai,Brake pads Dubai,Brake pads Dubai,Auto parts delivery Dubai,Auto parts delivery Dubai,Auto parts delivery Dubai,Luxury car parts Dubai,
-          4x4 auto parts Dubai,Car batteries DubaiTyres and rims Dubai" />
+    <meta name="keywords" content="@ViewBag.Keywords" />
     <meta name="description" content="@ViewBag.Description" />
     <meta property="og:title" content="@ViewBag.Title" />
     <meta property="og:url" content="@webname" />
@@ -220,7 +217,7 @@
         @RenderBody()
     </div>
     @{ Html.RenderAction("Footer", "Layout"); }
-    <div class="sticky-button">
+    <div class="sticky-button d-none">
         <a class="layoutWhatsapp fixed-button" href="">
             <img class="whatsapp-svg" src="~/Content/Images/whatsapp.svg" />
         </a>

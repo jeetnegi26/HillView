@@ -19,5 +19,7 @@ namespace DTOs
 
         public List<TestimonialVM> Testimonials { get; set; }
             = new List<TestimonialVM>();
+
+        public List<Blogs> TopBlogs { get; set; } = new List<Blogs>();
     }
 }

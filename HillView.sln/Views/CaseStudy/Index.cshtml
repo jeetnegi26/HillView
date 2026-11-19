@@ -7,10 +7,12 @@
 
 @{
     ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+    ViewBag.Description = !string.IsNullOrWhiteSpace(Model.MetaDescription) ? Model.MetaDescription : Model.MetaTitle;
+    ViewBag.Keywords = !string.IsNullOrWhiteSpace(Model.MetaKeywords) ? Model.MetaKeywords : Model.MetaTitle;
 
     var sections = (Model != null && Model.Sections != null)
-        ? Model.Sections.Where(x => x != null).ToList()
-        : null;
+? Model.Sections.Where(x => x != null).ToList()
+: null;
 
     var data = sections != null ? sections.FirstOrDefault(x => x.DisplayOrder == 1) : null;
 
@@ -60,7 +62,7 @@
             display: block;
         }
 
-    .study-item h2{
+    .study-item h2 {
         padding-top: 10px;
         font-weight: 500;
         font-size: 24px;
@@ -72,9 +74,10 @@
         opacity: 0.8;
         transition: opacity 0.3s ease, color 0.3s ease;
     }
-    .study-item a:hover {
-        opacity: 1;
-    }
+
+        .study-item a:hover {
+            opacity: 1;
+        }
 
     .study-item p {
         font-size: 13px;
@@ -170,77 +173,140 @@
     </div>
 </section>
 
-@*<section class="study-section">
-    <div class="study-box">
-        <div class="study-container container">
-            <div class="study-row row">
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="study-item">
-                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
-                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
-                        <p>
-                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
-                        </p>
-                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="study-item">
-                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
-                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
-                        <p>
-                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
-                        </p>
-                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="study-item">
-                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
-                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
-                        <p>
-                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
-                        </p>
-                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="study-item">
-                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
-                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
-                        <p>
-                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
-                        </p>
-                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="study-item">
-                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
-                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
-                        <p>
-                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
-                        </p>
-                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="study-item">
-                        <img src="~/Content/Images/CaseStudy/casestudy1.png" />
-                        <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
-                        <p>
-                            “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
-                        </p>
-                        <a>Read More <i class="bi bi-arrow-up-right"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>*@
-
-
 <script>
+
+let currentPage = 1;
+let isLoading = false;
+let hasMore = true;
+let isFirstPageLoaded = false;
+
+const loadCaseStudiesUrl = '@Url.Action("LoadCaseStudies", "CaseStudy")';
+
+function loadCaseStudies(isScrollRequest = false) {
+
+    if (isLoading || !hasMore) {
+        return;
+    }
+
+    // Do not load another page automatically before the visitor scrolls.
+    if (!isFirstPageLoaded && isScrollRequest) {
+        return;
+    }
+
+    isLoading = true;
+    $("#studyLoader").show();
+
+    $.ajax({
+        url: loadCaseStudiesUrl,
+        type: "GET",
+        data: { page: currentPage },
+
+        success: function (response) {
+
+            if (response.success && response.items) {
+
+                if (response.items.length > 0) {
+
+                    response.items.forEach(function (item) {
+
+                        let imagePath = item.CoverImage
+                            ? '/Content/Uploads/' + item.CoverImage
+                            : '/Content/Images/CaseStudy/casestudy1.png';
+
+                        let title = item.Title || '';
+                        let description = item.Description || '';
+
+                        let tempDiv = document.createElement("div");
+                        tempDiv.innerHTML = description;
+
+                        description = tempDiv.textContent || tempDiv.innerText || '';
+                        description = description.trim();
+
+                        if (description.length > 150) {
+                            description = description.substring(0, 150).trim() + '...';
+                        }
+
+                        let slug = item.RewriteUrl || '';
+                        let studyUrl = '@Url.Content("~/CaseStudy/study/")' + encodeURIComponent(slug);
+
+                        let card = `
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <div class="study-card">
+                                    <img src="${escapeHtml(imagePath)}"
+                                         alt="${escapeHtml(title)}"
+                                         class="img-fluid"
+                                         loading="lazy" />
+
+                                    <div class="study-item">
+                                        <h2>${escapeHtml(title)}</h2>
+                                        <p>${escapeHtml(description)}</p>
+                                        <a href="${studyUrl}">
+                                            Read More <i class="bi bi-arrow-up-right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+
+                        $("#studyContainer").append(card);
+                    });
+
+                    currentPage++;
+                }
+
+                hasMore = response.hasMore;
+
+                // Mark the first page as loaded.
+                isFirstPageLoaded = true;
+
+                // Show the message only when the visitor reaches the end.
+                if (!hasMore && isScrollRequest) {
+                    $("#studyMessage").show();
+                }
+            }
+        },
+
+        error: function () {
+            console.error("Unable to load case studies.");
+        },
+
+        complete: function () {
+            isLoading = false;
+            $("#studyLoader").hide();
+        }
+    });
+}
+
+function escapeHtml(value) {
+    return $('<div>').text(value).html();
+}
+
+$(document).ready(function () {
+
+    // Load only the first 20 records.
+    loadCaseStudies(false);
+
+    const sentinel = document.getElementById("studySentinel");
+
+    const observer = new IntersectionObserver(function (entries) {
+
+        if (entries[0].isIntersecting && isFirstPageLoaded && hasMore && !isLoading) {
+
+            loadCaseStudies(true);
+        }
+
+    }, {
+        root: null,
+        rootMargin: "300px",
+        threshold: 0
+    });
+
+    observer.observe(sentinel);
+});
+
+</script>
+
+@*<script>
     let currentPage = 1;
     let isLoading = false;
     let hasMore = true;
@@ -281,7 +347,7 @@
                                 description = description.substring(0, 150).trim() + '...';
                             }
                             let slug = item.RewriteUrl || '';
-
+                            let studyUrl = '@Url.Content("~/CaseStudy/study/")' + encodeURIComponent(slug);
                             let card = `
                                 <div class="col-lg-4 col-md-6 mb-4">
                                     <div class="study-card">
@@ -294,10 +360,9 @@
                                             <h2>${escapeHtml(title)}</h2>
 
                                             <p>${escapeHtml(description)}</p>
-
-                                            <a href="@Url.Action("Study", "CaseStudy")?slug=${encodeURIComponent(slug)}">
-                                                Read More
-                                            </a>
+                <a href="${studyUrl}">
+                    Read More <i class="bi bi-arrow-up-right"></i>
+                </a>
                                         </div>
                                     </div>
                                 </div>
@@ -349,4 +414,82 @@
 
         observer.observe(sentinel);
     });
-</script>
+</script>*@
+
+
+
+
+
+
+
+
+
+
+@*<section class="study-section">
+        <div class="study-box">
+            <div class="study-container container">
+                <div class="study-row row">
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="study-item">
+                            <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                            <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                            <p>
+                                “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                            </p>
+                            <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="study-item">
+                            <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                            <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                            <p>
+                                “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                            </p>
+                            <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="study-item">
+                            <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                            <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                            <p>
+                                “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                            </p>
+                            <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="study-item">
+                            <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                            <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                            <p>
+                                “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                            </p>
+                            <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="study-item">
+                            <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                            <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                            <p>
+                                “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                            </p>
+                            <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-12">
+                        <div class="study-item">
+                            <img src="~/Content/Images/CaseStudy/casestudy1.png" />
+                            <h2>The Future of IT Hiring: What Businesses Need to Know</h2>
+                            <p>
+                                “Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ornare non sed est cursus. Vel hac convallis ipsum, facilisi odio pellentesque bibendum viverra tempus.
+                            </p>
+                            <a>Read More <i class="bi bi-arrow-up-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>*@

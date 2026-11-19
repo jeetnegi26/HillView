@@ -167,6 +167,22 @@ namespace Services
 
                         SortByDisplayOrder(page, itemMap.Values);
 
+                        // Result set 9: Top Five Blogs
+                        await reader.NextResultAsync();
+
+                        while (await reader.ReadAsync())
+                        {
+                            page.TopBlogs.Add(new Blogs
+                            {
+                                Id = Convert.ToInt32(reader["Id"]),
+                                Title = reader["Title"]?.ToString(),
+                                Description = reader["Description"]?.ToString(),
+                                RewriteUrl = reader["RewriteUrl"]?.ToString(),
+                                CoverImage = reader["CoverImage"]?.ToString(),
+                                CreatedAt = Convert.ToDateTime(reader["CreatedAt"])
+                            });
+                        }
+
                         return page;
                     }
                 }

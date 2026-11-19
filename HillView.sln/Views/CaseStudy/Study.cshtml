@@ -204,7 +204,7 @@
                                          )
                                 </p>
 
-                                <a href="@Url.Action("Study", "CaseStudy", new { slug = item.RewriteUrl })">
+                                <a href="@Url.RouteUrl(new { controller = "CaseStudy", action = "Study", slug = item.RewriteUrl })">
                                     Read More <i class="bi bi-arrow-up-right"></i>
                                 </a>
 

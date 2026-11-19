@@ -1,32 +1,11 @@
 ﻿@model DTOs.UIPageVM
 @using System.Linq
 @using DTOs
-@*@{
-        ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
-
-        var data = Model?.Sections?
-        .FirstOrDefault(x => x != null && x.DisplayOrder == 1);
-
-        var images = data?.Images?
-            .Where(x => x != null)
-            .ToList();
-
-        var buttons = data?.Buttons?
-            .Where(x => x != null)
-            .ToList();
-
-        var dataService = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 4);
-        var data5 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 5);
-        var data6 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 6);
-        var data8 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 8);
-
-        var data10 = Model?.Sections?.FirstOrDefault(x => x != null && x.DisplayOrder == 10);
-
-        var reviews = Model.Testimonials.ToList();
-    }*@
 
 @{
     ViewBag.Title = string.IsNullOrWhiteSpace(Model.MetaTitle) ? Model.Title : Model.MetaTitle;
+    ViewBag.Description = !string.IsNullOrWhiteSpace(Model.MetaDescription) ? Model.MetaDescription : Model.MetaTitle;
+    ViewBag.Keywords = !string.IsNullOrWhiteSpace(Model.MetaKeywords) ? Model.MetaKeywords : Model.MetaTitle;
 
     var sections = (Model != null && Model.Sections != null)
         ? Model.Sections.Where(x => x != null).ToList()
@@ -730,59 +709,89 @@
         <div class="case-cointainer container">
             <div class="case-items">
                 <div class="owl-carousel owl-theme case-carousel">
-                    <div class="item">
-                        <div class="case-item">
-                            <div class="case-row row">
-                                <div class="col-lg-6 col-12 case-item-img">
-                                    <div class="case-img">
-                                        <img src="~/Content/Images/case-study/casestudy1.png" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12 case-item-desc">
-                                    <div class="case-desc">
-                                        <h3>Real-time Analytics</h3>
-                                        <h1>Common Hiring Mistakes That Cost Businesses Top Talent</h1>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Ornare non sed est cursus. Vel hac convallis ipsum,
-                                            facilisi odio pellentesque bibendum viverra tempus.
-                                        </p>
-                                        <div class="case-item-btns">
-                                            <a class="btn btn-secondary mr-2">Read full case study</a>
-                                            <a class="btn btn-primary">View More</a>
+                    @if (Model != null && Model.TopBlogs != null)
+                    {
+                        foreach (var item in Model.TopBlogs)
+                        {
+                            <div class="item">
+                                <div class="case-item">
+                                    <div class="case-row row">
+                                        <div class="col-lg-6 col-12 case-item-img">
+                                            <div class="case-img">
+                                                <img src="@("/Content/Uploads/" + item.CoverImage)" />
+                                            </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                                        <div class="col-lg-6 col-12 case-item-desc">
+                                            <div class="case-desc">
+                                                <h3>Real-time Analytics</h3>
+                                                <h1>@item.Title</h1>
+                                                @{
+                                                    string description = "";
 
-                    <div class="item">
-                        <div class="case-item">
-                            <div class="case-row row">
-                                <div class="col-lg-6 col-12 case-item-img">
-                                    <div class="case-img">
-                                        <img src="~/Content/Images/case-study/casestudy1.png" />
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-12 case-item-desc">
-                                    <div class="case-desc">
-                                        <h3>Real-time Analytics</h3>
-                                        <h1>Common Hiring Mistakes That Cost Businesses Top Talent</h1>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                            Ornare non sed est cursus. Vel hac convallis ipsum,
-                                            facilisi odio pellentesque bibendum viverra tempus.
-                                        </p>
-                                        <div class="case-item-btns">
-                                            <a class="btn btn-secondary mr-2">Read full case study</a>
-                                            <a class="btn btn-primary">View More</a>
+                                                    try
+                                                    {
+                                                        if (!string.IsNullOrWhiteSpace(item.Description))
+                                                        {
+                                                            description = System.Text.RegularExpressions.Regex.Replace(
+                                                                item.Description, "<[^>]*>", " ");
+
+                                                            description = System.Net.WebUtility.HtmlDecode(description);
+                                                            description = System.Text.RegularExpressions.Regex.Replace(
+                                                                description, @"\s+", " ").Trim();
+
+                                                            if (description.Length > 20)
+                                                            {
+                                                                description = description.Substring(0, 180) + "...";
+                                                            }
+                                                        }
+                                                    }
+                                                    catch
+                                                    {
+                                                        description = "";
+                                                    }
+                                                }
+
+                                                <p>@description</p>
+                                                <div class="case-item-btns">
+                                                    <a class="btn btn-secondary mr-2" href="@Url.RouteUrl(new { controller = "CaseStudy", action = "Study", slug = item.RewriteUrl })">Read full case study</a>
+                                                    <a class="btn btn-primary" href="@Url.Action("Index", "CaseStudy")">View More</a>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
+                        }
+                    }
+
+
+                    @*<div class="item">
+            <div class="case-item">
+                <div class="case-row row">
+                    <div class="col-lg-6 col-12 case-item-img">
+                        <div class="case-img">
+                            <img src="~/Content/Images/case-study/casestudy1.png" />
                         </div>
                     </div>
+                    <div class="col-lg-6 col-12 case-item-desc">
+                        <div class="case-desc">
+                            <h3>Real-time Analytics</h3>
+                            <h1>Common Hiring Mistakes That Cost Businesses Top Talent</h1>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                Ornare non sed est cursus. Vel hac convallis ipsum,
+                                facilisi odio pellentesque bibendum viverra tempus.
+                            </p>
+                            <div class="case-item-btns">
+                                <a class="btn btn-secondary mr-2">Read full case study</a>
+                                <a class="btn btn-primary">View More</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
                 </div>
             </div>
         </div>
