@@ -48,13 +48,17 @@
             color: var(--primary)
         }
 
-    .study-item{
-        padding-bottom:2rem;
+    .study-card {
+        padding-bottom: 2rem;
     }
 
-    .study-item imgs {
-        border-radius: 25px;
-    }
+        .study-card img {
+            border-radius: 25px;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            object-fit: cover;
+            display: block;
+        }
 
     .study-item h2{
         padding-top: 10px;
@@ -279,15 +283,15 @@
                             let slug = item.RewriteUrl || '';
 
                             let card = `
-                                <div class="study-item col-lg-4 col-md-6 mb-4">
+                                <div class="col-lg-4 col-md-6 mb-4">
                                     <div class="study-card">
                                         <img src="${escapeHtml(imagePath)}"
                                              alt="${escapeHtml(title)}"
                                              class="img-fluid"
                                              loading="lazy" />
 
-                                        <div class="study-content">
-                                            <h3>${escapeHtml(title)}</h3>
+                                        <div class="study-item">
+                                            <h2>${escapeHtml(title)}</h2>
 
                                             <p>${escapeHtml(description)}</p>
 
