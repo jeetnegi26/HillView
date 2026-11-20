@@ -17,7 +17,7 @@
                     @using (Html.BeginForm("SaveMenuItem", "Admin",
                         FormMethod.Post, new { @class = "row g-3" }))
                     {
-                        @Html.AntiForgeryToken()
+                        
                         @Html.HiddenFor(m => m.Id)
                         <div class="col-md-6">
                             @Html.LabelFor(m => m.Title, "Menu Title",

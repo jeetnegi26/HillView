@@ -22,7 +22,6 @@
     <div class="card-body">
         @using (Html.BeginForm("BlogAction", "Admin", FormMethod.Post, new { enctype = "multipart/form-data", id = "blog-form" }))
         {
-            @Html.AntiForgeryToken()
             @Html.HiddenFor(m => m.Id)
             @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 

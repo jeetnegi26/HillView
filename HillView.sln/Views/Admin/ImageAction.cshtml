@@ -25,7 +25,7 @@
                 "ImageAction", "Admin", FormMethod.Post,
                 new { id = "imageForm" }))
             {
-                @Html.AntiForgeryToken()
+                
                 @Html.HiddenFor(m => m.Id)
                 @Html.HiddenFor(m => m.CreatedAt)
                 @Html.HiddenFor(m => m.UpdatedAt)

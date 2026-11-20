@@ -179,7 +179,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> SaveMenuItem(DTOs.AdminMenuItemEditVM model)
         {
             var ip = Request.UserHostAddress;
@@ -271,7 +270,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteMenuItem(Guid id)
         {
             var ip = Request.UserHostAddress;
@@ -348,7 +346,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [ValidateInput(false)]
         public async Task<ActionResult> PageAction(PageVM model)
         {
@@ -396,7 +393,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<JsonResult> DeletePage(Guid id)
         {
             try
@@ -551,7 +547,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveSectionContent(SectionVM model)
         {
             try
@@ -689,7 +684,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> SectionTypeAction(SectionTypeVM model)
         {
             try
@@ -754,7 +748,6 @@ namespace HillView.sln.Admin
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteSection(Guid id, Guid? pageId)
         {
             try
@@ -867,7 +860,6 @@ namespace HillView.sln.Admin
             return View(model);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [ValidateInput(false)]
         public async Task<ActionResult> SectionAction(SectionVM model)
         {
@@ -1057,7 +1049,6 @@ namespace HillView.sln.Admin
             return View(model);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [ValidateInput(false)]
         public async Task<ActionResult> SectionItemAction(SectionItemVM model)
         {
@@ -1125,7 +1116,6 @@ namespace HillView.sln.Admin
                 });
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteSectionItem(Guid id)
         {
             try
@@ -1238,7 +1228,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<JsonResult> DeleteSectionItemContent(Guid id)
         {
             try
@@ -1282,7 +1271,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<JsonResult> SaveSectionItemContent(SectionItemVM model)
         {
             try
@@ -1389,7 +1377,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<JsonResult> UpdateSectionItemImage(Guid id, string altText, string caption, int displayOrder, bool status)
         {
             try
@@ -1450,7 +1437,6 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<JsonResult> DeleteSectionItemImage(Guid id)
         {
             try
@@ -1618,7 +1604,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<JsonResult> UpdateSectionImage(
             Guid id,
             Guid sectionId,
@@ -1701,7 +1687,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<JsonResult> DeleteSectionImage(Guid id, Guid sectionId)
         {
             try
@@ -1916,7 +1902,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<JsonResult> SaveSectionButton(
             Guid sectionId,
             Guid? id,
@@ -2031,7 +2017,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> DeleteSectionButton(Guid sectionId, Guid id)
         {
             var ip = Request.UserHostAddress ?? string.Empty;
@@ -2117,7 +2103,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> SaveSectionItemButton(
             Guid sectionItemId,
             Guid? id,
@@ -2214,7 +2200,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> DeleteSectionItemButton(Guid sectionItemId, Guid id)
         {
             var ip = Request.UserHostAddress ?? string.Empty;
@@ -2330,7 +2316,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<JsonResult> SaveChildSectionItem(SectionItemVM model)
         {
             try
@@ -2505,7 +2491,7 @@ namespace HillView.sln.Admin
             return View(model);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> ImageAction(ImageVM model)
         {
             bool hasSection = model.SectionId.HasValue &&
@@ -2573,7 +2559,7 @@ namespace HillView.sln.Admin
                 });
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> DeleteImage(Guid id)
         {
             try
@@ -2691,7 +2677,7 @@ namespace HillView.sln.Admin
 
         #region Upload Content Image
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<JsonResult> Upload_Content_Image(HttpPostedFileBase file, Guid? sectionItemId, Guid? sectionId, string altText,string caption)
         {
             try
@@ -2907,7 +2893,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<JsonResult> Upload_PageContent_Image(HttpPostedFileBase file, Guid? sectionItemId, Guid? sectionId, string altText, string caption)
         {
             try
@@ -3183,7 +3169,7 @@ namespace HillView.sln.Admin
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> ButtonAction(ButtonVM model)
         {
             bool hasSection = model.SectionId.HasValue &&
@@ -3259,7 +3245,7 @@ namespace HillView.sln.Admin
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> DeleteButton(Guid id)
         {
             try
@@ -3387,7 +3373,7 @@ namespace HillView.sln.Admin
             return View(model);
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> PageSectionAction(PageSectionVM model)
         {
             if (model.PageId == Guid.Empty)
@@ -3472,7 +3458,7 @@ namespace HillView.sln.Admin
                 });
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> DeletePageSection(Guid id, Guid pageId)
         {
             try
@@ -3595,7 +3581,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         [ValidateInput(false)]
         public async Task<ActionResult> TestimonialAction(TestimonialVM model)
         {
@@ -3657,7 +3643,7 @@ namespace HillView.sln.Admin
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> DeleteTestimonial(Guid id)
         {
             string ip = Request.UserHostAddress ?? "Unknown";
@@ -3783,7 +3769,7 @@ namespace HillView.sln.Admin
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<ActionResult> ChangeContactStatus(Guid id, bool newStatus, bool? filter)
         {
             string ip = Request.UserHostAddress ?? "Unknown";
@@ -4073,7 +4059,7 @@ namespace HillView.sln.Admin
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<JsonResult> BlogStatus(int id, bool status)
         {
             string ip = Request.UserHostAddress ?? "Unknown";
@@ -4099,7 +4085,7 @@ namespace HillView.sln.Admin
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        
         public async Task<JsonResult> DeleteBlog(int id)
         {
             string ip = Request.UserHostAddress ?? "Unknown";

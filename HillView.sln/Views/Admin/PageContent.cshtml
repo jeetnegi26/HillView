@@ -127,7 +127,7 @@
                                             FormMethod.Post,
                                             new { style = "display:inline;" }))
                                         {
-                                            @Html.AntiForgeryToken()
+                                            
                                             <input type="hidden" name="pageId" value="@pageId" />
 
                                             <button type="submit"
@@ -145,7 +145,7 @@
                                             FormMethod.Post,
                                             new { style = "display:inline;" }))
                                         {
-                                            @Html.AntiForgeryToken()
+                                            
 
                                             <button type="submit"
                                                     class="btn btn-sm btn-danger"
@@ -522,7 +522,7 @@
 
 
     <div id="sectionAntiForgeryToken" style="display:none;">
-        @Html.AntiForgeryToken()
+        
     </div>
 
 </div>

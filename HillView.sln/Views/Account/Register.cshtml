@@ -33,7 +33,7 @@
                     @using (Html.BeginForm(
                         "Register", "Account", FormMethod.Post))
                     {
-                        @Html.AntiForgeryToken()
+                        
 
                         <div class="mb-3">
                             @Html.LabelFor(m => m.UserName)
@@ -95,7 +95,7 @@
                     @using (Html.BeginForm(
                         "AddRole", "Account", FormMethod.Post))
                     {
-                        @Html.AntiForgeryToken()
+                        
 
                         <div class="mb-3">
                             @Html.LabelFor(m => m.NewRoleTitle, "Role Name")
@@ -168,7 +168,7 @@
                             FormMethod.Post,
                             new { onsubmit = "return confirm('Reset this user password to the default password?');" }))
                         {
-                            @Html.AntiForgeryToken()
+                            
 
                             <button type="submit" class="btn btn-warning btn-sm">
                                 Reset Password

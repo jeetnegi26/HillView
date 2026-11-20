@@ -38,7 +38,7 @@
                 FormMethod.Post,
                 new { id = "sectionTypeForm" }))
             {
-                @Html.AntiForgeryToken()
+                
                 @Html.HiddenFor(m => m.Id)
 
                 @Html.ValidationSummary(

@@ -100,7 +100,7 @@
                                             FormMethod.Post,
                                             new { @class = "d-inline delete-form" }))
                                         {
-                                            @Html.AntiForgeryToken()
+                                            
                                             @Html.Hidden("id", item.Id)
 
                                             <button type="submit"

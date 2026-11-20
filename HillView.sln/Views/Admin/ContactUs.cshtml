@@ -118,7 +118,7 @@
                                             FormMethod.Post,
                                             new { @class = "d-inline change-status-form" }))
                                         {
-                                            @Html.AntiForgeryToken()
+                                            
                                             <input type="hidden" name="id" value="@item.Id" />
                                             <input type="hidden" name="newStatus" value="@((!item.Status).ToString().ToLower())" />
                                             <input type="hidden" name="filter" value="@(filter.HasValue ? filter.Value.ToString().ToLower() : "")" />

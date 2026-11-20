@@ -57,7 +57,7 @@
                 FormMethod.Post,
                 new { id = "pageForm" }))
             {
-                @Html.AntiForgeryToken()
+                
                 @Html.HiddenFor(m => m.Id)
 
                 if (!ViewData.ModelState.IsValid)

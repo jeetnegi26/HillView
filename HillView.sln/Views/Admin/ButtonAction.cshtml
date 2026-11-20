@@ -34,7 +34,7 @@
                 FormMethod.Post,
                 new { id = "buttonForm" }))
             {
-                @Html.AntiForgeryToken()
+                
 
                 @Html.HiddenFor(m => m.Id)
                 @Html.HiddenFor(m => m.CreatedAt)
