@@ -3970,7 +3970,6 @@ namespace HillView.sln.Admin
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [ValidateInput(false)]   // Description contains HTML
         public async Task<ActionResult> BlogAction(DTOs.Blogs model, HttpPostedFileBase coverFile, bool removeCover = false)
         {
